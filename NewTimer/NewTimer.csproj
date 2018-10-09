@@ -311,8 +311,6 @@
     <None Include="Resources\periodSmal.png" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Bars.dll" />
-    <Content Include="CleanNodeTree.dll" />
     <Content Include="Clock.ico" />
     <None Include="Resources\clrToRed.png" />
     <None Include="Resources\clrToGreen.png" />

@@ -1,0 +1,6 @@
+[submodule "CleanNodeTree"]
+	path = CleanNodeTree
+	url = "C:\\Users\\Kryxzael\\Documents\\app-git\\C#\\LIB\\CleanNodeTree"
+[submodule "SegmentedBarControl"]
+	path = SegmentedBarControl
+	url = "C:\\Users\\Kryxzael\\Documents\\app-git\\C#\\LIB\\SegmentedBarControl"

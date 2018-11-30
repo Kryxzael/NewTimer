@@ -1,6 +1,6 @@
 [submodule "CleanNodeTree"]
 	path = CleanNodeTree
-	url = "C:\\Users\\Kryxzael\\Documents\\app-git\\C#\\LIB\\CleanNodeTree"
+	url = "https://github.com/Kryxzael/CleanNodeTree.git"
 [submodule "SegmentedBarControl"]
 	path = SegmentedBarControl
-	url = "C:\\Users\\Kryxzael\\Documents\\app-git\\C#\\LIB\\SegmentedBarControl"
+	url = "https://github.com/Kryxzael/SegmentedBarControl.git"

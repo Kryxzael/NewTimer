@@ -40,14 +40,6 @@
     <StartupObject />
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Bars, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\dlls\Bars.dll</HintPath>
-    </Reference>
-    <Reference Include="CleanNodeTree, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\dlls\CleanNodeTree.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -319,6 +311,16 @@
     <None Include="Resources\TimeSuggestionBG.png" />
     <None Include="Resources\Spectre.png" />
     <None Include="Resources\colorspecter.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\CleanNodeTree\CleanNodeTree\CleanNodeTree.csproj">
+      <Project>{c848cfa6-3ede-4ec8-847d-e5149b3d1753}</Project>
+      <Name>CleanNodeTree</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SegmentedBarControl\Bars\Bars.csproj">
+      <Project>{3f2644dd-a9ae-488b-b91f-869c85c8c63b}</Project>
+      <Name>Bars</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

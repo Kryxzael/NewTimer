@@ -5,6 +5,7 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 using Bars;
 
 namespace NewTimer.FormParts
@@ -109,6 +110,22 @@ namespace NewTimer.FormParts
             //}
         }
 
+        protected virtual int GetSubSegmentCount(TimeSpan span)
+        {
+            if (span > new TimeSpan(365, 0, 0, 0)) return 12;
+            else if (span > new TimeSpan(30, 0, 0, 0)) return 4;
+            else if (span > new TimeSpan(7, 0, 0, 0)) return 7;
+            else if (span > new TimeSpan(1, 0, 0, 0)) return 8;
+            else if (span > new TimeSpan(12, 0, 0)) return 6;
+            else if (span > new TimeSpan(6, 0, 0)) return 6;
+            else if (span > new TimeSpan(1, 0, 0)) return 4;
+            else if (span > new TimeSpan(0, 30, 0)) return 6;
+            else if (span > new TimeSpan(0, 10, 0)) return 10;
+            else if (span > new TimeSpan(0, 1, 0)) return 6;
+            else if (span > new TimeSpan(0, 0, 10)) return 10;
+            else return 0;
+        }
+
         /// <summary>
         /// Randomizes the color scheme
         /// </summary>
@@ -117,6 +134,39 @@ namespace NewTimer.FormParts
         {
             base.OnClick(e);
             Config.RandomizeColorScheme();
+        }
+
+        protected override void OnPaint(PaintEventArgs e)
+        {
+            base.OnPaint(e);
+
+            if (Value == 0)
+            {
+                return;
+            }
+
+            float overflowWidth = MaxValue / Value * e.ClipRectangle.Width;
+
+            if (overflowWidth >= e.ClipRectangle.Width)
+            {
+                return;
+            }
+
+            using (Pen transparentPen = new Pen(Color.FromArgb((int)(overflowWidth / e.ClipRectangle.Width * 0x8F), Color.White)))
+            {
+                int SubSegmentCount = GetSubSegmentCount(Config.GetTimeLeft());
+                for (int i = 0; i < SubSegmentCount; i++)
+                {
+                    e.Graphics.DrawLine(
+                        pen: transparentPen,
+                        x1: (float)i / SubSegmentCount * overflowWidth,
+                        y1: e.ClipRectangle.Top,
+                        x2: (float)i / SubSegmentCount * overflowWidth,
+                        y2: e.ClipRectangle.Bottom
+                    );
+                }
+            }
+
         }
     }
 }

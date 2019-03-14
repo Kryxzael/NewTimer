@@ -62,7 +62,7 @@ namespace NewTimer
         /// </summary>
         public static Dictionary<TimeSpan, BarSettings> BarSettings = new Dictionary<TimeSpan, BarSettings>()
         {
-            { new TimeSpan(360, 0, 0, 0), CreateBarSettings(1, 1)}, //1 year
+            { new TimeSpan(365, 0, 0, 0), CreateBarSettings(1, 1)}, //1 year
 
             { new TimeSpan(30, 0, 0, 0), CreateBarSettings(30, 30) }, //30 days
             { new TimeSpan(7, 0, 0, 0), CreateBarSettings(7, 7) }, //7 days

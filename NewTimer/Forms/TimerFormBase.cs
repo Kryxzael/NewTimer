@@ -105,6 +105,8 @@ namespace NewTimer.Forms
         }
 
         private int _lastMinuteIconWasCreated = 61; //Used to prevent creating a new taskbar icon every frame
+        private bool _overtimeBackColorSet = false;
+
         private void UpdateICountdowns(object sender, EventArgs e)
         {
             recursiveUpdate(this);
@@ -130,12 +132,14 @@ namespace NewTimer.Forms
                 pie.Dispose();
             }
 
-            if (Config.Overtime)
+            if (Config.Overtime && !_overtimeBackColorSet)
             {
                 foreach (Control i in tabs.Controls)
                 {
                     i.BackColor = Config.GlobalOvertimeColor;
                 }
+
+                _overtimeBackColorSet = true;
             }
 
             /* local */ void recursiveUpdate(Control c)

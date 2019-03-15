@@ -57,7 +57,7 @@ namespace NewTimer.Forms
             InitializeAutoLabels();
             SetColors();
 
-            _updateTimer.Interval = 10;
+            _updateTimer.Interval = 50;
             _updateTimer.Tick += UpdateICountdowns;
         }
 

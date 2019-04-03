@@ -152,7 +152,7 @@ namespace NewTimer.FormParts
                 return;
             }
 
-            using (Pen transparentPen = new Pen(Color.FromArgb((int)(overflowWidth / e.ClipRectangle.Width * 0x8F), Color.White)))
+            using (Pen transparentPen = new Pen(Color.FromArgb((int)(overflowWidth / e.ClipRectangle.Width * 0x8F), Color.White)) { DashStyle = System.Drawing.Drawing2D.DashStyle.Dash })
             {
                 int SubSegmentCount = GetSubSegmentCount(Config.GetTimeLeft());
                 for (int i = 0; i < SubSegmentCount; i++)

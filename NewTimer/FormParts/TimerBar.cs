@@ -146,23 +146,26 @@ namespace NewTimer.FormParts
             }
 
             float overflowWidth = MaxValue / Value * e.ClipRectangle.Width;
+            const float MARGIN_MULTIPLIER = 0.06f;
+            const int MARGIN_MAX = 10;
 
             if (overflowWidth >= e.ClipRectangle.Width)
             {
                 return;
             }
 
+
             using (Pen transparentPen = new Pen(Color.FromArgb((int)(overflowWidth / e.ClipRectangle.Width * 0x8F), Color.White)) { DashStyle = System.Drawing.Drawing2D.DashStyle.Dash })
             {
-                int SubSegmentCount = GetSubSegmentCount(Config.GetTimeLeft());
-                for (int i = 0; i < SubSegmentCount; i++)
+                int subSegmentCount = GetSubSegmentCount(Config.GetTimeLeft());
+                for (int i = 0; i < subSegmentCount; i++)
                 {
                     e.Graphics.DrawLine(
                         pen: transparentPen,
-                        x1: (float)i / SubSegmentCount * overflowWidth,
-                        y1: e.ClipRectangle.Top,
-                        x2: (float)i / SubSegmentCount * overflowWidth,
-                        y2: e.ClipRectangle.Bottom
+                        x1: (float)i / subSegmentCount * overflowWidth,
+                        y1: e.ClipRectangle.Top + Math.Min(e.ClipRectangle.Height * MARGIN_MULTIPLIER, MARGIN_MAX),
+                        x2: (float)i / subSegmentCount * overflowWidth,
+                        y2: e.ClipRectangle.Bottom - Math.Min(e.ClipRectangle.Height * MARGIN_MULTIPLIER, MARGIN_MAX)
                     );
                 }
             }

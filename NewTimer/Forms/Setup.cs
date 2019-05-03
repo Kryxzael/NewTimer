@@ -37,6 +37,7 @@ namespace NewTimer.Forms
             }
 
             CreateSuggestions();
+            colorSchemeComboBox1.Items.Add("Hello");
         }
 
         private void HandleClose(object sender, FormClosingEventArgs e)

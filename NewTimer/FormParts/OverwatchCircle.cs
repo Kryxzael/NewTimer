@@ -12,7 +12,7 @@ namespace NewTimer.FormParts
     class OverwatchCircle : UserControl
     {
         [Bindable(false)]
-        public Color[] Colors { get; set; } = ColorFactory.GenerateMany(9);
+        public Color[] Colors { get; set; } = Config.ColorScheme.GenerateMany(9, Config.MasterRandom).ToArray();
 
         public OverwatchCircle()
         {
@@ -305,7 +305,7 @@ namespace NewTimer.FormParts
 
         protected override void OnClick(EventArgs e)
         {
-            Colors = ColorFactory.GenerateMany(9);
+            Colors = Config.ColorScheme.GenerateMany(5, Config.MasterRandom).ToArray();
         }
     }
 }

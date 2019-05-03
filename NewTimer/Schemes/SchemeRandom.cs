@@ -5,27 +5,24 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace NewTimer
+namespace NewTimer.Schemes
 {
     /// <summary>
     /// Factory class for generating random colors
     /// </summary>
-    public static class ColorFactory
+    public class SchemeRandom : ColorScheme
     {
-        /// <summary>
-        /// Random number generator
-        /// </summary>
-        static Random Random = new Random();
+        public override string Name { get => "Random"; }
 
         /// <summary>
         /// Generates a random color
         /// </summary>
         /// <returns></returns>
-        public static Color GenerateOne()
+        public override Color GenerateOne(Random rng)
         {
             while (true)
             {
-                Color clr = Color.FromArgb(RandByte(), RandByte(), RandByte());
+                Color clr = Color.FromArgb(RandByte(rng), RandByte(rng), RandByte(rng));
 
                 float sat = clr.GetSaturation();
 
@@ -49,7 +46,7 @@ namespace NewTimer
         /// </summary>
         /// <param name="count">The amount of colors to generate</param>
         /// <returns></returns>
-        public static Color[] GenerateMany(int count)
+        public override IEnumerable<Color> GenerateMany(int count, Random rng)
         {
             Color[] _ = new Color[count];
 
@@ -57,7 +54,7 @@ namespace NewTimer
             {
                 while (true)
                 {
-                    Color clr = GenerateOne();
+                    Color clr = GenerateOne(rng);
 
                     float hue = clr.GetHue();
                     foreach (Color o in _)
@@ -83,22 +80,6 @@ namespace NewTimer
         /// Returns a random number between 0 and 255
         /// </summary>
         /// <returns></returns>
-        private static int RandByte()
-        {
-            int r = Random.Next(0x100);
-            return r;
-        }
-
-        /// <summary>
-        /// Translates the hue of a color by a specific amount of degrees in the color spectre
-        /// </summary>
-        /// <param name="color"></param>
-        /// <param name="degrees"></param>
-        /// <returns></returns>
-        public static Color TranslateColor(Color color, int degrees)
-        {
-            Console.WriteLine(((int)(color.GetHue() * 360) + degrees) % 360);
-            return Properties.Resources.Spectre.GetPixel(((int)(color.GetHue() * 360) + degrees) % 360, 0);
-        }
+        private static int RandByte(Random rng) => rng.Next(0x100);
     }
 }

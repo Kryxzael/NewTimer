@@ -33,6 +33,11 @@ namespace NewTimer
         //}
 
         /// <summary>
+        /// The single, centerelized Random Number Generator. Use this for anything random
+        /// </summary>
+        public static Random MasterRandom = new Random();
+
+        /// <summary>
         /// The color that will be used as the text color for the whole application
         /// </summary>
         public static Color GlobalForeColor { get; set; } = ColorTranslator.FromHtml("#dddddd");
@@ -56,6 +61,8 @@ namespace NewTimer
         /// Gets or sets the time the timer targets
         /// </summary>
         public static DateTime Target { get; private set; } = new DateTime(2017, 4, 7, 15, 05, 0);
+
+        public static ColorScheme ColorScheme { get; set; }
 
         /// <summary>
         /// Gets the configuration settings that the time bar will use. The key is the minimum unit time that will be used to apply the settings
@@ -81,6 +88,11 @@ namespace NewTimer
             { new TimeSpan(0, 0, 0), CreateBarSettings(1, 1) }, //1 second
         };
 
+        public static ColorScheme[] ColorSchemes { get; } =
+        {
+            new Schemes.SchemeRandom()
+        };
+
         private static BarSettings CreateBarSettings(float maxValue, int interval)
         {
             return new BarSettings(maxValue, interval, Color.White, Color.White);
@@ -91,7 +103,7 @@ namespace NewTimer
         /// </summary>
         internal static void RandomizeColorScheme()
         {
-            Color[] color = ColorFactory.GenerateMany(BarSettings.Count);
+            Color[] color = ColorScheme.GenerateMany(BarSettings.Count, MasterRandom).ToArray();
             for (int i = 0; i < BarSettings.Count - 1; i++)
             {
                 BarSettings.Values.ElementAt(i + 1).FillColor = color[i + 1];

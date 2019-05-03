@@ -61,7 +61,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ColorFactory.cs" />
+    <Compile Include="Schemes\SchemeRandom.cs" />
+    <Compile Include="ColorScheme.cs" />
     <Compile Include="Config.cs" />
     <Compile Include="DigitalNumber.cs">
       <SubType>Component</SubType>

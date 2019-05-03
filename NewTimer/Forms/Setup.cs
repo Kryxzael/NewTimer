@@ -24,6 +24,7 @@ namespace NewTimer.Forms
             FormClosing += HandleClose;
             numYear.Minimum = DateTime.Now.Year - 1;
             numYear.Maximum = DateTime.Now.Year + 1;
+            cboxColors.Items.AddRange(Config.ColorSchemes);
             ChkAdv_CheckedChanged(null, null);
 
             foreach (FormParts.Setup.Knob i in tabTime.Controls.Cast<Control>().Where(i => i is FormParts.Setup.Knob))
@@ -36,8 +37,7 @@ namespace NewTimer.Forms
                 i.ValueChanged += (s, e) => CreateSuggestions();
             }
 
-            CreateSuggestions();
-            colorSchemeComboBox1.Items.Add("Hello");
+            CreateSuggestions();            
         }
 
         private void HandleClose(object sender, FormClosingEventArgs e)
@@ -50,6 +50,8 @@ namespace NewTimer.Forms
 
         private void OnClickStart(object sender, MouseEventArgs e)
         {
+            Config.ColorScheme = (ColorScheme)(cboxColors.SelectedItem ?? cboxColors.Items[0]);
+
             if (sender == btnStartTime)
             {
                 Config.StartTimer(new DateTime((int)numYear.Value, knbMonth.Value, knbDay.Value, knbHour.Value, knbMin.Value, knbSec.Value), this);

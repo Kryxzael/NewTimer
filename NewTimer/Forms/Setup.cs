@@ -16,7 +16,7 @@ namespace NewTimer.Forms
         public Setup()
         {
             InitializeComponent();
-            knbHour.Value = DateTime.Now.Hour + 1 % 24;
+            knbHour.Value = (DateTime.Now.Hour + 1) % 24;
 
             knbMonth.ValueChanged += (s, e) => knbDay.MaxValue = DateTime.DaysInMonth((int)numYear.Value, (int)knbMonth.Value);
             btnStartTime.MouseDown += OnClickStart;

@@ -64,5 +64,13 @@ namespace NewTimer.Schemes
                 }
             }
         }
+
+        public override IEnumerable<Color> GenerateForPreview(int count, Random rng)
+        {
+            for (int i = 0; i < count; i++)
+            {
+                yield return Colors[(int)((float)i / count * Colors.Count)];
+            }
+        }
     }
 }

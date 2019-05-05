@@ -76,6 +76,17 @@ namespace NewTimer.Schemes
 
         }
 
+        private IEnumerable<Color> _previewColors;
+        public override IEnumerable<Color> GenerateForPreview(int count, Random rng)
+        {
+            if (_previewColors == null || _previewColors.Count() != count)
+            {
+                _previewColors = GenerateMany(count, rng);
+            }
+
+            return _previewColors;
+        }
+
         /// <summary>
         /// Returns a random number between 0 and 255
         /// </summary>

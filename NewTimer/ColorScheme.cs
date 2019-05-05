@@ -38,6 +38,17 @@ namespace NewTimer
             }
         }
 
+        /// <summary>
+        /// Generates a set amount of colors to be used for the scheme picker
+        /// </summary>
+        /// <param name="count"></param>
+        /// <param name="rng"></param>
+        /// <returns></returns>
+        public virtual IEnumerable<Color> GenerateForPreview(int count, Random rng)
+        {
+            return GenerateMany(count, rng);
+        }
+
         public override string ToString() => Name;
     }
 }

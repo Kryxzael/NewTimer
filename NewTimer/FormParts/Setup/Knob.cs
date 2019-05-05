@@ -7,56 +7,37 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using CircleControl;
 
 namespace NewTimer.FormParts.Setup
 {
-    public partial class Knob : UserControl
+    public partial class Knob : CircleProgressControl
     {
+        public event EventHandler ValueChanged;
+
         public Knob()
         {
             InitializeComponent();
-            lblText.BackColor = Color.Transparent;
-            lblValue.BackColor = Color.Transparent;
-            lblText.MouseDown += (s, e) => OnMouseDown(e);
-            lblValue.MouseDown += (s, e) => OnMouseDown(e);
+            CircleTrackColor = Color.FromArgb(10, 10, 10);
+            Boldness = 15f;
         }
 
-
-        public event EventHandler ValueChanged;
-
-        int _minValue;
+        int _minValue = 0;
         public int MinValue
         {
             get => _minValue;
             set
             {
-                _minValue = Math.Min(MaxValue - 1, value);
-                Value = Value;
+                if (_minValue > MaxValue)
+                {
+                    throw new InvalidOperationException("MinValue cannot be greater than MaxValue");
+                }
+
+                _minValue = value;
+                SetValueClamped(value);
             }
         }
 
-        int _maxValue = 10;
-        public int MaxValue
-        {
-            get => _maxValue;
-            set
-            {
-                _maxValue = Math.Max(MinValue + 1, value);
-                Value = Value;
-            }
-        }
-
-        int _value;
-        public int Value
-        {
-            get => _value;
-            set
-            {
-                _value = Math.Max(MinValue, Math.Min(MaxValue, value));
-                ValueChanged?.Invoke(this, new EventArgs());
-                Refresh();
-            }
-        }
 
         int _step = 1;
         public int Step
@@ -70,7 +51,9 @@ namespace NewTimer.FormParts.Setup
 
         public bool RenderPlussOne { get; set; }
 
-        string _text;
+        public bool ReadOnly { get; set; }
+
+        private string _text;
         [EditorBrowsable(EditorBrowsableState.Always)]
         [Browsable(true)]
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
@@ -80,39 +63,54 @@ namespace NewTimer.FormParts.Setup
             get => _text;
             set
             {
-                lblText.Text = value;
                 _text = value;
-                Refresh();
+                Invalidate();
             }
         }
 
-        public bool ReadOnly { get; set; }
+        private Font _numberFont = new Font(DefaultFont.FontFamily, 32f, FontStyle.Bold);
+        public Font NumberFont
+        {
+            get => _numberFont;
+            set
+            {
+                _numberFont = value ?? throw new ArgumentNullException();
+                Invalidate();
+            }
+        }
 
         protected override void OnPaint(PaintEventArgs e)
         {
             base.OnPaint(e);
-            DrawKnob(e.Graphics);
-        }
-
-        public override void Refresh()
-        {
-            base.Refresh();
-            lblValue.Text = Value.ToString();
-
-        }
-
-        void DrawKnob(Graphics g)
-        {
-            const int W = 10;
-
-            using (Brush bg = new SolidBrush(Color.FromArgb(0x22, 0x22, 0x22)))
-            using (Brush b = new SolidBrush(Color.FromArgb(0x44, 0x44, 0x44)))
-            using (Brush f = new SolidBrush(ForeColor))
+            using (SolidBrush foreBrush = new SolidBrush(ForeColor))
             {
-                g.FillEllipse(b, 0, 0, Width, Height);
-                g.FillPie(f, new Rectangle(0, 0, Width, Height), -90, ((Value - MinValue) / (float)(MaxValue - MinValue + (RenderPlussOne ? 1 : 0))) * 360);
-                g.FillEllipse(bg, W, W, Width - 2 * W, Height - 2 * W);
+                //Draw title
+                e.Graphics.DrawString(
+                    s: Text, 
+                    font: Font, 
+                    brush: foreBrush, 
+                    layoutRectangle: new Rectangle(e.ClipRectangle.X, e.ClipRectangle.Y + e.ClipRectangle.Height / 5, e.ClipRectangle.Width, e.ClipRectangle.Height / 5),
+                    format: new StringFormat() { Alignment = StringAlignment.Center }
+                );
+
+                //Draw number
+                e.Graphics.DrawString(
+                    s: Value.ToString(),
+                    font: NumberFont,
+                    brush: foreBrush,
+                    layoutRectangle: e.ClipRectangle,
+                    format: new StringFormat() { Alignment = StringAlignment.Center, LineAlignment = StringAlignment.Center }
+                );
             }
+
+
+
+        }
+
+        private void SetValueClamped(int value)
+        {
+            Value = Math.Min(Math.Max(MinValue, value), MaxValue);
+            ValueChanged?.Invoke(this, new EventArgs());
         }
 
         protected override void OnMouseDown(MouseEventArgs e)
@@ -124,15 +122,15 @@ namespace NewTimer.FormParts.Setup
 
             if (e.Button == MouseButtons.Left)
             {
-                Value += Step;
+                SetValueClamped((int)Value + Step);
             }
             else if (e.Button == MouseButtons.Right)
             {
-                Value -= Step;
+                SetValueClamped((int)Value - Step);
             }
             else if (e.Button == MouseButtons.Middle)
             {
-                Value = MinValue;
+                SetValueClamped(MinValue);
             }
         }
     }

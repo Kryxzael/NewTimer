@@ -18,7 +18,7 @@ namespace NewTimer.Forms
             InitializeComponent();
             knbHour.Value = DateTime.Now.Hour + 1 % 24;
 
-            knbMonth.ValueChanged += (s, e) => knbDay.MaxValue = DateTime.DaysInMonth((int)numYear.Value, knbMonth.Value);
+            knbMonth.ValueChanged += (s, e) => knbDay.MaxValue = DateTime.DaysInMonth((int)numYear.Value, (int)knbMonth.Value);
             btnStartTime.MouseDown += OnClickStart;
             btnStartDuration.MouseDown += OnClickStart;
             FormClosing += HandleClose;
@@ -59,7 +59,7 @@ namespace NewTimer.Forms
             if (sender == btnStartTime)
             {
                 Config.StartTimer(
-                    new DateTime((int)numYear.Value, knbMonth.Value, knbDay.Value, knbHour.Value, knbMin.Value, knbSec.Value), 
+                    new DateTime((int)numYear.Value, (int)knbMonth.Value, (int)knbDay.Value, (int)knbHour.Value, (int)knbMin.Value, (int)knbSec.Value), 
                     GetSelectedColorScheme(), 
                     this
                 );
@@ -67,7 +67,7 @@ namespace NewTimer.Forms
             else if (sender == btnStartDuration)
             {
                 Config.StartTimer(
-                    DateTime.Now.Add(new TimeSpan(knbDurHour.Value, knbDurMin.Value, knbDurSec.Value)), 
+                    DateTime.Now.Add(new TimeSpan((int)knbDurHour.Value, (int)knbDurMin.Value, (int)knbDurSec.Value)), 
                     GetSelectedColorScheme(), 
                     this
                 );
@@ -79,8 +79,8 @@ namespace NewTimer.Forms
             flwTimeSuggestions.Controls.Clear();
             flwTimeSuggestionsDuration.Controls.Clear();
 
-            int h = knbHour.Value;
-            int m = knbMin.Value;
+            int h = (int)knbHour.Value;
+            int m = (int)knbMin.Value;
 
             //Smart next xx:mm
             if (DateTime.Now.Minute >= m)

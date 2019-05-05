@@ -321,6 +321,10 @@
     <None Include="Resources\colorspecter.png" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\CircleProgressControl\CircleControl\CircleControl.csproj">
+      <Project>{0138df9c-2607-4100-a1de-082edfa94d65}</Project>
+      <Name>CircleControl</Name>
+    </ProjectReference>
     <ProjectReference Include="..\CleanNodeTree\CleanNodeTree\CleanNodeTree.csproj">
       <Project>{c848cfa6-3ede-4ec8-847d-e5149b3d1753}</Project>
       <Name>CleanNodeTree</Name>

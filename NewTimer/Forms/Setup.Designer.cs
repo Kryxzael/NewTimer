@@ -34,24 +34,24 @@
             this.btnLoadDuration = new System.Windows.Forms.Button();
             this.btnSaveDuration = new System.Windows.Forms.Button();
             this.btnStartDuration = new System.Windows.Forms.Button();
+            this.knbDurSec = new NewTimer.FormParts.Setup.Knob();
+            this.knbDurMin = new NewTimer.FormParts.Setup.Knob();
+            this.knbDurHour = new NewTimer.FormParts.Setup.Knob();
             this.tabTime = new System.Windows.Forms.TabPage();
+            this.cboxColors = new NewTimer.FormParts.ColorSchemeComboBox();
             this.flwTimeSuggestions = new System.Windows.Forms.FlowLayoutPanel();
             this.btnLoadCountdown = new System.Windows.Forms.Button();
             this.btnSaveCountdown = new System.Windows.Forms.Button();
             this.btnStartTime = new System.Windows.Forms.Button();
             this.lblYear = new System.Windows.Forms.Label();
             this.numYear = new System.Windows.Forms.NumericUpDown();
-            this.chkAdv = new System.Windows.Forms.CheckBox();
-            this.tabs = new System.Windows.Forms.TabControl();
-            this.cboxColors = new NewTimer.FormParts.ColorSchemeComboBox();
             this.knbMonth = new NewTimer.FormParts.Setup.Knob();
             this.knbDay = new NewTimer.FormParts.Setup.Knob();
+            this.chkAdv = new System.Windows.Forms.CheckBox();
             this.knbSec = new NewTimer.FormParts.Setup.Knob();
             this.knbMin = new NewTimer.FormParts.Setup.Knob();
             this.knbHour = new NewTimer.FormParts.Setup.Knob();
-            this.knbDurSec = new NewTimer.FormParts.Setup.Knob();
-            this.knbDurMin = new NewTimer.FormParts.Setup.Knob();
-            this.knbDurHour = new NewTimer.FormParts.Setup.Knob();
+            this.tabs = new System.Windows.Forms.TabControl();
             this.tabDuration.SuspendLayout();
             this.tabTime.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numYear)).BeginInit();
@@ -117,6 +117,60 @@
             this.btnStartDuration.Text = "Start Countdown";
             this.btnStartDuration.UseVisualStyleBackColor = true;
             // 
+            // knbDurSec
+            // 
+            this.knbDurSec.Boldness = 15F;
+            this.knbDurSec.CircleTrackColor = System.Drawing.Color.FromArgb(((int)(((byte)(10)))), ((int)(((byte)(10)))), ((int)(((byte)(10)))));
+            this.knbDurSec.ForeColor = System.Drawing.Color.Gold;
+            this.knbDurSec.Location = new System.Drawing.Point(245, 6);
+            this.knbDurSec.MaxValue = 59F;
+            this.knbDurSec.MinValue = 0;
+            this.knbDurSec.Name = "knbDurSec";
+            this.knbDurSec.NumberFont = new System.Drawing.Font("Microsoft Sans Serif", 32F, System.Drawing.FontStyle.Bold);
+            this.knbDurSec.ReadOnly = false;
+            this.knbDurSec.RenderPlussOne = true;
+            this.knbDurSec.Size = new System.Drawing.Size(140, 140);
+            this.knbDurSec.Step = 1;
+            this.knbDurSec.TabIndex = 2;
+            this.knbDurSec.Text = "Seconds";
+            this.knbDurSec.Value = 0F;
+            // 
+            // knbDurMin
+            // 
+            this.knbDurMin.Boldness = 15F;
+            this.knbDurMin.CircleTrackColor = System.Drawing.Color.FromArgb(((int)(((byte)(10)))), ((int)(((byte)(10)))), ((int)(((byte)(10)))));
+            this.knbDurMin.ForeColor = System.Drawing.Color.Blue;
+            this.knbDurMin.Location = new System.Drawing.Point(119, 6);
+            this.knbDurMin.MaxValue = 59F;
+            this.knbDurMin.MinValue = 0;
+            this.knbDurMin.Name = "knbDurMin";
+            this.knbDurMin.NumberFont = new System.Drawing.Font("Microsoft Sans Serif", 32F, System.Drawing.FontStyle.Bold);
+            this.knbDurMin.ReadOnly = false;
+            this.knbDurMin.RenderPlussOne = true;
+            this.knbDurMin.Size = new System.Drawing.Size(120, 120);
+            this.knbDurMin.Step = 1;
+            this.knbDurMin.TabIndex = 1;
+            this.knbDurMin.Text = "Minutes";
+            this.knbDurMin.Value = 0F;
+            // 
+            // knbDurHour
+            // 
+            this.knbDurHour.Boldness = 15F;
+            this.knbDurHour.CircleTrackColor = System.Drawing.Color.FromArgb(((int)(((byte)(10)))), ((int)(((byte)(10)))), ((int)(((byte)(10)))));
+            this.knbDurHour.ForeColor = System.Drawing.Color.Red;
+            this.knbDurHour.Location = new System.Drawing.Point(8, 6);
+            this.knbDurHour.MaxValue = 48F;
+            this.knbDurHour.MinValue = 0;
+            this.knbDurHour.Name = "knbDurHour";
+            this.knbDurHour.NumberFont = new System.Drawing.Font("Microsoft Sans Serif", 32F, System.Drawing.FontStyle.Bold);
+            this.knbDurHour.ReadOnly = false;
+            this.knbDurHour.RenderPlussOne = false;
+            this.knbDurHour.Size = new System.Drawing.Size(100, 100);
+            this.knbDurHour.Step = 1;
+            this.knbDurHour.TabIndex = 0;
+            this.knbDurHour.Text = "Hours";
+            this.knbDurHour.Value = 0F;
+            // 
             // tabTime
             // 
             this.tabTime.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(17)))), ((int)(((byte)(17)))), ((int)(((byte)(17)))));
@@ -139,6 +193,15 @@
             this.tabTime.Size = new System.Drawing.Size(396, 289);
             this.tabTime.TabIndex = 0;
             this.tabTime.Text = "Set time";
+            // 
+            // cboxColors
+            // 
+            this.cboxColors.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
+            this.cboxColors.FormattingEnabled = true;
+            this.cboxColors.Location = new System.Drawing.Point(315, 148);
+            this.cboxColors.Name = "cboxColors";
+            this.cboxColors.Size = new System.Drawing.Size(73, 21);
+            this.cboxColors.TabIndex = 13;
             // 
             // flwTimeSuggestions
             // 
@@ -217,6 +280,44 @@
             0});
             this.numYear.Visible = false;
             // 
+            // knbMonth
+            // 
+            this.knbMonth.Boldness = 15F;
+            this.knbMonth.CircleTrackColor = System.Drawing.Color.FromArgb(((int)(((byte)(10)))), ((int)(((byte)(10)))), ((int)(((byte)(10)))));
+            this.knbMonth.ForeColor = System.Drawing.Color.MediumVioletRed;
+            this.knbMonth.Location = new System.Drawing.Point(134, 132);
+            this.knbMonth.MaxValue = 12F;
+            this.knbMonth.MinValue = 1;
+            this.knbMonth.Name = "knbMonth";
+            this.knbMonth.NumberFont = new System.Drawing.Font("Microsoft Sans Serif", 32F, System.Drawing.FontStyle.Bold);
+            this.knbMonth.ReadOnly = false;
+            this.knbMonth.RenderPlussOne = false;
+            this.knbMonth.Size = new System.Drawing.Size(120, 120);
+            this.knbMonth.Step = 1;
+            this.knbMonth.TabIndex = 5;
+            this.knbMonth.Text = "Month";
+            this.knbMonth.Value = 1F;
+            this.knbMonth.Visible = false;
+            // 
+            // knbDay
+            // 
+            this.knbDay.Boldness = 15F;
+            this.knbDay.CircleTrackColor = System.Drawing.Color.FromArgb(((int)(((byte)(10)))), ((int)(((byte)(10)))), ((int)(((byte)(10)))));
+            this.knbDay.ForeColor = System.Drawing.Color.SeaGreen;
+            this.knbDay.Location = new System.Drawing.Point(8, 132);
+            this.knbDay.MaxValue = 31F;
+            this.knbDay.MinValue = 1;
+            this.knbDay.Name = "knbDay";
+            this.knbDay.NumberFont = new System.Drawing.Font("Microsoft Sans Serif", 32F, System.Drawing.FontStyle.Bold);
+            this.knbDay.ReadOnly = false;
+            this.knbDay.RenderPlussOne = false;
+            this.knbDay.Size = new System.Drawing.Size(120, 120);
+            this.knbDay.Step = 1;
+            this.knbDay.TabIndex = 4;
+            this.knbDay.Text = "Day";
+            this.knbDay.Value = 1F;
+            this.knbDay.Visible = false;
+            // 
             // chkAdv
             // 
             this.chkAdv.AutoSize = true;
@@ -230,6 +331,61 @@
             this.chkAdv.UseVisualStyleBackColor = true;
             this.chkAdv.CheckedChanged += new System.EventHandler(this.ChkAdv_CheckedChanged);
             // 
+            // knbSec
+            // 
+            this.knbSec.Boldness = 15F;
+            this.knbSec.CircleTrackColor = System.Drawing.Color.FromArgb(((int)(((byte)(10)))), ((int)(((byte)(10)))), ((int)(((byte)(10)))));
+            this.knbSec.ForeColor = System.Drawing.Color.DarkKhaki;
+            this.knbSec.Location = new System.Drawing.Point(260, 6);
+            this.knbSec.MaxValue = 59F;
+            this.knbSec.MinValue = 0;
+            this.knbSec.Name = "knbSec";
+            this.knbSec.NumberFont = new System.Drawing.Font("Microsoft Sans Serif", 32F, System.Drawing.FontStyle.Bold);
+            this.knbSec.ReadOnly = false;
+            this.knbSec.RenderPlussOne = true;
+            this.knbSec.Size = new System.Drawing.Size(120, 120);
+            this.knbSec.Step = 1;
+            this.knbSec.TabIndex = 2;
+            this.knbSec.Text = "Second";
+            this.knbSec.Value = 0F;
+            this.knbSec.Visible = false;
+            // 
+            // knbMin
+            // 
+            this.knbMin.Boldness = 15F;
+            this.knbMin.CircleTrackColor = System.Drawing.Color.FromArgb(((int)(((byte)(10)))), ((int)(((byte)(10)))), ((int)(((byte)(10)))));
+            this.knbMin.ForeColor = System.Drawing.Color.DarkCyan;
+            this.knbMin.Location = new System.Drawing.Point(134, 6);
+            this.knbMin.MaxValue = 59F;
+            this.knbMin.MinValue = 0;
+            this.knbMin.Name = "knbMin";
+            this.knbMin.NumberFont = new System.Drawing.Font("Microsoft Sans Serif", 32F, System.Drawing.FontStyle.Bold);
+            this.knbMin.ReadOnly = false;
+            this.knbMin.RenderPlussOne = true;
+            this.knbMin.Size = new System.Drawing.Size(120, 120);
+            this.knbMin.Step = 5;
+            this.knbMin.TabIndex = 1;
+            this.knbMin.Text = "Minute";
+            this.knbMin.Value = 0F;
+            // 
+            // knbHour
+            // 
+            this.knbHour.Boldness = 15F;
+            this.knbHour.CircleTrackColor = System.Drawing.Color.FromArgb(((int)(((byte)(10)))), ((int)(((byte)(10)))), ((int)(((byte)(10)))));
+            this.knbHour.ForeColor = System.Drawing.Color.Firebrick;
+            this.knbHour.Location = new System.Drawing.Point(8, 6);
+            this.knbHour.MaxValue = 23F;
+            this.knbHour.MinValue = 0;
+            this.knbHour.Name = "knbHour";
+            this.knbHour.NumberFont = new System.Drawing.Font("Microsoft Sans Serif", 32F, System.Drawing.FontStyle.Bold);
+            this.knbHour.ReadOnly = false;
+            this.knbHour.RenderPlussOne = true;
+            this.knbHour.Size = new System.Drawing.Size(120, 120);
+            this.knbHour.Step = 1;
+            this.knbHour.TabIndex = 0;
+            this.knbHour.Text = "Hour";
+            this.knbHour.Value = 0F;
+            // 
             // tabs
             // 
             this.tabs.Controls.Add(this.tabTime);
@@ -239,138 +395,6 @@
             this.tabs.SelectedIndex = 0;
             this.tabs.Size = new System.Drawing.Size(404, 315);
             this.tabs.TabIndex = 0;
-            // 
-            // colorSchemeComboBox1
-            // 
-            this.cboxColors.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
-            this.cboxColors.FormattingEnabled = true;
-            this.cboxColors.Location = new System.Drawing.Point(315, 148);
-            this.cboxColors.Name = "colorSchemeComboBox1";
-            this.cboxColors.Size = new System.Drawing.Size(73, 21);
-            this.cboxColors.TabIndex = 13;
-            // 
-            // knbMonth
-            // 
-            this.knbMonth.ForeColor = System.Drawing.Color.MediumVioletRed;
-            this.knbMonth.Location = new System.Drawing.Point(134, 132);
-            this.knbMonth.MaxValue = 12;
-            this.knbMonth.MinValue = 1;
-            this.knbMonth.Name = "knbMonth";
-            this.knbMonth.ReadOnly = false;
-            this.knbMonth.RenderPlussOne = false;
-            this.knbMonth.Size = new System.Drawing.Size(120, 120);
-            this.knbMonth.Step = 1;
-            this.knbMonth.TabIndex = 5;
-            this.knbMonth.Text = "Month";
-            this.knbMonth.Value = 1;
-            this.knbMonth.Visible = false;
-            // 
-            // knbDay
-            // 
-            this.knbDay.ForeColor = System.Drawing.Color.SeaGreen;
-            this.knbDay.Location = new System.Drawing.Point(8, 132);
-            this.knbDay.MaxValue = 31;
-            this.knbDay.MinValue = 1;
-            this.knbDay.Name = "knbDay";
-            this.knbDay.ReadOnly = false;
-            this.knbDay.RenderPlussOne = false;
-            this.knbDay.Size = new System.Drawing.Size(120, 120);
-            this.knbDay.Step = 1;
-            this.knbDay.TabIndex = 4;
-            this.knbDay.Text = "Day";
-            this.knbDay.Value = 1;
-            this.knbDay.Visible = false;
-            // 
-            // knbSec
-            // 
-            this.knbSec.ForeColor = System.Drawing.Color.DarkKhaki;
-            this.knbSec.Location = new System.Drawing.Point(260, 6);
-            this.knbSec.MaxValue = 59;
-            this.knbSec.MinValue = 0;
-            this.knbSec.Name = "knbSec";
-            this.knbSec.ReadOnly = false;
-            this.knbSec.RenderPlussOne = true;
-            this.knbSec.Size = new System.Drawing.Size(120, 120);
-            this.knbSec.Step = 1;
-            this.knbSec.TabIndex = 2;
-            this.knbSec.Text = "Second";
-            this.knbSec.Value = 0;
-            this.knbSec.Visible = false;
-            // 
-            // knbMin
-            // 
-            this.knbMin.ForeColor = System.Drawing.Color.DarkCyan;
-            this.knbMin.Location = new System.Drawing.Point(134, 6);
-            this.knbMin.MaxValue = 59;
-            this.knbMin.MinValue = 0;
-            this.knbMin.Name = "knbMin";
-            this.knbMin.ReadOnly = false;
-            this.knbMin.RenderPlussOne = true;
-            this.knbMin.Size = new System.Drawing.Size(120, 120);
-            this.knbMin.Step = 5;
-            this.knbMin.TabIndex = 1;
-            this.knbMin.Text = "Minute";
-            this.knbMin.Value = 0;
-            // 
-            // knbHour
-            // 
-            this.knbHour.ForeColor = System.Drawing.Color.Firebrick;
-            this.knbHour.Location = new System.Drawing.Point(8, 6);
-            this.knbHour.MaxValue = 23;
-            this.knbHour.MinValue = 0;
-            this.knbHour.Name = "knbHour";
-            this.knbHour.ReadOnly = false;
-            this.knbHour.RenderPlussOne = true;
-            this.knbHour.Size = new System.Drawing.Size(120, 120);
-            this.knbHour.Step = 1;
-            this.knbHour.TabIndex = 0;
-            this.knbHour.Text = "Hour";
-            this.knbHour.Value = 0;
-            // 
-            // knbDurSec
-            // 
-            this.knbDurSec.ForeColor = System.Drawing.Color.Gold;
-            this.knbDurSec.Location = new System.Drawing.Point(245, 6);
-            this.knbDurSec.MaxValue = 59;
-            this.knbDurSec.MinValue = 0;
-            this.knbDurSec.Name = "knbDurSec";
-            this.knbDurSec.ReadOnly = false;
-            this.knbDurSec.RenderPlussOne = true;
-            this.knbDurSec.Size = new System.Drawing.Size(140, 140);
-            this.knbDurSec.Step = 1;
-            this.knbDurSec.TabIndex = 2;
-            this.knbDurSec.Text = "Seconds";
-            this.knbDurSec.Value = 0;
-            // 
-            // knbDurMin
-            // 
-            this.knbDurMin.ForeColor = System.Drawing.Color.Blue;
-            this.knbDurMin.Location = new System.Drawing.Point(119, 6);
-            this.knbDurMin.MaxValue = 59;
-            this.knbDurMin.MinValue = 0;
-            this.knbDurMin.Name = "knbDurMin";
-            this.knbDurMin.ReadOnly = false;
-            this.knbDurMin.RenderPlussOne = true;
-            this.knbDurMin.Size = new System.Drawing.Size(120, 120);
-            this.knbDurMin.Step = 1;
-            this.knbDurMin.TabIndex = 1;
-            this.knbDurMin.Text = "Minutes";
-            this.knbDurMin.Value = 0;
-            // 
-            // knbDurHour
-            // 
-            this.knbDurHour.ForeColor = System.Drawing.Color.Red;
-            this.knbDurHour.Location = new System.Drawing.Point(8, 6);
-            this.knbDurHour.MaxValue = 48;
-            this.knbDurHour.MinValue = 0;
-            this.knbDurHour.Name = "knbDurHour";
-            this.knbDurHour.ReadOnly = false;
-            this.knbDurHour.RenderPlussOne = false;
-            this.knbDurHour.Size = new System.Drawing.Size(100, 100);
-            this.knbDurHour.Step = 1;
-            this.knbDurHour.TabIndex = 0;
-            this.knbDurHour.Text = "Hours";
-            this.knbDurHour.Value = 0;
             // 
             // Setup
             // 

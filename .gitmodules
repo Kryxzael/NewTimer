@@ -4,3 +4,6 @@
 [submodule "SegmentedBarControl"]
 	path = SegmentedBarControl
 	url = "https://github.com/Kryxzael/SegmentedBarControl.git"
+[submodule "CircleProgressControl"]
+	path = CircleProgressControl
+	url = https://github.com/Kryxzael/CircleProgressControl

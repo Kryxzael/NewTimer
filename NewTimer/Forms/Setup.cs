@@ -233,6 +233,8 @@ namespace NewTimer.Forms
                 targetNode.Add("Seconds", knbDurSec.Value);
             }
 
+            node.Add("ColorScheme", cboxColors.SelectedIndex);
+
             try
             {
                 node.ToFile(dialog.FileName);
@@ -309,6 +311,8 @@ namespace NewTimer.Forms
                 {
                     throw new ArgumentOutOfRangeException("Invalid preset type!");
                 }
+
+                cboxColors.SelectedIndex = node["ColorScheme"]?.Int ?? 0;
 
 
             }

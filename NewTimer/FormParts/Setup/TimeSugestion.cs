@@ -53,7 +53,7 @@ namespace NewTimer.FormParts.Setup
         {
             base.OnClick(e);
 
-            Config.StartTimer(Target, ParentForm);
+            Config.StartTimer(Target, (ParentForm as Forms.Setup).GetSelectedColorScheme(), ParentForm);
         }
     }
 }

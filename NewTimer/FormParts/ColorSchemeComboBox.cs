@@ -32,10 +32,12 @@ namespace NewTimer.FormParts
 
                 for (int i = 0; i < previewColors.Length; i++)
                 {
-                    Rectangle area = new Rectangle(new Point(i * (cellSize.Width + MARGIN), MARGIN), cellSize);
+                    Rectangle area = new Rectangle(new Point(i * (cellSize.Width + MARGIN), e.Bounds.Top + MARGIN), cellSize);
 
                     e.Graphics.FillRectangle(previewColors[i], area);
                     e.Graphics.DrawRectangle(Pens.Black, area);
+
+                    previewColors[i].Dispose();
                 }
 
                 e.DrawFocusRectangle();

@@ -40,6 +40,11 @@ namespace NewTimer.Forms
             CreateSuggestions();            
         }
 
+        public ColorScheme GetSelectedColorScheme()
+        {
+            return (ColorScheme)(cboxColors.SelectedItem ?? cboxColors.Items[0]);
+        }
+
         private void HandleClose(object sender, FormClosingEventArgs e)
         {
             if (DialogResult == DialogResult.None)
@@ -50,15 +55,21 @@ namespace NewTimer.Forms
 
         private void OnClickStart(object sender, MouseEventArgs e)
         {
-            Config.ColorScheme = (ColorScheme)(cboxColors.SelectedItem ?? cboxColors.Items[0]);
-
             if (sender == btnStartTime)
             {
-                Config.StartTimer(new DateTime((int)numYear.Value, knbMonth.Value, knbDay.Value, knbHour.Value, knbMin.Value, knbSec.Value), this);
+                Config.StartTimer(
+                    new DateTime((int)numYear.Value, knbMonth.Value, knbDay.Value, knbHour.Value, knbMin.Value, knbSec.Value), 
+                    GetSelectedColorScheme(), 
+                    this
+                );
             }
             else if (sender == btnStartDuration)
             {
-                Config.StartTimer(DateTime.Now.Add(new TimeSpan(knbDurHour.Value, knbDurMin.Value, knbDurSec.Value)), this);
+                Config.StartTimer(
+                    DateTime.Now.Add(new TimeSpan(knbDurHour.Value, knbDurMin.Value, knbDurSec.Value)), 
+                    GetSelectedColorScheme(), 
+                    this
+                );
             }
         }
 

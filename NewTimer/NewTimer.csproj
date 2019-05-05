@@ -62,6 +62,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ColorConverter.cs" />
+    <Compile Include="Schemes\SchemeCustom.cs" />
     <Compile Include="Schemes\SchemeRandom.cs" />
     <Compile Include="ColorScheme.cs" />
     <Compile Include="Config.cs" />

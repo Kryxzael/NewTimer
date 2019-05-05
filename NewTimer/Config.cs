@@ -99,6 +99,70 @@ namespace NewTimer
             new Schemes.SchemeSingle("Aqua", Color.Aqua),
             new Schemes.SchemeSingle("Purples", Color.Purple),
             new Schemes.SchemeSingle("Gray", Color.White),
+
+            new Schemes.SchemeCustom("Positive", Schemes.SchemeCustom.LoopType.Ceiling, 
+                /*  1s */ Color.Lime,
+                /* 10s */ Color.LimeGreen,
+                /*  1m */ Color.Green,
+                /*  5s */ Color.GreenYellow,
+                /* 15s */ Color.Gold,
+                /*  1h */ Color.OrangeRed,
+                /*  2h */ Color.Red,
+                /*  3h */ Color.FromArgb(0xE0, 0, 0),
+                /*  1d */ Color.FromArgb(0xC0, 0, 0),
+                /*  7d */ Color.FromArgb(0xA0, 0, 0),
+                /* 30d */ Color.FromArgb(0x80, 0, 0),
+                /*  1y */ Color.FromArgb(0x40, 0, 0),
+                /* >1y */ Color.FromArgb(0x20, 0, 0)
+            ),
+
+            new Schemes.SchemeCustom("Negative", Schemes.SchemeCustom.LoopType.Ceiling,
+                /*  1s */ Color.DarkRed,
+                /* 10s */ Color.Red,
+                /*  1m */ Color.OrangeRed,
+                /*  5m */ Color.Orange,
+                /* 15m */ Color.Gold,
+                /*  1h */ Color.YellowGreen,
+                /*  2h */ Color.Green,
+                /*  3h */ Color.LimeGreen,
+                /*  1d */ Color.Lime,
+                /*  7d */ Color.FromArgb(0x20, 0xFF, 0x20),
+                /* 30d */ Color.FromArgb(0x40, 0xFF, 0x40),
+                /*  1y */ Color.FromArgb(0x60, 0xFF, 0x60),
+                /* >1y */ Color.FromArgb(0x80, 0xFF, 0x80)
+            ),
+
+            new Schemes.SchemeCustom("Long Pos", Schemes.SchemeCustom.LoopType.Ceiling,
+                /*  1s */ Color.White,
+                /* 10s */ Color.FromArgb(0x4F, 0xFF, 0x4F),
+                /*  1m */ Color.FromArgb(0x8F, 0x8F, 0x8F),
+                /*  5m */ Color.FromArgb(0xBF, 0x8F, 0xBF),
+                /* 15m */ Color.Lime,
+                /*  1h */ Color.LimeGreen,
+                /*  2h */ Color.GreenYellow,
+                /*  3h */ Color.Green,
+                /*  1d */ Color.Gold,
+                /*  7d */ Color.OrangeRed,
+                /* 30d */ Color.Red,
+                /*  1y */ Color.DarkRed,
+                /* >1y */ Color.Black
+            ),
+
+            new Schemes.SchemeCustom("Long Neg", Schemes.SchemeCustom.LoopType.Ceiling,
+                /*  1s */ Color.Black,
+                /* 10s */ Color.FromArgb(0x4F, 0x00, 0x00),
+                /*  1m */ Color.FromArgb(0x8F, 0x00, 0x00),
+                /*  5m */ Color.FromArgb(0xBF, 0x00, 0x00),
+                /* 15m */ Color.Red,
+                /*  1h */ Color.FromArgb(0xFF, 0x2F, 0x00),
+                /*  2h */ Color.FromArgb(0xFF, 0x4F, 0x00),
+                /*  3h */ Color.FromArgb(0xFF, 0x8F, 0x00),
+                /*  1d */ Color.FromArgb(0xFF, 0xBF, 0x00),
+                /*  7d */ Color.Gold,
+                /* 30d */ Color.Green,
+                /*  1y */ Color.Lime,
+                /* >1y */ Color.White
+            )
         };
 
         private static BarSettings CreateBarSettings(float maxValue, int interval)
@@ -114,8 +178,8 @@ namespace NewTimer
             Color[] color = ColorScheme.GenerateMany(BarSettings.Count, MasterRandom).ToArray();
             for (int i = 0; i < BarSettings.Count - 1; i++)
             {
-                BarSettings.Values.ElementAt(i + 1).FillColor = color[i + 1];
-                BarSettings.Values.ElementAt(i + 1).OverflowColor = color[i];
+                BarSettings.Values.ElementAt(BarSettings.Count - (i + 1)).FillColor = color[i];
+                BarSettings.Values.ElementAt(BarSettings.Count - (i + 1)).OverflowColor = color[i + 1];
             }
         }
 

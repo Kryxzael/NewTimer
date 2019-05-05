@@ -43,6 +43,7 @@
             this.numYear = new System.Windows.Forms.NumericUpDown();
             this.chkAdv = new System.Windows.Forms.CheckBox();
             this.tabs = new System.Windows.Forms.TabControl();
+            this.cboxColors = new NewTimer.FormParts.ColorSchemeComboBox();
             this.knbMonth = new NewTimer.FormParts.Setup.Knob();
             this.knbDay = new NewTimer.FormParts.Setup.Knob();
             this.knbSec = new NewTimer.FormParts.Setup.Knob();
@@ -119,6 +120,7 @@
             // tabTime
             // 
             this.tabTime.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(17)))), ((int)(((byte)(17)))), ((int)(((byte)(17)))));
+            this.tabTime.Controls.Add(this.cboxColors);
             this.tabTime.Controls.Add(this.flwTimeSuggestions);
             this.tabTime.Controls.Add(this.btnLoadCountdown);
             this.tabTime.Controls.Add(this.btnSaveCountdown);
@@ -194,7 +196,7 @@
             // 
             // numYear
             // 
-            this.numYear.Location = new System.Drawing.Point(260, 148);
+            this.numYear.Location = new System.Drawing.Point(263, 148);
             this.numYear.Maximum = new decimal(new int[] {
             9999,
             0,
@@ -206,7 +208,7 @@
             0,
             0});
             this.numYear.Name = "numYear";
-            this.numYear.Size = new System.Drawing.Size(128, 20);
+            this.numYear.Size = new System.Drawing.Size(46, 20);
             this.numYear.TabIndex = 6;
             this.numYear.Value = new decimal(new int[] {
             1,
@@ -237,6 +239,15 @@
             this.tabs.SelectedIndex = 0;
             this.tabs.Size = new System.Drawing.Size(404, 315);
             this.tabs.TabIndex = 0;
+            // 
+            // colorSchemeComboBox1
+            // 
+            this.cboxColors.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
+            this.cboxColors.FormattingEnabled = true;
+            this.cboxColors.Location = new System.Drawing.Point(315, 148);
+            this.cboxColors.Name = "colorSchemeComboBox1";
+            this.cboxColors.Size = new System.Drawing.Size(73, 21);
+            this.cboxColors.TabIndex = 13;
             // 
             // knbMonth
             // 
@@ -408,5 +419,6 @@
         internal System.Windows.Forms.Button btnStartTime;
         private System.Windows.Forms.FlowLayoutPanel flwTimeSuggestions;
         private System.Windows.Forms.FlowLayoutPanel flwTimeSuggestionsDuration;
+        private FormParts.ColorSchemeComboBox cboxColors;
     }
 }

@@ -24,6 +24,7 @@ namespace NewTimer.Forms
             FormClosing += HandleClose;
             numYear.Minimum = DateTime.Now.Year - 1;
             numYear.Maximum = DateTime.Now.Year + 1;
+            cboxColors.Items.AddRange(Config.ColorSchemes);
             ChkAdv_CheckedChanged(null, null);
 
             foreach (FormParts.Setup.Knob i in tabTime.Controls.Cast<Control>().Where(i => i is FormParts.Setup.Knob))
@@ -37,6 +38,12 @@ namespace NewTimer.Forms
             }
 
             CreateSuggestions();
+            cboxColors.SelectedIndex = 0;
+        }
+
+        public ColorScheme GetSelectedColorScheme()
+        {
+            return (ColorScheme)(cboxColors.SelectedItem ?? cboxColors.Items[0]);
         }
 
         private void HandleClose(object sender, FormClosingEventArgs e)
@@ -51,11 +58,19 @@ namespace NewTimer.Forms
         {
             if (sender == btnStartTime)
             {
-                Config.StartTimer(new DateTime((int)numYear.Value, knbMonth.Value, knbDay.Value, knbHour.Value, knbMin.Value, knbSec.Value), this);
+                Config.StartTimer(
+                    new DateTime((int)numYear.Value, knbMonth.Value, knbDay.Value, knbHour.Value, knbMin.Value, knbSec.Value), 
+                    GetSelectedColorScheme(), 
+                    this
+                );
             }
             else if (sender == btnStartDuration)
             {
-                Config.StartTimer(DateTime.Now.Add(new TimeSpan(knbDurHour.Value, knbDurMin.Value, knbDurSec.Value)), this);
+                Config.StartTimer(
+                    DateTime.Now.Add(new TimeSpan(knbDurHour.Value, knbDurMin.Value, knbDurSec.Value)), 
+                    GetSelectedColorScheme(), 
+                    this
+                );
             }
         }
 

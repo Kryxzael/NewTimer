@@ -17,7 +17,7 @@ namespace NewTimer.FormParts.Setup
         /// <summary>
         /// Gets or sets the time this sugestion button will target when clicked
         /// </summary>
-        public DateTime Target;
+        public Func<DateTime> GetTarget;
 
         public TimeSugestion()
         {
@@ -25,10 +25,10 @@ namespace NewTimer.FormParts.Setup
             Size = new Size(105, 25);
         }
 
-        public TimeSugestion(string text, DateTime target) : this()
+        public TimeSugestion(string text, Func<DateTime> getTarget) : this()
         {
             Text = text;
-            Target = target;
+            GetTarget = getTarget;
         }
 
         protected override void OnPaint(PaintEventArgs e)
@@ -53,7 +53,7 @@ namespace NewTimer.FormParts.Setup
         {
             base.OnClick(e);
 
-            Config.StartTimer(Target, (ParentForm as Forms.Setup).GetSelectedColorScheme(), ParentForm);
+            Config.StartTimer(GetTarget(), (ParentForm as Forms.Setup).GetSelectedColorScheme(), ParentForm);
         }
     }
 }

@@ -126,32 +126,32 @@ namespace NewTimer.Forms
                     break;
             }
 
-            createTimeDuration("30s", DateTime.Now.AddSeconds(30));
-            createTimeDuration("1m", DateTime.Now.AddMinutes(1));
-            createTimeDuration("3m", DateTime.Now.AddMinutes(3));
-            createTimeDuration("5m", DateTime.Now.AddMinutes(5));
-            createTimeDuration("10m", DateTime.Now.AddMinutes(10));
-            createTimeDuration("15m", DateTime.Now.AddMinutes(15));
-            createTimeDuration("20m", DateTime.Now.AddMinutes(20));
-            createTimeDuration("30m", DateTime.Now.AddMinutes(30));
-            createTimeDuration("45m", DateTime.Now.AddMinutes(45));
-            createTimeDuration("1h", DateTime.Now.AddHours(1));
-            createTimeDuration("2h", DateTime.Now.AddHours(2));
-            createTimeDuration("3h", DateTime.Now.AddHours(3));
+            createTimeDuration("30s", new TimeSpan(0, 0, 30));
+            createTimeDuration("1m", new TimeSpan(0, 1, 0));
+            createTimeDuration("3m", new TimeSpan(0, 3, 0));
+            createTimeDuration("5m", new TimeSpan(0, 5, 0));
+            createTimeDuration("10m", new TimeSpan(0, 10, 0));
+            createTimeDuration("15m", new TimeSpan(0, 15, 0));
+            createTimeDuration("20m", new TimeSpan(0, 20, 0));
+            createTimeDuration("30m", new TimeSpan(0, 30, 0));
+            createTimeDuration("45m", new TimeSpan(0, 45, 0));
+            createTimeDuration("1h", new TimeSpan(1, 0, 0));
+            createTimeDuration("2h", new TimeSpan(2, 0, 0));
+            createTimeDuration("3h", new TimeSpan(3, 0, 0));
 
             void createTime(DateTime target)
             {
-                flwTimeSuggestions.Controls.Add(new FormParts.Setup.TimeSugestion(target.ToShortTimeString(), target));
+                flwTimeSuggestions.Controls.Add(new FormParts.Setup.TimeSugestion(target.ToShortTimeString(), () => target));
             }
 
             void createTimeWithText(string text, DateTime target)
             {
-                flwTimeSuggestions.Controls.Add(new FormParts.Setup.TimeSugestion(text, target));
+                flwTimeSuggestions.Controls.Add(new FormParts.Setup.TimeSugestion(text, () => target));
             }
 
-            void createTimeDuration(string text, DateTime target)
+            void createTimeDuration(string text, TimeSpan duration)
             {
-                flwTimeSuggestionsDuration.Controls.Add(new FormParts.Setup.TimeSugestion(text, target));
+                flwTimeSuggestionsDuration.Controls.Add(new FormParts.Setup.TimeSugestion(text, () => DateTime.Now + duration));
             }
         }
 

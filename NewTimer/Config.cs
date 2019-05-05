@@ -90,7 +90,15 @@ namespace NewTimer
 
         public static ColorScheme[] ColorSchemes { get; } =
         {
-            new Schemes.SchemeRandom()
+            new Schemes.SchemeRandom(),
+            new Schemes.SchemeSingle("Reds", Color.Red),
+            new Schemes.SchemeSingle("Oranges", Color.Orange),
+            new Schemes.SchemeSingle("Yellows", Color.Yellow),
+            new Schemes.SchemeSingle("Greens", Color.LimeGreen),
+            new Schemes.SchemeSingle("Blues", Color.Blue),
+            new Schemes.SchemeSingle("Aqua", Color.Aqua),
+            new Schemes.SchemeSingle("Purples", Color.Purple),
+            new Schemes.SchemeSingle("Gray", Color.White),
         };
 
         private static BarSettings CreateBarSettings(float maxValue, int interval)
@@ -116,9 +124,10 @@ namespace NewTimer
         /// </summary>
         /// <param name="target">Target time</param>
         /// <param name="closingForm">Form that will be closed, this should be the settings form</param>
-        public static void StartTimer(DateTime target, Form closingForm = null)
+        public static void StartTimer(DateTime target, ColorScheme colorScheme, Form closingForm = null)
         {
             Target = target;
+            ColorScheme = colorScheme;
 
             if (closingForm != null)
             {

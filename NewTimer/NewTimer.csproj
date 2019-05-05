@@ -61,6 +61,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ColorConverter.cs" />
     <Compile Include="Schemes\SchemeRandom.cs" />
     <Compile Include="ColorScheme.cs" />
     <Compile Include="Config.cs" />
@@ -143,6 +144,8 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Schemes\SchemeGradient.cs" />
+    <Compile Include="Schemes\SchemeSingle.cs" />
     <Compile Include="TaskbarIconHelper.cs" />
     <Compile Include="TaskbarUtility.cs" />
     <Compile Include="TimerHandler.cs" />

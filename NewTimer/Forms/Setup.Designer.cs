@@ -38,7 +38,6 @@
             this.knbDurMin = new NewTimer.FormParts.Setup.Knob();
             this.knbDurHour = new NewTimer.FormParts.Setup.Knob();
             this.tabTime = new System.Windows.Forms.TabPage();
-            this.cboxColors = new NewTimer.FormParts.ColorSchemeComboBox();
             this.flwTimeSuggestions = new System.Windows.Forms.FlowLayoutPanel();
             this.btnLoadCountdown = new System.Windows.Forms.Button();
             this.btnSaveCountdown = new System.Windows.Forms.Button();
@@ -52,6 +51,7 @@
             this.knbMin = new NewTimer.FormParts.Setup.Knob();
             this.knbHour = new NewTimer.FormParts.Setup.Knob();
             this.tabs = new System.Windows.Forms.TabControl();
+            this.cboxColors = new NewTimer.FormParts.ColorSchemeComboBox();
             this.tabDuration.SuspendLayout();
             this.tabTime.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numYear)).BeginInit();
@@ -129,7 +129,7 @@
             this.knbDurSec.NumberFont = new System.Drawing.Font("Microsoft Sans Serif", 32F, System.Drawing.FontStyle.Bold);
             this.knbDurSec.ReadOnly = false;
             this.knbDurSec.RenderPlussOne = true;
-            this.knbDurSec.Size = new System.Drawing.Size(140, 140);
+            this.knbDurSec.Size = new System.Drawing.Size(130, 130);
             this.knbDurSec.Step = 1;
             this.knbDurSec.TabIndex = 2;
             this.knbDurSec.Text = "Seconds";
@@ -165,7 +165,7 @@
             this.knbDurHour.NumberFont = new System.Drawing.Font("Microsoft Sans Serif", 32F, System.Drawing.FontStyle.Bold);
             this.knbDurHour.ReadOnly = false;
             this.knbDurHour.RenderPlussOne = false;
-            this.knbDurHour.Size = new System.Drawing.Size(100, 100);
+            this.knbDurHour.Size = new System.Drawing.Size(110, 110);
             this.knbDurHour.Step = 1;
             this.knbDurHour.TabIndex = 0;
             this.knbDurHour.Text = "Hours";
@@ -174,7 +174,6 @@
             // tabTime
             // 
             this.tabTime.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(17)))), ((int)(((byte)(17)))), ((int)(((byte)(17)))));
-            this.tabTime.Controls.Add(this.cboxColors);
             this.tabTime.Controls.Add(this.flwTimeSuggestions);
             this.tabTime.Controls.Add(this.btnLoadCountdown);
             this.tabTime.Controls.Add(this.btnSaveCountdown);
@@ -193,15 +192,6 @@
             this.tabTime.Size = new System.Drawing.Size(396, 289);
             this.tabTime.TabIndex = 0;
             this.tabTime.Text = "Set time";
-            // 
-            // cboxColors
-            // 
-            this.cboxColors.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
-            this.cboxColors.FormattingEnabled = true;
-            this.cboxColors.Location = new System.Drawing.Point(315, 148);
-            this.cboxColors.Name = "cboxColors";
-            this.cboxColors.Size = new System.Drawing.Size(73, 21);
-            this.cboxColors.TabIndex = 13;
             // 
             // flwTimeSuggestions
             // 
@@ -396,12 +386,22 @@
             this.tabs.Size = new System.Drawing.Size(404, 315);
             this.tabs.TabIndex = 0;
             // 
+            // cboxColors
+            // 
+            this.cboxColors.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
+            this.cboxColors.FormattingEnabled = true;
+            this.cboxColors.Location = new System.Drawing.Point(319, 169);
+            this.cboxColors.Name = "cboxColors";
+            this.cboxColors.Size = new System.Drawing.Size(73, 21);
+            this.cboxColors.TabIndex = 14;
+            // 
             // Setup
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Black;
             this.ClientSize = new System.Drawing.Size(404, 314);
+            this.Controls.Add(this.cboxColors);
             this.Controls.Add(this.tabs);
             this.ForeColor = System.Drawing.Color.LightGray;
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;

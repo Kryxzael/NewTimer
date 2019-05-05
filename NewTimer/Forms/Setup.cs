@@ -37,7 +37,8 @@ namespace NewTimer.Forms
                 i.ValueChanged += (s, e) => CreateSuggestions();
             }
 
-            CreateSuggestions();            
+            CreateSuggestions();
+            cboxColors.SelectedIndex = 0;
         }
 
         public ColorScheme GetSelectedColorScheme()

@@ -92,7 +92,7 @@ namespace NewTimer
         {
             new Schemes.SchemeRandom(),
             new Schemes.SchemeSingle("Reds", Color.Red),
-            new Schemes.SchemeSingle("Oranges", Color.Orange),
+            new Schemes.SchemeSingle("Oranges", Color.OrangeRed),
             new Schemes.SchemeSingle("Yellows", Color.Yellow),
             new Schemes.SchemeSingle("Greens", Color.LimeGreen),
             new Schemes.SchemeSingle("Blues", Color.Blue),
@@ -134,9 +134,9 @@ namespace NewTimer
 
             new Schemes.SchemeCustom("Long Pos", Schemes.SchemeCustom.LoopType.Ceiling,
                 /*  1s */ Color.White,
-                /* 10s */ Color.FromArgb(0x4F, 0xFF, 0x4F),
+                /* 10s */ Color.FromArgb(0xBF, 0xFF, 0xBF),
                 /*  1m */ Color.FromArgb(0x8F, 0xFF, 0x8F),
-                /*  5m */ Color.FromArgb(0xBF, 0xFF, 0xBF),
+                /*  5m */ Color.FromArgb(0x4F, 0xFF, 0x4F),
                 /* 15m */ Color.Lime,
                 /*  1h */ Color.LimeGreen,
                 /*  2h */ Color.GreenYellow,

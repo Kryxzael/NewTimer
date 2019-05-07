@@ -123,22 +123,33 @@ namespace NewTimer.FormParts.Setup
 
         protected override void OnMouseDown(MouseEventArgs e)
         {
+            //Knob is readonly. Ignore input
             if (ReadOnly)
             {
                 return;
             }
 
-            if (e.Button == MouseButtons.Left)
+            //Handle mouse press
+            switch (e.Button)
             {
-                SetValueClamped((int)Value + Step);
-            }
-            else if (e.Button == MouseButtons.Right)
-            {
-                SetValueClamped((int)Value - Step);
-            }
-            else if (e.Button == MouseButtons.Middle)
-            {
-                SetValueClamped(MinValue);
+                //Increment the value
+                case MouseButtons.Left:
+                    if (ModifierKeys.HasFlag(Keys.Shift))
+                    {
+                        goto case MouseButtons.Middle;
+                    }
+                    SetValueClamped((int)Value + Step);
+                    break;
+
+                //Decrement the value
+                case MouseButtons.Right:
+                    SetValueClamped((int)Value - Step);
+                    break;
+
+                //Reset the value
+                case MouseButtons.Middle:
+                    SetValueClamped(MinValue);
+                    break;
             }
         }
     }

@@ -128,7 +128,6 @@
             this.knbDurSec.Name = "knbDurSec";
             this.knbDurSec.NumberFont = new System.Drawing.Font("Microsoft Sans Serif", 32F, System.Drawing.FontStyle.Bold);
             this.knbDurSec.ReadOnly = false;
-            this.knbDurSec.RenderPlussOne = true;
             this.knbDurSec.Size = new System.Drawing.Size(130, 130);
             this.knbDurSec.Step = 1;
             this.knbDurSec.TabIndex = 2;
@@ -146,7 +145,6 @@
             this.knbDurMin.Name = "knbDurMin";
             this.knbDurMin.NumberFont = new System.Drawing.Font("Microsoft Sans Serif", 32F, System.Drawing.FontStyle.Bold);
             this.knbDurMin.ReadOnly = false;
-            this.knbDurMin.RenderPlussOne = true;
             this.knbDurMin.Size = new System.Drawing.Size(120, 120);
             this.knbDurMin.Step = 1;
             this.knbDurMin.TabIndex = 1;
@@ -164,7 +162,6 @@
             this.knbDurHour.Name = "knbDurHour";
             this.knbDurHour.NumberFont = new System.Drawing.Font("Microsoft Sans Serif", 32F, System.Drawing.FontStyle.Bold);
             this.knbDurHour.ReadOnly = false;
-            this.knbDurHour.RenderPlussOne = false;
             this.knbDurHour.Size = new System.Drawing.Size(110, 110);
             this.knbDurHour.Step = 1;
             this.knbDurHour.TabIndex = 0;
@@ -281,7 +278,6 @@
             this.knbMonth.Name = "knbMonth";
             this.knbMonth.NumberFont = new System.Drawing.Font("Microsoft Sans Serif", 32F, System.Drawing.FontStyle.Bold);
             this.knbMonth.ReadOnly = false;
-            this.knbMonth.RenderPlussOne = false;
             this.knbMonth.Size = new System.Drawing.Size(120, 120);
             this.knbMonth.Step = 1;
             this.knbMonth.TabIndex = 5;
@@ -300,7 +296,6 @@
             this.knbDay.Name = "knbDay";
             this.knbDay.NumberFont = new System.Drawing.Font("Microsoft Sans Serif", 32F, System.Drawing.FontStyle.Bold);
             this.knbDay.ReadOnly = false;
-            this.knbDay.RenderPlussOne = false;
             this.knbDay.Size = new System.Drawing.Size(120, 120);
             this.knbDay.Step = 1;
             this.knbDay.TabIndex = 4;
@@ -332,7 +327,6 @@
             this.knbSec.Name = "knbSec";
             this.knbSec.NumberFont = new System.Drawing.Font("Microsoft Sans Serif", 32F, System.Drawing.FontStyle.Bold);
             this.knbSec.ReadOnly = false;
-            this.knbSec.RenderPlussOne = true;
             this.knbSec.Size = new System.Drawing.Size(120, 120);
             this.knbSec.Step = 1;
             this.knbSec.TabIndex = 2;
@@ -351,7 +345,6 @@
             this.knbMin.Name = "knbMin";
             this.knbMin.NumberFont = new System.Drawing.Font("Microsoft Sans Serif", 32F, System.Drawing.FontStyle.Bold);
             this.knbMin.ReadOnly = false;
-            this.knbMin.RenderPlussOne = true;
             this.knbMin.Size = new System.Drawing.Size(120, 120);
             this.knbMin.Step = 5;
             this.knbMin.TabIndex = 1;
@@ -369,7 +362,6 @@
             this.knbHour.Name = "knbHour";
             this.knbHour.NumberFont = new System.Drawing.Font("Microsoft Sans Serif", 32F, System.Drawing.FontStyle.Bold);
             this.knbHour.ReadOnly = false;
-            this.knbHour.RenderPlussOne = true;
             this.knbHour.Size = new System.Drawing.Size(120, 120);
             this.knbHour.Step = 1;
             this.knbHour.TabIndex = 0;

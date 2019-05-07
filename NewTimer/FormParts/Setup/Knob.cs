@@ -23,7 +23,7 @@ namespace NewTimer.FormParts.Setup
         }
 
         int _minValue = 0;
-        public int MinValue
+        public virtual int MinValue
         {
             get => _minValue;
             set
@@ -40,7 +40,7 @@ namespace NewTimer.FormParts.Setup
 
 
         int _step = 1;
-        public int Step
+        public virtual int Step
         {
             get => _step;
             set
@@ -49,9 +49,7 @@ namespace NewTimer.FormParts.Setup
             }
         }
 
-        public bool RenderPlussOne { get; set; }
-
-        public bool ReadOnly { get; set; }
+        public virtual bool ReadOnly { get; set; }
 
         private string _text;
         [EditorBrowsable(EditorBrowsableState.Always)]
@@ -69,7 +67,7 @@ namespace NewTimer.FormParts.Setup
         }
 
         private Font _numberFont = new Font(DefaultFont.FontFamily, 32f, FontStyle.Bold);
-        public Font NumberFont
+        public virtual Font NumberFont
         {
             get => _numberFont;
             set
@@ -79,6 +77,16 @@ namespace NewTimer.FormParts.Setup
             }
         }
 
+        protected virtual string GetLabelString()
+        {
+            return Text;
+        }
+
+        protected virtual string GetValueString()
+        {
+            return Value.ToString();
+        }
+
         protected override void OnPaint(PaintEventArgs e)
         {
             base.OnPaint(e);
@@ -86,7 +94,7 @@ namespace NewTimer.FormParts.Setup
             {
                 //Draw title
                 e.Graphics.DrawString(
-                    s: Text, 
+                    s: GetLabelString(), 
                     font: Font, 
                     brush: foreBrush, 
                     layoutRectangle: new Rectangle(e.ClipRectangle.X, e.ClipRectangle.Y + e.ClipRectangle.Height / 5, e.ClipRectangle.Width, e.ClipRectangle.Height / 5),
@@ -95,7 +103,7 @@ namespace NewTimer.FormParts.Setup
 
                 //Draw number
                 e.Graphics.DrawString(
-                    s: Value.ToString(),
+                    s: GetValueString(),
                     font: NumberFont,
                     brush: foreBrush,
                     layoutRectangle: e.ClipRectangle,

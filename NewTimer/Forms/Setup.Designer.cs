@@ -34,8 +34,8 @@
             this.btnLoadDuration = new System.Windows.Forms.Button();
             this.btnSaveDuration = new System.Windows.Forms.Button();
             this.btnStartDuration = new System.Windows.Forms.Button();
-            this.knbDurSec = new NewTimer.FormParts.Setup.Knob();
-            this.knbDurMin = new NewTimer.FormParts.Setup.Knob();
+            this.knbDurSec = new NewTimer.FormParts.Setup.KnobDual();
+            this.knbDurMin = new NewTimer.FormParts.Setup.KnobDual();
             this.knbDurHour = new NewTimer.FormParts.Setup.Knob();
             this.tabTime = new System.Windows.Forms.TabPage();
             this.flwTimeSuggestions = new System.Windows.Forms.FlowLayoutPanel();
@@ -47,11 +47,14 @@
             this.knbMonth = new NewTimer.FormParts.Setup.Knob();
             this.knbDay = new NewTimer.FormParts.Setup.Knob();
             this.chkAdv = new System.Windows.Forms.CheckBox();
-            this.knbSec = new NewTimer.FormParts.Setup.Knob();
-            this.knbMin = new NewTimer.FormParts.Setup.Knob();
+            this.knbSec = new NewTimer.FormParts.Setup.KnobDual();
+            this.knbMin = new NewTimer.FormParts.Setup.KnobDual();
             this.knbHour = new NewTimer.FormParts.Setup.KnobHour();
             this.tabs = new System.Windows.Forms.TabControl();
             this.cboxColors = new NewTimer.FormParts.ColorSchemeComboBox();
+            this.chk24h = new System.Windows.Forms.CheckBox();
+            this.lbl24h1 = new System.Windows.Forms.Label();
+            this.label1 = new System.Windows.Forms.Label();
             this.tabDuration.SuspendLayout();
             this.tabTime.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numYear)).BeginInit();
@@ -171,6 +174,9 @@
             // tabTime
             // 
             this.tabTime.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(17)))), ((int)(((byte)(17)))), ((int)(((byte)(17)))));
+            this.tabTime.Controls.Add(this.label1);
+            this.tabTime.Controls.Add(this.lbl24h1);
+            this.tabTime.Controls.Add(this.chk24h);
             this.tabTime.Controls.Add(this.flwTimeSuggestions);
             this.tabTime.Controls.Add(this.btnLoadCountdown);
             this.tabTime.Controls.Add(this.btnSaveCountdown);
@@ -387,6 +393,34 @@
             this.cboxColors.Size = new System.Drawing.Size(73, 21);
             this.cboxColors.TabIndex = 14;
             // 
+            // chk24h
+            // 
+            this.chk24h.AutoSize = true;
+            this.chk24h.Location = new System.Drawing.Point(294, 236);
+            this.chk24h.Name = "chk24h";
+            this.chk24h.Size = new System.Drawing.Size(15, 14);
+            this.chk24h.TabIndex = 15;
+            this.chk24h.UseVisualStyleBackColor = true;
+            this.chk24h.CheckedChanged += new System.EventHandler(this.OnChangeHourMode);
+            // 
+            // lbl24h1
+            // 
+            this.lbl24h1.AutoSize = true;
+            this.lbl24h1.Location = new System.Drawing.Point(261, 220);
+            this.lbl24h1.Name = "lbl24h1";
+            this.lbl24h1.Size = new System.Drawing.Size(50, 13);
+            this.lbl24h1.TabIndex = 16;
+            this.lbl24h1.Text = "Use 24 h";
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(262, 235);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(26, 13);
+            this.label1.TabIndex = 17;
+            this.label1.Text = "time";
+            // 
             // Setup
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -415,8 +449,8 @@
         #endregion
         private System.Windows.Forms.TabPage tabDuration;
         private System.Windows.Forms.Button btnStartDuration;
-        private FormParts.Setup.Knob knbDurSec;
-        private FormParts.Setup.Knob knbDurMin;
+        private FormParts.Setup.KnobDual knbDurSec;
+        private FormParts.Setup.KnobDual knbDurMin;
         private FormParts.Setup.Knob knbDurHour;
         private System.Windows.Forms.TabPage tabTime;
         private System.Windows.Forms.Label lblYear;
@@ -424,8 +458,8 @@
         private FormParts.Setup.Knob knbMonth;
         private FormParts.Setup.Knob knbDay;
         private System.Windows.Forms.CheckBox chkAdv;
-        private FormParts.Setup.Knob knbSec;
-        private FormParts.Setup.Knob knbMin;
+        private FormParts.Setup.KnobDual knbSec;
+        private FormParts.Setup.KnobDual knbMin;
         private FormParts.Setup.KnobHour knbHour;
         private System.Windows.Forms.TabControl tabs;
         private System.Windows.Forms.Button btnLoadCountdown;
@@ -436,5 +470,8 @@
         private System.Windows.Forms.FlowLayoutPanel flwTimeSuggestions;
         private System.Windows.Forms.FlowLayoutPanel flwTimeSuggestionsDuration;
         private FormParts.ColorSchemeComboBox cboxColors;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label lbl24h1;
+        private System.Windows.Forms.CheckBox chk24h;
     }
 }

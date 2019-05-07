@@ -322,5 +322,11 @@ namespace NewTimer.Forms
                 return;
             }
         }
+
+        private void OnChangeHourMode(object sender, EventArgs e)
+        {
+            Config.Use24HourSelector = chk24h.Checked;
+            knbHour.Invalidate();
+        }
     }
 }

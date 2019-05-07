@@ -39,6 +39,7 @@ namespace NewTimer.Forms
 
             CreateSuggestions();
             cboxColors.SelectedIndex = 0;
+            chk24h.Checked = Properties.Settings.Default.use24h;
         }
 
         public ColorScheme GetSelectedColorScheme()
@@ -52,6 +53,9 @@ namespace NewTimer.Forms
             {
                 Application.Exit();
             }
+
+            Properties.Settings.Default.use24h = chk24h.Checked;
+            Properties.Settings.Default.Save();
         }
 
         private void OnClickStart(object sender, MouseEventArgs e)

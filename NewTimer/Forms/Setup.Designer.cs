@@ -49,7 +49,7 @@
             this.chkAdv = new System.Windows.Forms.CheckBox();
             this.knbSec = new NewTimer.FormParts.Setup.Knob();
             this.knbMin = new NewTimer.FormParts.Setup.Knob();
-            this.knbHour = new NewTimer.FormParts.Setup.Knob();
+            this.knbHour = new NewTimer.FormParts.Setup.KnobHour();
             this.tabs = new System.Windows.Forms.TabControl();
             this.cboxColors = new NewTimer.FormParts.ColorSchemeComboBox();
             this.tabDuration.SuspendLayout();
@@ -426,7 +426,7 @@
         private System.Windows.Forms.CheckBox chkAdv;
         private FormParts.Setup.Knob knbSec;
         private FormParts.Setup.Knob knbMin;
-        private FormParts.Setup.Knob knbHour;
+        private FormParts.Setup.KnobHour knbHour;
         private System.Windows.Forms.TabControl tabs;
         private System.Windows.Forms.Button btnLoadCountdown;
         private System.Windows.Forms.Button btnSaveCountdown;

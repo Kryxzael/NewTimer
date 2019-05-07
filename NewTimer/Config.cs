@@ -62,6 +62,11 @@ namespace NewTimer
         /// </summary>
         public static DateTime Target { get; private set; } = new DateTime(2017, 4, 7, 15, 05, 0);
 
+        /// <summary>
+        /// Will the time selector use 24-hour time?
+        /// </summary>
+        public static bool Use24HourSelector { get; set; } = false;
+
         public static ColorScheme ColorScheme { get; set; }
 
         /// <summary>

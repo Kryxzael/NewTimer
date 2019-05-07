@@ -95,11 +95,17 @@ namespace NewTimer.Forms
             //Smart next hh:mm
             if (DateTime.Now.TimeOfDay > new TimeSpan(h, m, 0))
             {
-                createTimeWithText(h.ToString("00") + ":" + m.ToString("00") + " tomorrow", DateTime.Now.Date.AddHours(h).AddMinutes(m).AddDays(1));
+                createTimeWithText(
+                    text: new DateTime(1, 1, 1, h, m, 0).ToString(Config.Use24HourSelector ? "HH:mm" : "h:mm tt") + " tomorrow", 
+                    target: DateTime.Now.Date.AddHours(h).AddMinutes(m).AddDays(1)
+                );
             }
             else
             {
-                createTimeWithText(h.ToString("00") + ":" + m.ToString("00") + " today", DateTime.Now.Date.AddHours(h).AddMinutes(m));
+                createTimeWithText(
+                    text: new DateTime(1, 1, 1, h, m, 0).ToString(Config.Use24HourSelector ? "HH:mm" : "h:mm tt") + " today", 
+                    target: DateTime.Now.Date.AddHours(h).AddMinutes(m)
+                );
             }
 
             switch (DateTime.Now.Minute)
@@ -141,17 +147,26 @@ namespace NewTimer.Forms
 
             void createTime(DateTime target)
             {
-                flwTimeSuggestions.Controls.Add(new FormParts.Setup.TimeSugestion(target.ToShortTimeString(), () => target));
+                flwTimeSuggestions.Controls.Add(new FormParts.Setup.TimeSugestion(
+                    text: target.ToString(Config.Use24HourSelector ? "HH:mm" : "h:mm tt"), 
+                    getTarget: () => target)
+                );
             }
 
             void createTimeWithText(string text, DateTime target)
             {
-                flwTimeSuggestions.Controls.Add(new FormParts.Setup.TimeSugestion(text, () => target));
+                flwTimeSuggestions.Controls.Add(new FormParts.Setup.TimeSugestion(
+                    text: text, 
+                    getTarget: () => target)
+                );
             }
 
             void createTimeDuration(string text, TimeSpan duration)
             {
-                flwTimeSuggestionsDuration.Controls.Add(new FormParts.Setup.TimeSugestion(text, () => DateTime.Now + duration));
+                flwTimeSuggestionsDuration.Controls.Add(new FormParts.Setup.TimeSugestion(
+                    text: text, 
+                    getTarget: () => DateTime.Now + duration)
+                );
             }
         }
 
@@ -327,6 +342,7 @@ namespace NewTimer.Forms
         {
             Config.Use24HourSelector = chk24h.Checked;
             knbHour.Invalidate();
+            CreateSuggestions();
         }
     }
 }

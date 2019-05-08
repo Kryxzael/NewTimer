@@ -31,6 +31,7 @@ namespace NewTimer.Commands
 
         protected override void Executed(Params args, IConsoleOutput target)
         {
+            _deltaTime.Restart();
             target.WriteLine((_timer.Enabled = !_timer.Enabled) ? "Frozen" : "Unfrozen");
         }
 

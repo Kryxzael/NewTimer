@@ -11,52 +11,11 @@ using Bars;
 
 namespace NewTimer
 {
+    /// <summary>
+    /// Stores configuration and other global settings
+    /// </summary>
     public static class Config
     {
-        static PrivateFontCollection privFontColl = new PrivateFontCollection();
-        //public static FontFamily DigitalFont { get; }
-        //static readonly string tempFontLocation = Path.GetTempPath() + "newtimerfont.tmp";
-
-        //static Config()
-        //{
-        //    try
-        //    {
-        //        File.WriteAllBytes(tempFontLocation, Properties.Resources.deffont);
-        //        privFontColl.AddFontFile(tempFontLocation);
-        //        DigitalFont = privFontColl.Families[0];
-        //    }
-        //    catch (Exception)
-        //    {
-        //        MessageBox.Show("Could not create temp file!\n\rApplication will now be terminated!", "Fatal error!", MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Error);
-        //        Application.Exit();
-        //    }
-        //}
-
-        /// <summary>
-        /// The single, centerelized Random Number Generator. Use this for anything random
-        /// </summary>
-        public static Random MasterRandom = new Random();
-
-        /// <summary>
-        /// The color that will be used as the text color for the whole application
-        /// </summary>
-        public static Color GlobalForeColor { get; set; } = ColorTranslator.FromHtml("#dddddd");
-
-        /// <summary>
-        /// The color that will be used as the background color for the whole application
-        /// </summary>
-        public static Color GlobalBackColor { get; set; } = ColorTranslator.FromHtml("#111111");
-
-        /// <summary>
-        /// The color that will be used as the background color for the whole application
-        /// </summary>
-        public static Color GlobalOvertimeColor { get; set; } = ColorTranslator.FromHtml("#330000");
-
-        /// <summary>
-        /// The color that will be used to gray out text
-        /// </summary>
-        public static Color GlobalGrayedColor { get; set; } = ColorTranslator.FromHtml("#333333");
-
         /// <summary>
         /// Gets or sets the time the timer targets
         /// </summary>
@@ -67,35 +26,90 @@ namespace NewTimer
         /// </summary>
         public static bool Use24HourSelector { get; set; } = false;
 
+        /// <summary>
+        /// The color scheme that is selected. This value is set when the timer starts
+        /// </summary>
         public static ColorScheme ColorScheme { get; set; }
+
+        /// <summary>
+        /// Gets the time to display on the timer. This is value will start incrementing once the target time has passed
+        /// </summary>
+        /// <returns></returns>
+        public static TimeSpan TimeLeft => DateTime.Now > Target ? DateTime.Now - Target : Target - DateTime.Now;
+
+        /// <summary>
+        /// Gets the real time left until the target time. This value will go negative after the target time
+        /// </summary>
+        /// <returns></returns>
+        public static TimeSpan RealTimeLeft => Target - DateTime.Now;
+
+        /// <summary>
+        /// Has the target time passed?
+        /// </summary>
+        public static bool Overtime => DateTime.Now > Target;
+
+        /*
+         * Constants
+         */
+
+        /// <summary>
+        /// The random number generator that is used for all randomness
+        /// </summary>
+        public static readonly Random MasterRandom = new Random();
+
+        /// <summary>
+        /// The color that will be used as the text color for the whole application
+        /// </summary>
+        public static Color GlobalForeColor { get; } = ColorTranslator.FromHtml("#dddddd");
+
+        /// <summary>
+        /// The color that will be used as the background color for the whole application
+        /// </summary>
+        public static Color GlobalBackColor { get; } = ColorTranslator.FromHtml("#111111");
+
+        /// <summary>
+        /// The color that will be used as the background color for the whole application
+        /// </summary>
+        public static Color GlobalOvertimeColor { get; } = ColorTranslator.FromHtml("#330000");
+
+        /// <summary>
+        /// The color that will be used to gray out text
+        /// </summary>
+        public static Color GlobalGrayedColor { get; } = ColorTranslator.FromHtml("#333333");
+
 
         /// <summary>
         /// Gets the configuration settings that the time bar will use. The key is the minimum unit time that will be used to apply the settings
         /// </summary>
         public static Dictionary<TimeSpan, BarSettings> BarSettings = new Dictionary<TimeSpan, BarSettings>()
         {
-            { new TimeSpan(365, 0, 0, 0), CreateBarSettings(1, 1)}, //1 year
+            /*  1y */ { new TimeSpan(365, 0, 0, 0), CreateBarSettings(1, 1)},
 
-            { new TimeSpan(30, 0, 0, 0), CreateBarSettings(30, 30) }, //30 days
-            { new TimeSpan(7, 0, 0, 0), CreateBarSettings(7, 7) }, //7 days
-            { new TimeSpan(1, 0, 0, 0), CreateBarSettings(1, 1) }, //1 day
+            /* 30d */ { new TimeSpan(30, 0, 0, 0), CreateBarSettings(30, 30) },
+            /*  7d */ { new TimeSpan(7, 0, 0, 0), CreateBarSettings(7, 7) },
+            /*  1d */ { new TimeSpan(1, 0, 0, 0), CreateBarSettings(1, 1) },
 
-            { new TimeSpan(12, 0, 0), CreateBarSettings(12, 3) }, //3 hour
-            { new TimeSpan(6, 0, 0), CreateBarSettings(6, 2) }, //2 hour
+            /*  3y */ { new TimeSpan(12, 0, 0), CreateBarSettings(12, 3) },
+            /*  2y */ { new TimeSpan(6, 0, 0), CreateBarSettings(6, 2) },
+            /*  1h */ { new TimeSpan(1, 0, 0), CreateBarSettings(1, 1) },
 
-            { new TimeSpan(1, 0, 0), CreateBarSettings(1, 1) }, //1 hour
+            /* 15m */ { new TimeSpan(0, 30, 0), CreateBarSettings(30, 15) },
+            /*  5y */ { new TimeSpan(0, 10, 0), CreateBarSettings(10, 5) },
 
-            { new TimeSpan(0, 30, 0), CreateBarSettings(30, 15) }, //15 minutes
-            { new TimeSpan(0, 10, 0), CreateBarSettings(10, 5) }, //5 minutes
-
-            { new TimeSpan(0, 1, 0), CreateBarSettings(1, 1) }, //1 minute
-            { new TimeSpan(0, 0, 10), CreateBarSettings(10, 10) }, //10 seconds
-            { new TimeSpan(0, 0, 0), CreateBarSettings(1, 1) }, //1 second
+            /*  1m */ { new TimeSpan(0, 1, 0), CreateBarSettings(1, 1) },
+            /* 10s */ { new TimeSpan(0, 0, 10), CreateBarSettings(10, 10) },
+            /*  1s */ { new TimeSpan(0, 0, 0), CreateBarSettings(1, 1) }
         };
 
+        /// <summary>
+        /// Gets the available color schemes
+        /// </summary>
         public static ColorScheme[] ColorSchemes { get; } =
         {
+            //Random
             new Schemes.SchemeRandom(),
+
+            //Single colored
             new Schemes.SchemeSingle("Reds", Color.Red),
             new Schemes.SchemeSingle("Oranges", Color.OrangeRed),
             new Schemes.SchemeSingle("Yellows", Color.Yellow),
@@ -105,12 +119,13 @@ namespace NewTimer
             new Schemes.SchemeSingle("Purples", Color.Purple),
             new Schemes.SchemeSingle("Grays", Color.White),
 
+            //Gauges
             new Schemes.SchemeCustom("Positive", Schemes.SchemeCustom.LoopType.Ceiling, 
                 /*  1s */ Color.Lime,
                 /* 10s */ Color.LimeGreen,
                 /*  1m */ Color.Green,
-                /*  5s */ Color.GreenYellow,
-                /* 15s */ Color.Gold,
+                /*  5m */ Color.GreenYellow,
+                /* 15m */ Color.Gold,
                 /*  1h */ Color.OrangeRed,
                 /*  2h */ Color.Red,
                 /*  3h */ Color.FromArgb(0xE0, 0, 0),
@@ -170,24 +185,6 @@ namespace NewTimer
             )
         };
 
-        private static BarSettings CreateBarSettings(float maxValue, int interval)
-        {
-            return new BarSettings(maxValue, interval, Color.White, Color.White);
-        }
-
-        /// <summary>
-        /// Populates the bar control with a random color scheme
-        /// </summary>
-        internal static void RandomizeColorScheme()
-        {
-            Color[] color = ColorScheme.GenerateMany(BarSettings.Count, MasterRandom).ToArray();
-            for (int i = 0; i < BarSettings.Count - 1; i++)
-            {
-                BarSettings.Values.ElementAt(BarSettings.Count - (i + 1)).FillColor = color[i];
-                BarSettings.Values.ElementAt(BarSettings.Count - (i + 1)).OverflowColor = color[i + 1];
-            }
-        }
-
         /// <summary>
         /// Starts the timer
         /// </summary>
@@ -195,41 +192,61 @@ namespace NewTimer
         /// <param name="closingForm">Form that will be closed, this should be the settings form</param>
         public static void StartTimer(DateTime target, ColorScheme colorScheme, Form closingForm = null)
         {
+            //Set target and color scheme
             Target = target;
             ColorScheme = colorScheme;
 
+            //Close the closing form with a result of OK so that the application doesn't exit
             if (closingForm != null)
             {
                 closingForm.DialogResult = DialogResult.OK;
                 closingForm.Close();
             }
 
-            RandomizeColorScheme();
+            //Colorize the bar
+            ColorizeTimerBar();
+
+            //Show main form
             new Forms.Bar.Bar().Show();
         }
 
-        public static TimeSpan GetTimeLeft()
+
+        /// <summary>
+        /// Creates a bar setting object with the given minValue and interval
+        /// </summary>
+        /// <param name="maxValue"></param>
+        /// <param name="interval"></param>
+        /// <returns></returns>
+        private static BarSettings CreateBarSettings(float maxValue, int interval)
         {
-            if (DateTime.Now > Target)
+            return new BarSettings(maxValue, interval, Color.White, Color.White);
+        }
+
+        /// <summary>
+        /// Populates the bar control with a colors from the current color scheme
+        /// </summary>
+        internal static void ColorizeTimerBar()
+        {
+            //Get colors
+            Color[] color = ColorScheme.GenerateMany(BarSettings.Count, MasterRandom).ToArray();
+
+            //Apply colors to bar settings
+            for (int i = 0; i < BarSettings.Count - 1; i++)
             {
-                return DateTime.Now - Target;
-            }
-            return (Target - DateTime.Now);
-        }
+                //Apply fill color
+                BarSettings.Values.ElementAt(BarSettings.Count - (i + 1)).FillColor = color[i];
 
-        public static TimeSpan GetRealTimeLeft()
-        {
-            return Target - DateTime.Now;
-        }
-
-        public static bool Overtime
-        {
-            get
-            {
-                return DateTime.Now > Target;
+                //Apply overflow color
+                BarSettings.Values.ElementAt(BarSettings.Count - (i + 1)).OverflowColor = color[i + 1];
             }
         }
 
+        /// <summary>
+        /// Gets the decimals of a number and returns it as a integer. Eg: 1.25 => 25
+        /// </summary>
+        /// <param name="value">Value to convert</param>
+        /// <param name="significantDigits">The amount of digits to get</param>
+        /// <returns></returns>
         public static int GetDecimals(double value, int significantDigits)
         {
             return (int)((value - Math.Truncate(value)) * Math.Pow(10, significantDigits));

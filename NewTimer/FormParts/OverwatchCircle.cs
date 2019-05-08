@@ -23,7 +23,7 @@ namespace NewTimer.FormParts
         {
             get
             {
-                TimeSpan tl = Config.GetTimeLeft();
+                TimeSpan tl = Config.TimeLeft;
 
                 if (tl.TotalSeconds < 10)
                 {
@@ -71,7 +71,7 @@ namespace NewTimer.FormParts
         {
             get
             {
-                TimeSpan tl = Config.GetTimeLeft();
+                TimeSpan tl = Config.TimeLeft;
 
                 if (tl.TotalSeconds < 10)
                 {
@@ -114,7 +114,7 @@ namespace NewTimer.FormParts
         {
             get
             {
-                TimeSpan tl = Config.GetTimeLeft();
+                TimeSpan tl = Config.TimeLeft;
 
                 if (tl.TotalMinutes < 1)
                 {
@@ -132,7 +132,7 @@ namespace NewTimer.FormParts
         {
             get
             {
-                TimeSpan tl = Config.GetTimeLeft();
+                TimeSpan tl = Config.TimeLeft;
 
                 if (tl.TotalSeconds < 10)
                 {
@@ -175,7 +175,7 @@ namespace NewTimer.FormParts
         {
             get
             {
-                TimeSpan tl = Config.GetTimeLeft();
+                TimeSpan tl = Config.TimeLeft;
 
                 if (tl.TotalSeconds < 10)
                 {

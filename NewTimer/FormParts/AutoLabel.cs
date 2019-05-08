@@ -44,13 +44,16 @@ namespace NewTimer.FormParts
 
             if (_requestsResize)
             {
+                //Calculates the new font size
                 float newFontEm = NewFontSize(e.Graphics, Size, Font, Text);
 
+                //Upon error, use the current font size
                 if (newFontEm == -1)
                 {
                     newFontEm = Font.Size;
                 }
 
+                //Generate the new font and dispose the old one
                 Font oldFont = Font;
                 Font = new Font(Font.FontFamily, newFontEm, Font.Style);
                 oldFont.Dispose();
@@ -80,6 +83,7 @@ namespace NewTimer.FormParts
         {
             try
             {
+                //Don't ask
                 SizeF stringSize = graphics.MeasureString(str, font);
                 float wRatio = size.Width / stringSize.Width;
                 float hRatio = size.Height / stringSize.Height;

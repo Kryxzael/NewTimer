@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace NewTimer.FormParts
 {
+    /// <summary>
+    /// Represents an item that can be updated periodicly by the timer
+    /// </summary>
     public interface ICountdown
     {
         /// <summary>

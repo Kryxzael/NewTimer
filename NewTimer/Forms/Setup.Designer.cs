@@ -320,7 +320,7 @@
             this.chkAdv.TabIndex = 3;
             this.chkAdv.Text = "Advanced";
             this.chkAdv.UseVisualStyleBackColor = true;
-            this.chkAdv.CheckedChanged += new System.EventHandler(this.ChkAdv_CheckedChanged);
+            this.chkAdv.CheckedChanged += new System.EventHandler(this.OnAdvancedToggled);
             // 
             // knbSec
             // 

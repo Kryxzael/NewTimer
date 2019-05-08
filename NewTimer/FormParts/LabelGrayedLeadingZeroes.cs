@@ -13,19 +13,23 @@ namespace NewTimer.FormParts
     /// </summary>
     public class LabelGrayedLeadingZeros : Label
     {
-        private Color _leadingZeros = Color.Gray;
 
+        /*
+         * Private Backing fields
+         */
+
+        private Color _leadingZeros = Color.Gray;
         private float _progress;
+        private bool _renderLeadingZeros;
+        private Color _hiColor;
+
+        /// <summary>
+        /// Get or sets the amount of the label that should be colored with highlighting color. Intended range is 0 through 1
+        /// </summary>
         public float Progress
         {
-            get
-            {
-                return _progress;
-            }
-            set
-            {
-                _progress = Math.Max(0, Math.Min(1, value));
-            }
+            get => _progress;
+            set => _progress = Math.Max(0, Math.Min(1, value));
         }
 
         /// <summary>
@@ -33,45 +37,34 @@ namespace NewTimer.FormParts
         /// </summary>
         public Color LeadingZerosColor
         {
-            get
-            {
-                return _leadingZeros;
-            }
+            get => _leadingZeros;
             set
             {
                 _leadingZeros = value;
-                Refresh();
+                Invalidate();
             }
         }
 
-        private bool _renderLeadingZeros;
 
         /// <summary>
         /// False by default. If true, leading zeros will be rendered
         /// </summary>
         public bool RenderLeadingZeros
         {
-            get
-            {
-                return _renderLeadingZeros;
-            }
+            get => _renderLeadingZeros;
             set
             {
                 _renderLeadingZeros = value;
-                Refresh();
+                Invalidate();
             }
         }
 
-        private Color _hiColor;
         /// <summary>
         /// Gets or sets the color that will be used for progress highlighting
         /// </summary>
         public Color HighlightColor
         {
-            get
-            {
-                return _hiColor;
-            }
+            get => _hiColor;
             set
             {
                 _hiColor = value;
@@ -85,7 +78,7 @@ namespace NewTimer.FormParts
             bool renderGrays = !RenderLeadingZeros;
 
             /*
-             * It might be wierd that the background text code uses the highlight color and vice versa.
+             * It might be weird that the background text code uses the highlight color and vice versa.
              * This is to make the effect go up and not down
              * It was done on purpose
              */

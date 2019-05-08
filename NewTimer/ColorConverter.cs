@@ -7,6 +7,9 @@ using System.Threading.Tasks;
 
 namespace NewTimer
 {
+    /// <summary>
+    /// Class for conversion from HSV to RGB colors
+    /// </summary>
     public static class ColorConverter
     {
         public static Color HsvToRgb(double h, double s, double v)

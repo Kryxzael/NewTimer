@@ -7,36 +7,35 @@ using System.Windows.Forms;
 
 namespace NewTimer
 {
-    static class Program
+    /// <summary>
+    /// Main entrypoint of application
+    /// </summary>
+    internal static class Program
     {
-
-        //public static void Main(string[] args)
-        //{
-        //    ColorFactory.Initialize();
-        //    Color[] clr = ColorFactory.GenerateMany(7);
-        //    Console.WriteLine(clr[0].ToArgb().ToString("x"));
-        //}
-
-
         /// <summary>
         /// The main entry point for the application.
         /// </summary>
         [STAThread]
         static void Main(string[] args)
         {
-
+            //Boilerplate code
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
+
+            //Create setup window
             Forms.Setup setupForm = new Forms.Setup();
 
-            setupForm.Show();
+            //If there is an argument, treat is as a file path and open it
             if (args.Length > 0)
             {
                 setupForm.LoadFile(args[0]);
             }
 
+            //Show window and run message pump
+            setupForm.Show();
             Application.Run();
 
+            //Dispose taskbar icon before shutdown
             TaskbarHelper.DisposeIcon();
         }
     }

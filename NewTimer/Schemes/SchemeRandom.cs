@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace NewTimer.Schemes
 {
     /// <summary>
-    /// Factory class for generating random colors
+    /// A color scheme that generates pseudo-random colors
     /// </summary>
     public class SchemeRandom : ColorScheme
     {
@@ -22,21 +22,17 @@ namespace NewTimer.Schemes
         {
             while (true)
             {
+                //Generate a candidate and store it and its saturation
                 Color clr = Color.FromArgb(RandByte(rng), RandByte(rng), RandByte(rng));
-
                 float sat = clr.GetSaturation();
 
-                if (sat > 0.8 || sat < 0.2)
+                //If the saturation is too high or too low or the color is too dark: Discard it
+                if (sat > 0.8f || sat < 0.2f || clr.GetBrightness() < 0.2f)
                 {
                     continue;
                 }
 
-                float brgt = clr.GetBrightness();
-                if (brgt < 0.2)
-                {
-                    continue;
-                }
-
+                //Good candidate. Return it
                 return clr;
             }
         }
@@ -48,32 +44,30 @@ namespace NewTimer.Schemes
         /// <returns></returns>
         public override IEnumerable<Color> GenerateMany(int count, Random rng)
         {
-            Color[] _ = new Color[count];
+            Color lastColor = default(Color);
+
 
             for (int i = 0; i < count; i++)
             {
-                while (true)
+                Color c;
+
+                //Generatea unique random color.
+                do
                 {
-                    Color clr = GenerateOne(rng);
+                    c = GenerateOne(rng);
+                } while (
+                    //First color gets automatic pass
+                    lastColor != default(Color) && 
 
-                    float hue = clr.GetHue();
-                    foreach (Color o in _)
-                    {
-                        float localHue = o.GetHue();
+                    //Colors must not be similar in hue, saturation and brigtness
+                    Math.Abs(c.GetHue() - lastColor.GetHue()) < 10 && 
+                    Math.Abs(c.GetSaturation() - lastColor.GetSaturation()) < 0.1f &&
+                    Math.Abs(c.GetBrightness() - lastColor.GetBrightness()) < 0.1f
+                );
 
-                        if (hue > localHue - 10 && hue < localHue + 10)
-                        {
-                            continue;
-                        }
-                    }
-
-                    _[i] = clr;
-                    break;
-                }
+                lastColor = c;
+                yield return c;
             }
-
-            return _;
-
         }
 
         private IEnumerable<Color> _previewColors;

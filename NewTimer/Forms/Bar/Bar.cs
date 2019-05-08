@@ -8,6 +8,9 @@ using System.Windows.Forms;
 
 namespace NewTimer.Forms.Bar
 {
+    /// <summary>
+    /// The default timer window
+    /// </summary>
     [DesignerCategory("")]
     public class Bar : TimerFormBase
     {

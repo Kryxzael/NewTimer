@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace NewTimer.FormParts.Setup
 {
+    /// <summary>
+    /// A knob that displays it's value with two digits (leading zeros)
+    /// </summary>
     public class KnobDual : Knob
     {
         protected override string GetValueString()

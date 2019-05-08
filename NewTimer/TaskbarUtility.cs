@@ -19,43 +19,46 @@ namespace NewTimer
         public static void SetTitle(Form f)
         {
             TimeSpan tl = Config.TimeLeft;
+            string title;
 
             //Less than one minute, show amount of seconds left
             if (tl.TotalMinutes < 1)
             {
-                f.Text = tl.Seconds.ToString() + (tl.Seconds == 1 ? " second" : " seconds");
+                title = tl.Seconds.ToString() + (tl.Seconds == 1 ? " second" : " seconds");
             }
 
             //Less than one hour, show amount of minutes left
             else if (tl.TotalHours < 1)
             {
-                f.Text = tl.Minutes.ToString() + (tl.Minutes == 1 ? " minute" : " minutes");
+                title = tl.Minutes.ToString() + (tl.Minutes == 1 ? " minute" : " minutes");
             }
 
             //Less than one day, show amount of hours left
             else if (tl.TotalDays < 1)
             {
-                f.Text = tl.Hours.ToString() + (tl.Hours == 1 ? " hour" : " hours");
+                title = tl.Hours.ToString() + (tl.Hours == 1 ? " hour" : " hours");
             }
 
             //Less than one year, show amount of days left
             else if (tl.TotalDays < 360)
             {
-                f.Text = tl.Days + (tl.Days == 1 ? " day" : " days");
+                title = tl.Days + (tl.Days == 1 ? " day" : " days");
             }
 
             //More than a year, show a fallback string
             else
             {
-                f.Text = "A long time";
+                title = "A long time";
             }
 
 
             //We are in overtime, add "ago" to the end of the title
             if (Config.Overtime)
             {
-                f.Text += " ago";
+                title += " ago";
             }
+
+            f.Text = title;
         }
 
         /// <summary>

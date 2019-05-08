@@ -28,6 +28,7 @@ namespace NewTimer
 
             //Register commands
             Command.Register<Commands.Target>();
+            Command.Register<Commands.ColorScheme>();
 
             //If there is an argument, treat is as a file path and open it
             if (args.Length > 0)

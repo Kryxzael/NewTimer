@@ -280,7 +280,11 @@ namespace NewTimer.Forms
         protected override void OnKeyDown(KeyEventArgs e)
         {
             base.OnKeyDown(e);
-            (_console = _console ?? new UserConsole()).Show();
+            if (_console == null || _console.IsDisposed)
+            {
+                _console = new UserConsole();
+            }
+            _console.Show();
             _console.BringToFront();
         }
     }

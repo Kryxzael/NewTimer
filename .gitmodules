@@ -7,3 +7,6 @@
 [submodule "CircleProgressControl"]
 	path = CircleProgressControl
 	url = https://github.com/Kryxzael/CircleProgressControl
+[submodule "UserConsoleLib"]
+	path = UserConsoleLib
+	url = https://github.com/Kryxzael/UserConsoleLib

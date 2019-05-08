@@ -60,6 +60,9 @@
     <Compile Include="FormParts\Setup\KnobHour.cs">
       <SubType>UserControl</SubType>
     </Compile>
+    <Compile Include="SaveFileProvider.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Schemes\SchemeCustom.cs" />
     <Compile Include="Schemes\SchemeRandom.cs" />
     <Compile Include="ColorScheme.cs" />
@@ -147,7 +150,6 @@
     <Compile Include="Schemes\SchemeSingle.cs" />
     <Compile Include="TaskbarIconHelper.cs" />
     <Compile Include="TaskbarUtility.cs" />
-    <Compile Include="TimerHandler.cs" />
     <EmbeddedResource Include="FormParts\Setup\Knob.resx">
       <DependentUpon>Knob.cs</DependentUpon>
     </EmbeddedResource>
@@ -338,6 +340,10 @@
     <ProjectReference Include="..\SegmentedBarControl\Bars\Bars.csproj">
       <Project>{3f2644dd-a9ae-488b-b91f-869c85c8c63b}</Project>
       <Name>Bars</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\UserConsoleLib\UserConsoleLib\UserConsoleLib.csproj">
+      <Project>{c5daeb99-86c4-45a5-93b4-d848666bf80a}</Project>
+      <Name>UserConsoleLib</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

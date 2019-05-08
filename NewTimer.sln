@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bars", "SegmentedBarControl
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CircleControl", "CircleProgressControl\CircleControl\CircleControl.csproj", "{0138DF9C-2607-4100-A1DE-082EDFA94D65}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UserConsoleLib", "UserConsoleLib\UserConsoleLib\UserConsoleLib.csproj", "{C5DAEB99-86C4-45A5-93B4-D848666BF80A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{0138DF9C-2607-4100-A1DE-082EDFA94D65}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0138DF9C-2607-4100-A1DE-082EDFA94D65}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0138DF9C-2607-4100-A1DE-082EDFA94D65}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C5DAEB99-86C4-45A5-93B4-D848666BF80A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C5DAEB99-86C4-45A5-93B4-D848666BF80A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C5DAEB99-86C4-45A5-93B4-D848666BF80A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C5DAEB99-86C4-45A5-93B4-D848666BF80A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

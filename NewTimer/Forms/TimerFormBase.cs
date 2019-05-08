@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using UserConsoleLib;
 
 namespace NewTimer.Forms
 {
@@ -30,6 +31,11 @@ namespace NewTimer.Forms
         /// Has the overtime's dark red background color already been applied?
         /// </summary>
         private bool _overtimeBackColorSet = false;
+
+        /// <summary>
+        /// The console associated with this window
+        /// </summary>
+        private UserConsole _console;
 
         protected override bool DoubleBuffered { get => true; }
 
@@ -77,6 +83,7 @@ namespace NewTimer.Forms
             InitializeCustomControls();
             InitializeAutoLabels();
             SetColors();
+            KeyPreview = true;
 
             //Initialize the timer
             _updateTimer.Interval = 50;
@@ -264,6 +271,17 @@ namespace NewTimer.Forms
             }
 
             OnResize(new EventArgs());
+        }
+
+        /// <summary>
+        /// Handler: Opens the terminal if the f12 key is pressed
+        /// </summary>
+        /// <param name="e"></param>
+        protected override void OnKeyDown(KeyEventArgs e)
+        {
+            base.OnKeyDown(e);
+            (_console = _console ?? new UserConsole()).Show();
+            _console.BringToFront();
         }
     }
 }

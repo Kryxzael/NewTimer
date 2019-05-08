@@ -17,7 +17,7 @@ namespace NewTimer.Commands
 
         public override Syntax GetSyntax(Params args)
         {
-            return Syntax.Begin().Or().AddTrailing("new value");
+            return Syntax.Begin().Or().AddTrailing("New value");
         }
 
         protected override void Executed(Params args, IConsoleOutput target)

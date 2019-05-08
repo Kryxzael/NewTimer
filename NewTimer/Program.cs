@@ -28,6 +28,7 @@ namespace NewTimer
 
             //Register commands
             Command.Register<Commands.Target>();
+            Command.Register<Commands.TimeLeft>();
             Command.Register<Commands.ColorScheme>();
             Command.Register<Commands.Freeze>();
 

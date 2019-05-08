@@ -57,6 +57,7 @@
     <Compile Include="Commands\ColorScheme.cs" />
     <Compile Include="Commands\Freeze.cs" />
     <Compile Include="Commands\Target.cs" />
+    <Compile Include="Commands\TimeLeft.cs" />
     <Compile Include="FormParts\Setup\KnobDual.cs">
       <SubType>UserControl</SubType>
     </Compile>

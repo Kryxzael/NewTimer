@@ -54,6 +54,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ColorConverter.cs" />
+    <Compile Include="Commands\Target.cs" />
     <Compile Include="FormParts\Setup\KnobDual.cs">
       <SubType>UserControl</SubType>
     </Compile>

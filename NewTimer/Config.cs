@@ -19,7 +19,7 @@ namespace NewTimer
         /// <summary>
         /// Gets or sets the time the timer targets
         /// </summary>
-        public static DateTime Target { get; private set; } = new DateTime(2017, 4, 7, 15, 05, 0);
+        public static DateTime Target { get; set; } = new DateTime(2017, 4, 7, 15, 05, 0);
 
         /// <summary>
         /// Will the time selector use 24-hour time?

@@ -4,6 +4,7 @@ using System.Drawing;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using UserConsoleLib;
 
 namespace NewTimer
 {
@@ -24,6 +25,9 @@ namespace NewTimer
 
             //Create setup window
             Forms.Setup setupForm = new Forms.Setup();
+
+            //Register commands
+            Command.Register<Commands.Target>();
 
             //If there is an argument, treat is as a file path and open it
             if (args.Length > 0)

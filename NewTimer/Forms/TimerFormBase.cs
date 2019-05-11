@@ -281,12 +281,16 @@ namespace NewTimer.Forms
         protected override void OnKeyDown(KeyEventArgs e)
         {
             base.OnKeyDown(e);
-            if (_console == null || _console.IsDisposed)
+
+            if (e.KeyCode == Keys.F12)
             {
-                _console = new UserConsole();
+                if (_console == null || _console.IsDisposed)
+                {
+                    _console = new UserConsole();
+                }
+                _console.Show();
+                _console.BringToFront();
             }
-            _console.Show();
-            _console.BringToFront();
         }
     }
 }

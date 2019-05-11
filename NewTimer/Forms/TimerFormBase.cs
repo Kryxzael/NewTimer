@@ -73,8 +73,9 @@ namespace NewTimer.Forms
             tabs.BackColor = Color.Transparent;
 
             //Position window to the bottom right corner of the screen
+            const int POS_OFFSET = +7;
             StartPosition = FormStartPosition.Manual;
-            Location = new Point(Screen.PrimaryScreen.WorkingArea.Right - Size.Width, Screen.PrimaryScreen.WorkingArea.Bottom - Size.Height);
+            Location = new Point(Screen.FromControl(this).WorkingArea.Right - Size.Width + POS_OFFSET, Screen.FromControl(this).WorkingArea.Bottom - Size.Height + POS_OFFSET);
 
             //Set the window to be topmost
             TopMost = true;

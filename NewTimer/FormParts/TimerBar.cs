@@ -129,9 +129,9 @@ namespace NewTimer.FormParts
             {
                 //Draw subsegments
                 int subSegmentCount = GetSubSegmentCount(Config.TimeLeft);
-                for (int segmentIndex = 0; segmentIndex < Value / Interval; segmentIndex++)
+                for (int segmentIndex = 0; segmentIndex < Value / Interval; segmentIndex++) //For every segment
                 {
-                    for (int i = 0; i < subSegmentCount; i++)
+                    for (int i = 0; i < subSegmentCount; i++) //Draw every subsegment in the current segment
                     {
                         e.Graphics.DrawLine(
                             pen: transparentPen,

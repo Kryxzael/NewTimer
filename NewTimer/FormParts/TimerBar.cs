@@ -125,19 +125,22 @@ namespace NewTimer.FormParts
             }
 
             //Set pen's transparency based on how big the subsegment area is
-            using (Pen transparentPen = new Pen(Color.FromArgb((int)(overflowWidth / e.ClipRectangle.Width * 0x8F), Color.White)) { DashStyle = System.Drawing.Drawing2D.DashStyle.Dash })
+            using (Pen transparentPen = new Pen(Color.FromArgb(0x8F /*(int)(overflowWidth / e.ClipRectangle.Width * 0x8F)*/, Color.White)) { DashStyle = System.Drawing.Drawing2D.DashStyle.Dash })
             {
                 //Draw subsegments
                 int subSegmentCount = GetSubSegmentCount(Config.TimeLeft);
-                for (int i = 0; i < subSegmentCount; i++)
+                for (int segmentIndex = 0; segmentIndex < Value / Interval; segmentIndex++)
                 {
-                    e.Graphics.DrawLine(
-                        pen: transparentPen,
-                        x1: (float)i / subSegmentCount * overflowWidth,
-                        y1: e.ClipRectangle.Top + Math.Min(e.ClipRectangle.Height * MARGIN_MULTIPLIER, MARGIN_MAX),
-                        x2: (float)i / subSegmentCount * overflowWidth,
-                        y2: e.ClipRectangle.Bottom - Math.Min(e.ClipRectangle.Height * MARGIN_MULTIPLIER, MARGIN_MAX)
-                    );
+                    for (int i = 0; i < subSegmentCount; i++)
+                    {
+                        e.Graphics.DrawLine(
+                            pen: transparentPen,
+                            x1: (float)i / subSegmentCount * overflowWidth + (segmentIndex * overflowWidth),
+                            y1: e.ClipRectangle.Top + Math.Min(e.ClipRectangle.Height * MARGIN_MULTIPLIER, MARGIN_MAX),
+                            x2: (float)i / subSegmentCount * overflowWidth + (segmentIndex * overflowWidth),
+                            y2: e.ClipRectangle.Bottom - Math.Min(e.ClipRectangle.Height * MARGIN_MULTIPLIER, MARGIN_MAX)
+                        );
+                    }
                 }
             }
 

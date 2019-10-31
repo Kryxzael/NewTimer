@@ -16,7 +16,7 @@ namespace NewTimer.FormParts.Setup
             //Use the normal format for 24 hour time
             if (Config.Use24HourSelector)
             {
-                base.GetValueString();
+                return base.GetValueString();
             }
 
             /*

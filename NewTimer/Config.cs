@@ -83,22 +83,22 @@ namespace NewTimer
         /// </summary>
         public static Dictionary<TimeSpan, BarSettings> BarSettings = new Dictionary<TimeSpan, BarSettings>()
         {
-            /*  1y */ { new TimeSpan(365, 0, 0, 0), CreateBarSettings(1, 1)},
+            /*  1y */ { new TimeSpan(365, 0, 0, 0), CreateBarSettings(1, 1, 30)},
 
-            /* 30d */ { new TimeSpan(30, 0, 0, 0), CreateBarSettings(30, 30) },
-            /*  7d */ { new TimeSpan(7, 0, 0, 0), CreateBarSettings(7, 7) },
-            /*  1d */ { new TimeSpan(1, 0, 0, 0), CreateBarSettings(1, 1) },
+            /* 30d */ { new TimeSpan(30, 0, 0, 0), CreateBarSettings(30, 30, 25) },
+            /*  7d */ { new TimeSpan(7, 0, 0, 0), CreateBarSettings(7, 7, 20) },
+            /*  1d */ { new TimeSpan(1, 0, 0, 0), CreateBarSettings(1, 1, 15) },
 
-            /*  3y */ { new TimeSpan(12, 0, 0), CreateBarSettings(12, 3) },
-            /*  2y */ { new TimeSpan(6, 0, 0), CreateBarSettings(6, 2) },
-            /*  1h */ { new TimeSpan(1, 0, 0), CreateBarSettings(1, 1) },
+            /*  3h */ { new TimeSpan(12, 0, 0), CreateBarSettings(12, 3, 10) },
+            /*  2h */ { new TimeSpan(6, 0, 0), CreateBarSettings(6, 2, 9) },
+            /*  1h */ { new TimeSpan(1, 0, 0), CreateBarSettings(1, 1, 8) },
 
-            /* 15m */ { new TimeSpan(0, 30, 0), CreateBarSettings(30, 15) },
-            /*  5y */ { new TimeSpan(0, 10, 0), CreateBarSettings(10, 5) },
+            /* 15m */ { new TimeSpan(0, 30, 0), CreateBarSettings(30, 15, 5) },
+            /*  5m */ { new TimeSpan(0, 10, 0), CreateBarSettings(10, 5, 4) },
 
-            /*  1m */ { new TimeSpan(0, 1, 0), CreateBarSettings(1, 1) },
-            /* 10s */ { new TimeSpan(0, 0, 10), CreateBarSettings(10, 10) },
-            /*  1s */ { new TimeSpan(0, 0, 0), CreateBarSettings(1, 1) }
+            /*  1m */ { new TimeSpan(0, 1, 0), CreateBarSettings(1, 1, 3) },
+            /* 10s */ { new TimeSpan(0, 0, 10), CreateBarSettings(10, 10, 2) },
+            /*  1s */ { new TimeSpan(0, 0, 0), CreateBarSettings(1, 1, 1) }
         };
 
         /// <summary>
@@ -217,9 +217,9 @@ namespace NewTimer
         /// <param name="maxValue"></param>
         /// <param name="interval"></param>
         /// <returns></returns>
-        private static BarSettings CreateBarSettings(float maxValue, int interval)
+        private static BarSettings CreateBarSettings(float maxValue, int interval, int margin)
         {
-            return new BarSettings(maxValue, interval, Color.White, Color.White);
+            return new BarSettings(maxValue, interval, Color.White, Color.White, margin);
         }
 
         /// <summary>

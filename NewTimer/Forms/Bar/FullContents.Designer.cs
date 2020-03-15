@@ -31,6 +31,7 @@
             this.label11 = new System.Windows.Forms.Label();
             this.label10 = new System.Windows.Forms.Label();
             this.label9 = new System.Windows.Forms.Label();
+            this.overwatchBar2 = new NewTimer.FormParts.TimerBar();
             this.FullS = new NewTimer.FormParts.LabelGrayedLeadingZeros();
             this.FullH = new NewTimer.FormParts.LabelGrayedLeadingZeros();
             this.FullFracM = new NewTimer.FormParts.LabelGrayedLeadingZeros();
@@ -38,7 +39,6 @@
             this.FullTotalM = new NewTimer.FormParts.LabelGrayedLeadingZeros();
             this.FullTotalH = new NewTimer.FormParts.LabelGrayedLeadingZeros();
             this.FullM = new NewTimer.FormParts.LabelGrayedLeadingZeros();
-            this.overwatchBar2 = new NewTimer.FormParts.TimerBar();
             this.FullTotalS = new NewTimer.FormParts.LabelGrayedLeadingZeros();
             this.SuspendLayout();
             // 
@@ -71,6 +71,21 @@
             this.label9.Size = new System.Drawing.Size(49, 13);
             this.label9.TabIndex = 19;
             this.label9.Text = "Seconds";
+            // 
+            // overwatchBar2
+            // 
+            this.overwatchBar2.BarMargin = 0;
+            this.overwatchBar2.FillColor = System.Drawing.Color.Empty;
+            this.overwatchBar2.Interval = 1;
+            this.overwatchBar2.Location = new System.Drawing.Point(0, 170);
+            this.overwatchBar2.MaxValue = 1F;
+            this.overwatchBar2.Name = "overwatchBar2";
+            this.overwatchBar2.OverflowColor = System.Drawing.Color.FromArgb(((int)(((byte)(62)))), ((int)(((byte)(0)))), ((int)(((byte)(255)))));
+            this.overwatchBar2.OverrideValueCode = null;
+            this.overwatchBar2.Size = new System.Drawing.Size(311, 75);
+            this.overwatchBar2.TabIndex = 12;
+            this.overwatchBar2.TabStop = false;
+            this.overwatchBar2.Value = 0F;
             // 
             // FullS
             // 
@@ -187,20 +202,6 @@
             this.FullM.TabIndex = 13;
             this.FullM.Text = "00";
             this.FullM.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // overwatchBar2
-            // 
-            this.overwatchBar2.FillColor = System.Drawing.Color.Empty;
-            this.overwatchBar2.Interval = 1;
-            this.overwatchBar2.Location = new System.Drawing.Point(0, 173);
-            this.overwatchBar2.MaxValue = 1F;
-            this.overwatchBar2.Name = "overwatchBar2";
-            this.overwatchBar2.OverflowColor = System.Drawing.Color.FromArgb(((int)(((byte)(62)))), ((int)(((byte)(0)))), ((int)(((byte)(255)))));
-            this.overwatchBar2.OverrideValueCode = null;
-            this.overwatchBar2.Size = new System.Drawing.Size(311, 75);
-            this.overwatchBar2.TabIndex = 12;
-            this.overwatchBar2.TabStop = false;
-            this.overwatchBar2.Value = 0F;
             // 
             // FullTotalS
             // 

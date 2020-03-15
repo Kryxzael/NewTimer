@@ -107,25 +107,23 @@ namespace NewTimer.FormParts
             //Draws the actuall bar
             base.OnPaint(e);
 
+            Rectangle bounds = new Rectangle(BarMargin, BarMargin, Width - (2 * BarMargin), Height - (2 * BarMargin));
+
             //Do nothing else if the value of the bar is zero. To prevent DIV/0
             if (Value == 0)
-            {
                 return;
-            }
 
             //Calculate the area to draw the subsegments in
-            float overflowWidth = MaxValue / Value * e.ClipRectangle.Width;
+            float overflowWidth = MaxValue / Value * bounds.Width;
             const float MARGIN_MULTIPLIER = 0.06f;
             const int MARGIN_MAX = 10;
 
             //Do nothing if there is less than one second left of the timer (overflow is higher that the width of the control)
             if (overflowWidth >= e.ClipRectangle.Width)
-            {
                 return;
-            }
 
             //Set pen's transparency based on how big the subsegment area is
-            using (Pen transparentPen = new Pen(Color.FromArgb((int)(overflowWidth / e.ClipRectangle.Width * 0x8F), Color.White)) { DashStyle = System.Drawing.Drawing2D.DashStyle.Dash })
+            using (Pen transparentPen = new Pen(Color.FromArgb((int)(overflowWidth / bounds.Width * 0x8F), Color.White)) { DashStyle = System.Drawing.Drawing2D.DashStyle.Dash })
             {
                 //Draw subsegments
                 int subSegmentCount = GetSubSegmentCount(Config.TimeLeft);
@@ -133,10 +131,10 @@ namespace NewTimer.FormParts
                 {
                     e.Graphics.DrawLine(
                         pen: transparentPen,
-                        x1: (float)i / subSegmentCount * overflowWidth,
-                        y1: e.ClipRectangle.Top + Math.Min(e.ClipRectangle.Height * MARGIN_MULTIPLIER, MARGIN_MAX),
-                        x2: (float)i / subSegmentCount * overflowWidth,
-                        y2: e.ClipRectangle.Bottom - Math.Min(e.ClipRectangle.Height * MARGIN_MULTIPLIER, MARGIN_MAX)
+                        x1: bounds.Left + (float)i / subSegmentCount * overflowWidth,
+                        y1: bounds.Top + Math.Min(bounds.Height * MARGIN_MULTIPLIER, MARGIN_MAX),
+                        x2: bounds.Left + (float)i / subSegmentCount * overflowWidth,
+                        y2: bounds.Bottom - Math.Min(bounds.Height * MARGIN_MULTIPLIER, MARGIN_MAX)
                     );
                 }
             }

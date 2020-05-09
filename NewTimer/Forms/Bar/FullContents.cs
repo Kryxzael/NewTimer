@@ -18,6 +18,7 @@ namespace NewTimer.Forms.Bar
             InitializeComponent();
 
             //Sets foreground colors to comply with global settings
+            FullD.ForeColor = Config.GlobalForeColor;
             FullH.ForeColor = Config.GlobalForeColor;
             FullM.ForeColor = Config.GlobalForeColor;
             FullS.ForeColor = Config.GlobalForeColor;
@@ -32,7 +33,9 @@ namespace NewTimer.Forms.Bar
             /*
              * Initialize dynamic fill colors
              */
+
             //Main display
+            FullD.HighlightColor = ColorTranslator.FromHtml("#18A32A");
             FullH.HighlightColor = ColorTranslator.FromHtml("#ff8888");
             FullM.HighlightColor = ColorTranslator.FromHtml("#88ccff");
             FullS.HighlightColor = ColorTranslator.FromHtml("#ffdd88");
@@ -51,6 +54,7 @@ namespace NewTimer.Forms.Bar
              */
 
             //Main display
+            FullD.LeadingZerosColor = Color.Transparent;
             FullH.LeadingZerosColor = Config.GlobalGrayedColor;
             FullM.LeadingZerosColor = Config.GlobalGrayedColor;
             FullS.LeadingZerosColor = Config.GlobalGrayedColor;
@@ -75,6 +79,10 @@ namespace NewTimer.Forms.Bar
             /*
              * Sets the text
              */
+            //Main days
+            FullD.Text = span.Days.ToString("00");
+            FullH.RenderLeadingZeros = true;
+
             //Main hours
             FullH.Text = span.Hours.ToString("00");
             FullH.RenderLeadingZeros = span.TotalDays >= 1;
@@ -104,6 +112,9 @@ namespace NewTimer.Forms.Bar
             /*
              * Set fill effects
              */
+            //Main days
+            FullD.Progress = (float)(isOvertime ? ReversedTimeLeft() : Config.TimeLeft).TotalDays / 7f;
+
             //Main hours
             FullH.Progress = (isOvertime ? ReversedTimeLeft() : Config.TimeLeft).Hours  / 24f;
 

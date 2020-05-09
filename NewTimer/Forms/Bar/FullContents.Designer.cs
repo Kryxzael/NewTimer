@@ -40,6 +40,7 @@
             this.FullTotalH = new NewTimer.FormParts.LabelGrayedLeadingZeros();
             this.FullM = new NewTimer.FormParts.LabelGrayedLeadingZeros();
             this.FullTotalS = new NewTimer.FormParts.LabelGrayedLeadingZeros();
+            this.FullD = new NewTimer.FormParts.LabelGrayedLeadingZeros();
             this.SuspendLayout();
             // 
             // label11
@@ -219,11 +220,28 @@
             this.FullTotalS.Text = "0000000";
             this.FullTotalS.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
+            // FullD
+            // 
+            this.FullD.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.FullD.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(221)))), ((int)(((byte)(221)))), ((int)(((byte)(221)))));
+            this.FullD.HighlightColor = System.Drawing.Color.Empty;
+            this.FullD.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.FullD.LeadingZerosColor = System.Drawing.Color.Gray;
+            this.FullD.Location = new System.Drawing.Point(8, 87);
+            this.FullD.Name = "FullD";
+            this.FullD.Progress = 0F;
+            this.FullD.RenderLeadingZeros = false;
+            this.FullD.Size = new System.Drawing.Size(29, 35);
+            this.FullD.TabIndex = 24;
+            this.FullD.Text = "00";
+            this.FullD.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
             // FullContents
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Transparent;
+            this.Controls.Add(this.FullD);
             this.Controls.Add(this.overwatchBar2);
             this.Controls.Add(this.FullS);
             this.Controls.Add(this.FullH);
@@ -257,5 +275,6 @@
         private NewTimer.FormParts.TimerBar overwatchBar2;
         private FormParts.LabelGrayedLeadingZeros FullH;
         private FormParts.LabelGrayedLeadingZeros FullS;
+        private FormParts.LabelGrayedLeadingZeros FullD;
     }
 }

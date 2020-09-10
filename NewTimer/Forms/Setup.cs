@@ -361,6 +361,7 @@ namespace NewTimer.Forms
             {
                 Config.StartTimer(
                     target: new DateTime((int)numYear.Value, (int)knbMonth.Value, (int)knbDay.Value, (int)knbHour.Value, (int)knbMin.Value, (int)knbSec.Value),
+                    stopAtZero: chkStopAtZero.Checked,
                     colorScheme: GetSelectedColorScheme(),
                     closingForm: this
                 );
@@ -371,9 +372,22 @@ namespace NewTimer.Forms
             {
                 Config.StartTimer(
                     target: DateTime.Now.Add(new TimeSpan((int)knbDurHour.Value, (int)knbDurMin.Value, (int)knbDurSec.Value)),
+                    stopAtZero: chkStopAtZero.Checked, 
                     colorScheme: GetSelectedColorScheme(),
                     closingForm: this
                 );
+            }
+        }
+
+        private void OnStopAtZeroChanged(object sender, EventArgs e)
+        {
+            if (sender == chkStopAtZero)
+            {
+                chkDurStopAtZero.Checked = chkStopAtZero.Checked;
+            }
+            else
+            {
+                chkStopAtZero.Checked = chkDurStopAtZero.Checked;
             }
         }
     }

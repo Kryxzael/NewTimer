@@ -73,7 +73,12 @@ namespace NewTimer.FormParts.Setup
         protected override void OnClick(EventArgs e)
         {
             base.OnClick(e);
-            Config.StartTimer(GetTarget(), (ParentForm as Forms.Setup).GetSelectedColorScheme(), ParentForm);
+            Config.StartTimer(
+                target: GetTarget(), 
+                colorScheme: (ParentForm as Forms.Setup).GetSelectedColorScheme(), 
+                stopAtZero: (ParentForm as Forms.Setup).chkStopAtZero.Checked,
+                closingForm: ParentForm
+            );
         }
     }
 }

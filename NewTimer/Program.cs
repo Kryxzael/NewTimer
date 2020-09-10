@@ -31,6 +31,7 @@ namespace NewTimer
             Command.Register<Commands.TimeLeft>();
             Command.Register<Commands.ColorScheme>();
             Command.Register<Commands.Freeze>();
+            Command.Register<Commands.EndMode>();
 
             //If there is an argument, treat is as a file path and open it
             if (args.Length > 0)

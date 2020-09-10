@@ -32,10 +32,30 @@ namespace NewTimer
         public static ColorScheme ColorScheme { get; set; }
 
         /// <summary>
+        /// Gets or sets whether the timer should stop when it reaches zero
+        /// </summary>
+        public static bool StopAtZero { get; set; }
+
+        /// <summary>
         /// Gets the time to display on the timer. This is value will start incrementing once the target time has passed
         /// </summary>
         /// <returns></returns>
-        public static TimeSpan TimeLeft => DateTime.Now > Target ? DateTime.Now - Target : Target - DateTime.Now;
+        public static TimeSpan TimeLeft
+        {
+            get
+            {
+                if (DateTime.Now > Target)
+                {
+                    if (StopAtZero)
+                        return new TimeSpan();
+
+                    return DateTime.Now - Target;
+                }
+                    
+
+                return Target - DateTime.Now;
+            }
+        }
 
         /// <summary>
         /// Gets the real time left until the target time. This value will go negative after the target time
@@ -190,11 +210,12 @@ namespace NewTimer
         /// </summary>
         /// <param name="target">Target time</param>
         /// <param name="closingForm">Form that will be closed, this should be the settings form</param>
-        public static void StartTimer(DateTime target, ColorScheme colorScheme, Form closingForm = null)
+        public static void StartTimer(DateTime target, ColorScheme colorScheme, bool stopAtZero, Form closingForm = null)
         {
             //Set target and color scheme
             Target = target;
             ColorScheme = colorScheme;
+            StopAtZero = stopAtZero;
 
             //Close the closing form with a result of OK so that the application doesn't exit
             if (closingForm != null)

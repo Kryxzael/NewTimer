@@ -30,6 +30,9 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Setup));
             this.tabDuration = new System.Windows.Forms.TabPage();
+            this.label4 = new System.Windows.Forms.Label();
+            this.label5 = new System.Windows.Forms.Label();
+            this.chkDurStopAtZero = new System.Windows.Forms.CheckBox();
             this.flwTimeSuggestionsDuration = new System.Windows.Forms.FlowLayoutPanel();
             this.btnLoadDuration = new System.Windows.Forms.Button();
             this.btnSaveDuration = new System.Windows.Forms.Button();
@@ -38,6 +41,12 @@
             this.knbDurMin = new NewTimer.FormParts.Setup.KnobDual();
             this.knbDurHour = new NewTimer.FormParts.Setup.Knob();
             this.tabTime = new System.Windows.Forms.TabPage();
+            this.label3 = new System.Windows.Forms.Label();
+            this.label2 = new System.Windows.Forms.Label();
+            this.chkStopAtZero = new System.Windows.Forms.CheckBox();
+            this.label1 = new System.Windows.Forms.Label();
+            this.lbl24h1 = new System.Windows.Forms.Label();
+            this.chk24h = new System.Windows.Forms.CheckBox();
             this.flwTimeSuggestions = new System.Windows.Forms.FlowLayoutPanel();
             this.btnLoadCountdown = new System.Windows.Forms.Button();
             this.btnSaveCountdown = new System.Windows.Forms.Button();
@@ -52,9 +61,6 @@
             this.knbHour = new NewTimer.FormParts.Setup.KnobHour();
             this.tabs = new System.Windows.Forms.TabControl();
             this.cboxColors = new NewTimer.FormParts.ColorSchemeComboBox();
-            this.chk24h = new System.Windows.Forms.CheckBox();
-            this.lbl24h1 = new System.Windows.Forms.Label();
-            this.label1 = new System.Windows.Forms.Label();
             this.tabDuration.SuspendLayout();
             this.tabTime.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numYear)).BeginInit();
@@ -64,6 +70,9 @@
             // tabDuration
             // 
             this.tabDuration.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(17)))), ((int)(((byte)(17)))), ((int)(((byte)(17)))));
+            this.tabDuration.Controls.Add(this.label4);
+            this.tabDuration.Controls.Add(this.label5);
+            this.tabDuration.Controls.Add(this.chkDurStopAtZero);
             this.tabDuration.Controls.Add(this.flwTimeSuggestionsDuration);
             this.tabDuration.Controls.Add(this.btnLoadDuration);
             this.tabDuration.Controls.Add(this.btnSaveDuration);
@@ -77,6 +86,34 @@
             this.tabDuration.Size = new System.Drawing.Size(396, 289);
             this.tabDuration.TabIndex = 1;
             this.tabDuration.Text = "Duration";
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(262, 237);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(27, 13);
+            this.label4.TabIndex = 23;
+            this.label4.Text = "zero";
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(262, 220);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(41, 13);
+            this.label5.TabIndex = 22;
+            this.label5.Text = "Stop at";
+            // 
+            // chkDurStopAtZero
+            // 
+            this.chkDurStopAtZero.AutoSize = true;
+            this.chkDurStopAtZero.Location = new System.Drawing.Point(294, 236);
+            this.chkDurStopAtZero.Name = "chkDurStopAtZero";
+            this.chkDurStopAtZero.Size = new System.Drawing.Size(15, 14);
+            this.chkDurStopAtZero.TabIndex = 21;
+            this.chkDurStopAtZero.UseVisualStyleBackColor = true;
+            this.chkDurStopAtZero.CheckedChanged += new System.EventHandler(this.OnStopAtZeroChanged);
             // 
             // flwTimeSuggestionsDuration
             // 
@@ -174,6 +211,9 @@
             // tabTime
             // 
             this.tabTime.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(17)))), ((int)(((byte)(17)))), ((int)(((byte)(17)))));
+            this.tabTime.Controls.Add(this.label3);
+            this.tabTime.Controls.Add(this.label2);
+            this.tabTime.Controls.Add(this.chkStopAtZero);
             this.tabTime.Controls.Add(this.label1);
             this.tabTime.Controls.Add(this.lbl24h1);
             this.tabTime.Controls.Add(this.chk24h);
@@ -195,6 +235,62 @@
             this.tabTime.Size = new System.Drawing.Size(396, 289);
             this.tabTime.TabIndex = 0;
             this.tabTime.Text = "Set time";
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(262, 237);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(27, 13);
+            this.label3.TabIndex = 20;
+            this.label3.Text = "zero";
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(262, 220);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(41, 13);
+            this.label2.TabIndex = 19;
+            this.label2.Text = "Stop at";
+            // 
+            // chkStopAtZero
+            // 
+            this.chkStopAtZero.AutoSize = true;
+            this.chkStopAtZero.Location = new System.Drawing.Point(294, 236);
+            this.chkStopAtZero.Name = "chkStopAtZero";
+            this.chkStopAtZero.Size = new System.Drawing.Size(15, 14);
+            this.chkStopAtZero.TabIndex = 18;
+            this.chkStopAtZero.UseVisualStyleBackColor = true;
+            this.chkStopAtZero.CheckedChanged += new System.EventHandler(this.OnStopAtZeroChanged);
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(262, 191);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(26, 13);
+            this.label1.TabIndex = 17;
+            this.label1.Text = "time";
+            // 
+            // lbl24h1
+            // 
+            this.lbl24h1.AutoSize = true;
+            this.lbl24h1.Location = new System.Drawing.Point(261, 176);
+            this.lbl24h1.Name = "lbl24h1";
+            this.lbl24h1.Size = new System.Drawing.Size(50, 13);
+            this.lbl24h1.TabIndex = 16;
+            this.lbl24h1.Text = "Use 24 h";
+            // 
+            // chk24h
+            // 
+            this.chk24h.AutoSize = true;
+            this.chk24h.Location = new System.Drawing.Point(294, 192);
+            this.chk24h.Name = "chk24h";
+            this.chk24h.Size = new System.Drawing.Size(15, 14);
+            this.chk24h.TabIndex = 15;
+            this.chk24h.UseVisualStyleBackColor = true;
+            this.chk24h.CheckedChanged += new System.EventHandler(this.OnChangeHourMode);
             // 
             // flwTimeSuggestions
             // 
@@ -393,34 +489,6 @@
             this.cboxColors.Size = new System.Drawing.Size(73, 21);
             this.cboxColors.TabIndex = 14;
             // 
-            // chk24h
-            // 
-            this.chk24h.AutoSize = true;
-            this.chk24h.Location = new System.Drawing.Point(294, 236);
-            this.chk24h.Name = "chk24h";
-            this.chk24h.Size = new System.Drawing.Size(15, 14);
-            this.chk24h.TabIndex = 15;
-            this.chk24h.UseVisualStyleBackColor = true;
-            this.chk24h.CheckedChanged += new System.EventHandler(this.OnChangeHourMode);
-            // 
-            // lbl24h1
-            // 
-            this.lbl24h1.AutoSize = true;
-            this.lbl24h1.Location = new System.Drawing.Point(261, 220);
-            this.lbl24h1.Name = "lbl24h1";
-            this.lbl24h1.Size = new System.Drawing.Size(50, 13);
-            this.lbl24h1.TabIndex = 16;
-            this.lbl24h1.Text = "Use 24 h";
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(262, 235);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(26, 13);
-            this.label1.TabIndex = 17;
-            this.label1.Text = "time";
-            // 
             // Setup
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -438,6 +506,7 @@
             this.ShowIcon = false;
             this.Text = "Settings";
             this.tabDuration.ResumeLayout(false);
+            this.tabDuration.PerformLayout();
             this.tabTime.ResumeLayout(false);
             this.tabTime.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numYear)).EndInit();
@@ -473,5 +542,11 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label lbl24h1;
         private System.Windows.Forms.CheckBox chk24h;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.CheckBox chkDurStopAtZero;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Label label2;
+        internal System.Windows.Forms.CheckBox chkStopAtZero;
     }
 }

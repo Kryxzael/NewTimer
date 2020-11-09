@@ -89,6 +89,9 @@ namespace NewTimer.Forms
                     //Load time values
                     knbHour.Value = node["Target;Time;Hour"].Int;
                     knbMin.Value = node["Target;Time;Minute"].Int;
+
+                    //Load Stop At Zero
+                    chkStopAtZero.Checked = node["StopAtZero"]?.Boolean ?? false;
                 }
 
                 //Preset is of type: duration
@@ -101,6 +104,9 @@ namespace NewTimer.Forms
                     knbDurHour.Value = node["Target;Hours"].Int;
                     knbDurMin.Value = node["Target;Minutes"].Int;
                     knbDurSec.Value = node["Target;Seconds"].Int;
+
+                    //Load Stop At Zero
+                    chkDurStopAtZero.Checked = node["StopAtZero"]?.Boolean ?? false;
                 }
 
                 //The preset did not have a valid header
@@ -111,8 +117,6 @@ namespace NewTimer.Forms
 
                 //Load the color scheme
                 cboxColors.SelectedIndex = node["ColorScheme"]?.Int ?? 0;
-
-
             }
             catch (Exception ex)
             {
@@ -162,6 +166,9 @@ namespace NewTimer.Forms
 
             //Create color scheme node
             node.Add("ColorScheme", cboxColors.SelectedIndex);
+
+            //Create Stop at Zero node
+            node.Add("StopAtZero", chkStopAtZero.Checked);
             return node;
         }
 
@@ -186,6 +193,9 @@ namespace NewTimer.Forms
 
             //Create color scheme node
             node.Add("ColorScheme", cboxColors.SelectedIndex);
+
+            //Create Stop at Zero node
+            node.Add("StopAtZero", chkDurStopAtZero.Checked);
             return node;
         }
     }

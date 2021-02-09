@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Bars;
+using NewTimer.Forms;
 
 namespace NewTimer
 {
@@ -228,7 +229,7 @@ namespace NewTimer
             ColorizeTimerBar();
 
             //Show main form
-            new Forms.Bar.Bar().Show();
+            new TimerFormBase().Show();
         }
 
 

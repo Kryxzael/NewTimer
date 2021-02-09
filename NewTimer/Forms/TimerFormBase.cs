@@ -1,4 +1,5 @@
 ﻿using NewTimer.FormParts;
+using NewTimer.Forms.Bar;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -15,7 +16,7 @@ namespace NewTimer.Forms
     /// <summary>
     /// Base class for any timer form
     /// </summary>
-    public abstract partial class TimerFormBase : Form
+    public partial class TimerFormBase : Form
     {
         /// <summary>
         /// The main loop timer
@@ -39,30 +40,6 @@ namespace NewTimer.Forms
 
         protected override bool DoubleBuffered { get => true; }
 
-        /// <summary>
-        /// Gets the control that will fill the 'full' tab. The control will be fill-docked
-        /// </summary>
-        /// <returns></returns>
-        public abstract Control FullTabContents();
-
-        /// <summary>
-        /// Gets the control that will fill the 'days' tab. The control will be fill-docked
-        /// </summary>
-        /// <returns></returns>
-        public abstract Control DaysTabContents();
-
-        /// <summary>
-        /// Gets the control that will fill the 'bar' tab. The control will be fill-docked
-        /// </summary>
-        /// <returns></returns>
-        public abstract Control BarTabContents();
-
-        /// <summary>
-        /// Gets the name that will be displayed on the 'bar' tab
-        /// </summary>
-        /// <returns></returns>
-        public abstract string GetBarTabName();
-
         public TimerFormBase()
         {
             InitializeComponent();
@@ -73,9 +50,10 @@ namespace NewTimer.Forms
             tabs.BackColor = Color.Transparent;
 
             //Position window to the bottom right corner of the screen
-            const int POS_OFFSET = +7;
+            const int POS_OFFSET_X = 58;
+            const int POS_OFFSET_Y = 9;
             StartPosition = FormStartPosition.Manual;
-            Location = new Point(Screen.FromControl(this).WorkingArea.Right - Size.Width + POS_OFFSET, Screen.FromControl(this).WorkingArea.Bottom - Size.Height + POS_OFFSET);
+            Location = new Point(Screen.FromControl(this).WorkingArea.Right - Size.Width + POS_OFFSET_X, Screen.FromControl(this).WorkingArea.Bottom - Size.Height + POS_OFFSET_Y);
 
             //Set the window to be topmost
             TopMost = true;
@@ -97,9 +75,9 @@ namespace NewTimer.Forms
         /// </summary>
         private void InitializeCustomControls()
         {
-            Control fullContents = setControlDefaults(FullTabContents(), tabFull);
-            Control daysContents = setControlDefaults(DaysTabContents(), tabDaysOnly);
-            Control barContents = setControlDefaults(BarTabContents(), tabBarOnly);
+            setControlDefaults(new FullContents(), tabFull);
+            setControlDefaults(new ClockControl(), tabAnalog);
+            setControlDefaults(new TimerBar(), tabBarOnly);
 
             //Normalizes settings for the given control. This function returns its input
             /* local */ Control setControlDefaults(Control ctrl, Control parent)

@@ -64,6 +64,7 @@ namespace NewTimer.FormParts
 
         //Disc settings
         private const float DISC_INITAL_SCALE = (1 - BG_FRAME_SCALE) * 0.95f;
+        private const float DISC_INITAL_SCALE_HOURS = (1 - HOUR_HAND_SCALE) * 0.95f;
         private const float DISC_DIVIDEND_INCREMENT = 0.2f;
 
         private Rectangle squareArea;
@@ -357,6 +358,21 @@ namespace NewTimer.FormParts
                 e.Graphics.FillPie(color, area, -90 + startAngle, angle);
             }
 
+            /*
+             * Creates an unfilled pie
+             */
+            /* local */ void drawPie(Pen color, float startAngle, float angle, float scale)
+            {
+                Rectangle area = new Rectangle(
+                    x: squareArea.X + (int)(squareArea.Width * (1 - scale) / 2f),
+                    y: squareArea.Y + (int)(squareArea.Height * (1 - scale) / 2f),
+                    width: Math.Max(1, (int)(squareArea.Width * scale)),
+                    height: Math.Max(1, (int)(squareArea.Height * scale))
+                );
+
+                e.Graphics.DrawPie(color, area, -90 + startAngle, angle);
+            }
+
             //Create the final-minute color shift
             if (Config.TimeLeft.TotalMinutes < 1f && !Config.Overtime)
             {
@@ -371,32 +387,111 @@ namespace NewTimer.FormParts
             /*
              * Draw pies
              */
-            float dividend = 1f;
-            for (int i = 0; i < Math.Ceiling(Config.TimeLeft.TotalHours); i++)
+
+            //Draw for days (more than 1 day)
+            if (Config.TimeLeft.TotalDays >= 1)
             {
-                //Create a colored pen based on what hour we are drawing
-                using (SolidBrush b = new SolidBrush(_colors[i % _colors.Length]))
+                float dividend = 1f;
+                for (int i = 0; i < Math.Ceiling(Config.TimeLeft.TotalDays / 12); i++)
                 {
-                    if (i == Math.Floor(Config.TimeLeft.TotalHours))
+                    //Create a colored pen based on what hour we are drawing
+                    using (Brush b = new SolidBrush(_colors[i % _colors.Length]))
                     {
-                        fillPie(
-                            color: b, 
-                            startAngle: (DateTime.Now.Minute + DateTime.Now.Second / 60f) / 60f * 360f,
-                            angle: (float)(Config.RealTimeLeft.TotalMinutes % 60) / 60f * 360f, 
-                            scale: DISC_INITAL_SCALE / dividend);
+                        if (i == Math.Floor(Config.TimeLeft.TotalDays / 12))
+                        {
+                            fillPie(
+                                color: b,
+                                startAngle: 0f,
+                                angle: ((float)Config.TimeLeft.TotalDays % 12f) * 360f / 12f,
+                                scale: DISC_INITAL_SCALE / dividend);
+                        }
+                        else
+                        {
+                            fillPie(
+                                color: b,
+                                startAngle: 0f,
+                                angle: 360f,
+                                scale: DISC_INITAL_SCALE / dividend
+                            );
+                        }
                     }
-                    else
+
+                    dividend += DISC_INITAL_SCALE_HOURS;
+                }
+
+                drawPie(Pens.Gray, 7 / 12f * 360f, 1f, DISC_INITAL_SCALE);
+
+                if (Config.TimeLeft.TotalDays >= 7f)
+                    drawPie(Pens.Gray, 2 / 12f * 360f, 1f, DISC_INITAL_SCALE);
+
+                if (Config.TimeLeft.TotalDays >= 14f)
+                    drawPie(Pens.Gray, 9 / 12f * 360f, 1f, DISC_INITAL_SCALE);
+
+                fillPie(BG_BRUSH, 0f, 360f, DISC_INITAL_SCALE_HOURS);
+            }
+
+            //Draw for hours (more than 4 hours)
+            else if (Config.TimeLeft.TotalHours >= 4)
+            {
+                float dividend = 1f;
+                for (int i = 0; i < Math.Ceiling(Config.TimeLeft.TotalDays * 2); i++)
+                {
+                    //Create a colored pen based on what hour we are drawing
+                    using (Brush b = new SolidBrush(_colors[i % _colors.Length]))
                     {
-                        fillPie(
-                            color: b, 
-                            startAngle: 0f, 
-                            angle: 360f, 
-                            scale: DISC_INITAL_SCALE / dividend
-                        );
+                        if (i == Math.Floor(Config.TimeLeft.TotalDays * 2))
+                        {
+                            fillPie(
+                                color: b,
+                                startAngle: ((DateTime.Now.Hour % 12) + DateTime.Now.Minute / 60f) / 12f * 360f,
+                                angle: (float)(Config.RealTimeLeft.TotalHours % 12) / 12f * 360f,
+                                scale: DISC_INITAL_SCALE_HOURS / dividend);
+                        }
+                        else
+                        {
+                            fillPie(
+                                color: b,
+                                startAngle: 0f,
+                                angle: 360f,
+                                scale: DISC_INITAL_SCALE_HOURS / dividend
+                            );
+                        }
                     }
-                }    
-                
-                dividend += DISC_DIVIDEND_INCREMENT;
+
+                    dividend += DISC_INITAL_SCALE_HOURS;
+                }
+            }
+
+            //Draw for minutes (less than 4 hours)
+            else
+            {
+                float dividend = 1f;
+                for (int i = 0; i < Math.Ceiling(Config.TimeLeft.TotalHours); i++)
+                {
+                    //Create a colored pen based on what hour we are drawing
+                    using (SolidBrush b = new SolidBrush(_colors[i % _colors.Length]))
+                    {
+                        if (i == Math.Floor(Config.TimeLeft.TotalHours))
+                        {
+                            fillPie(
+                                color: b,
+                                startAngle: (DateTime.Now.Minute + DateTime.Now.Second / 60f) / 60f * 360f,
+                                angle: (float)(Config.RealTimeLeft.TotalMinutes % 60) / 60f * 360f,
+                                scale: DISC_INITAL_SCALE / dividend);
+                        }
+                        else
+                        {
+                            fillPie(
+                                color: b,
+                                startAngle: 0f,
+                                angle: 360f,
+                                scale: DISC_INITAL_SCALE / dividend
+                            );
+                        }
+                    }
+
+                    dividend += DISC_DIVIDEND_INCREMENT;
+                }
             }
         }
 

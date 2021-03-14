@@ -394,15 +394,15 @@ namespace NewTimer.FormParts
                 float dividend = 1f;
                 for (int i = 0; i < Math.Ceiling(Config.TimeLeft.TotalDays / 12); i++)
                 {
-                    //Create a colored pen based on what hour we are drawing
-                    using (Brush b = new SolidBrush(_colors[i % _colors.Length]))
+                    //Create a colored pen based on what days we are drawing
+                    using (Brush b = new SolidBrush(_colors[(i + 6) % _colors.Length]))
                     {
                         if (i == Math.Floor(Config.TimeLeft.TotalDays / 12))
                         {
                             fillPie(
                                 color: b,
                                 startAngle: 0f,
-                                angle: ((float)Config.TimeLeft.TotalDays % 12f) * 360f / 12f,
+                                angle: (float)Config.TimeLeft.TotalDays % 12f * 360f / 12f,
                                 scale: DISC_INITAL_SCALE / dividend);
                         }
                         else
@@ -419,25 +419,38 @@ namespace NewTimer.FormParts
                     dividend += DISC_INITAL_SCALE_HOURS;
                 }
 
-                drawPie(Pens.Gray, 7 / 12f * 360f, 1f, DISC_INITAL_SCALE);
+                //Draw lines segmenting the bar
+                using (Pen p = new Pen(Color.FromArgb(0x7F, Color.Silver), 1.5f) { DashStyle = DashStyle.Dash })
+                {
+                    for (int a = 0; a < Math.Min(12, Config.TimeLeft.TotalDays); a++)
+                    {
+                        Point startPoint = new Point(squareArea.X + squareArea.Width / 2, squareArea.Y + squareArea.Height / 2);
+                        PointF endPoint = GetPointAtAngle(startPoint, (int)(DISC_INITAL_SCALE * squareArea.Width / 2), CalculateAngle(a * (Config.Overtime ? -1 : 1), 12));
+
+                        e.Graphics.DrawLine(p, startPoint, endPoint);
+                    }
+                }
+
+                //Draw week indicators
+                fillPie(Brushes.Gray, 7 / 12f * 360f, 1f, DISC_INITAL_SCALE);
 
                 if (Config.TimeLeft.TotalDays >= 7f)
-                    drawPie(Pens.Gray, 2 / 12f * 360f, 1f, DISC_INITAL_SCALE);
+                    fillPie(Brushes.Gray, 2 / 12f * 360f, 1f, DISC_INITAL_SCALE);
 
                 if (Config.TimeLeft.TotalDays >= 14f)
-                    drawPie(Pens.Gray, 9 / 12f * 360f, 1f, DISC_INITAL_SCALE);
+                    fillPie(Brushes.Gray, 9 / 12f * 360f, 1f, DISC_INITAL_SCALE);
 
                 fillPie(BG_BRUSH, 0f, 360f, DISC_INITAL_SCALE_HOURS);
             }
 
-            //Draw for hours (more than 4 hours)
-            else if (Config.TimeLeft.TotalHours >= 4)
+            //Draw for hours (more than 3 hours)
+            else if (Config.TimeLeft.TotalHours >= 3)
             {
                 float dividend = 1f;
                 for (int i = 0; i < Math.Ceiling(Config.TimeLeft.TotalDays * 2); i++)
                 {
-                    //Create a colored pen based on what hour we are drawing
-                    using (Brush b = new SolidBrush(_colors[i % _colors.Length]))
+                    //Create a colored pen based on what hours we are drawing
+                    using (Brush b = new SolidBrush(_colors[(i + 4) % _colors.Length]))
                     {
                         if (i == Math.Floor(Config.TimeLeft.TotalDays * 2))
                         {
@@ -445,7 +458,8 @@ namespace NewTimer.FormParts
                                 color: b,
                                 startAngle: ((DateTime.Now.Hour % 12) + DateTime.Now.Minute / 60f) / 12f * 360f,
                                 angle: (float)(Config.RealTimeLeft.TotalHours % 12) / 12f * 360f,
-                                scale: DISC_INITAL_SCALE_HOURS / dividend);
+                                scale: DISC_INITAL_SCALE_HOURS / dividend
+                            );
                         }
                         else
                         {
@@ -462,7 +476,7 @@ namespace NewTimer.FormParts
                 }
             }
 
-            //Draw for minutes (less than 4 hours)
+            //Draw for minutes (less than 3 hours)
             else
             {
                 float dividend = 1f;
@@ -477,7 +491,8 @@ namespace NewTimer.FormParts
                                 color: b,
                                 startAngle: (DateTime.Now.Minute + DateTime.Now.Second / 60f) / 60f * 360f,
                                 angle: (float)(Config.RealTimeLeft.TotalMinutes % 60) / 60f * 360f,
-                                scale: DISC_INITAL_SCALE / dividend);
+                                scale: DISC_INITAL_SCALE / dividend
+                            );
                         }
                         else
                         {
@@ -491,6 +506,20 @@ namespace NewTimer.FormParts
                     }
 
                     dividend += DISC_DIVIDEND_INCREMENT;
+                }
+            }
+
+            //Draw for seconds (less than 12 minutes)
+            if (Config.TimeLeft.TotalMinutes < 12)
+            {
+                using (Pen p = new Pen(_colors[0], 2f) { DashStyle = DashStyle.Dash })
+                {
+                    drawPie(
+                        color: p,
+                        startAngle: 0f,
+                        angle: (float)Config.RealTimeLeft.TotalMinutes / 12f * 360f,
+                        scale: DISC_INITAL_SCALE
+                    );
                 }
             }
         }

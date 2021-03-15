@@ -512,7 +512,7 @@ namespace NewTimer.FormParts
             //Draw for seconds (less than 12 minutes)
             if (Config.TimeLeft.TotalMinutes < 12)
             {
-                using (Pen p = new Pen(_colors[0], 2f) { DashStyle = DashStyle.Dash })
+                using (Pen p = new Pen(_colors[10 % _colors.Length], 2f) { DashStyle = DashStyle.Dash })
                 {
                     drawPie(
                         color: p,

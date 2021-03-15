@@ -75,8 +75,9 @@ namespace NewTimer.Forms
         /// </summary>
         private void InitializeCustomControls()
         {
-            setControlDefaults(new FullContents(), tabFull);
+            setControlDefaults(new Bar.FullContents(), tabFull);
             setControlDefaults(new ClockControl(), tabAnalog);
+            setControlDefaults(new Circle.FullContents(), tabCircle);
             setControlDefaults(new TimerBar(), tabBarOnly);
 
             //Normalizes settings for the given control. This function returns its input
@@ -128,7 +129,7 @@ namespace NewTimer.Forms
         }
 
         /// <summary>
-        /// Recursivly find and update every ICountdown control
+        /// Recursively find and update every ICountdown control
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -137,7 +138,7 @@ namespace NewTimer.Forms
             //Update ICountdowns
             recursiveUpdate(this);
 
-            //Recusivly updates every ICountdown control in the given control
+            //Recursively updates every ICountdown control in the given control
             /* local */ void recursiveUpdate(Control c)
             {
                 if (c is ICountdown ic)
@@ -228,7 +229,7 @@ namespace NewTimer.Forms
         private void OnTabSelected(object sender, TabControlEventArgs e)
         {
             //Locks window size if the 'full' tab is selected
-            if (tabs.SelectedTab == tabFull)
+            if (tabs.SelectedTab == tabFull || tabs.SelectedTab == tabCircle)
             {
                 MaximumSize = new Size(335, 310);
                 MinimumSize = MaximumSize;

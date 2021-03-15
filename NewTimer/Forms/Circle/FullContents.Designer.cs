@@ -1,4 +1,6 @@
-﻿namespace NewTimer.Forms.Circle
+﻿using NewTimer.FormParts;
+
+namespace NewTimer.Forms.Circle
 {
     partial class FullContents
     {
@@ -104,12 +106,12 @@
             this.FullTotalS.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.FullTotalS.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(221)))), ((int)(((byte)(221)))), ((int)(((byte)(221)))));
             this.FullTotalS.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.FullTotalS.Location = new System.Drawing.Point(212, 223);
+            this.FullTotalS.Location = new System.Drawing.Point(214, 223);
             this.FullTotalS.Name = "FullTotalS";
             this.FullTotalS.Size = new System.Drawing.Size(103, 25);
             this.FullTotalS.TabIndex = 18;
             this.FullTotalS.Text = "0000000";
-            this.FullTotalS.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.FullTotalS.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // FullTotalM
             // 
@@ -139,10 +141,10 @@
             // 
             // FullH
             // 
-            this.FullH.Font = new System.Drawing.Font("Microsoft Sans Serif", 27.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.FullH.Font = new System.Drawing.Font("Microsoft Sans Serif", 24F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.FullH.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(221)))), ((int)(((byte)(221)))), ((int)(((byte)(221)))));
             this.FullH.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.FullH.Location = new System.Drawing.Point(125, 40);
+            this.FullH.Location = new System.Drawing.Point(122, 48);
             this.FullH.Name = "FullH";
             this.FullH.Size = new System.Drawing.Size(65, 45);
             this.FullH.TabIndex = 15;
@@ -151,10 +153,10 @@
             // 
             // FullS
             // 
-            this.FullS.Font = new System.Drawing.Font("Microsoft Sans Serif", 27.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.FullS.Font = new System.Drawing.Font("Microsoft Sans Serif", 24F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.FullS.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(221)))), ((int)(((byte)(221)))), ((int)(((byte)(221)))));
             this.FullS.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.FullS.Location = new System.Drawing.Point(125, 155);
+            this.FullS.Location = new System.Drawing.Point(122, 142);
             this.FullS.Name = "FullS";
             this.FullS.Size = new System.Drawing.Size(63, 40);
             this.FullS.TabIndex = 14;
@@ -175,17 +177,6 @@
             // 
             // overwatchCircle2
             // 
-            this.overwatchCircle2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(242)))), ((int)(((byte)(34)))));
-            this.overwatchCircle2.Colors = new System.Drawing.Color[] {
-        System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(36)))), ((int)(((byte)(164))))),
-        System.Drawing.Color.FromArgb(((int)(((byte)(84)))), ((int)(((byte)(91)))), ((int)(((byte)(170))))),
-        System.Drawing.Color.FromArgb(((int)(((byte)(180)))), ((int)(((byte)(69)))), ((int)(((byte)(27))))),
-        System.Drawing.Color.FromArgb(((int)(((byte)(210)))), ((int)(((byte)(144)))), ((int)(((byte)(139))))),
-        System.Drawing.Color.FromArgb(((int)(((byte)(187)))), ((int)(((byte)(109)))), ((int)(((byte)(194))))),
-        System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(178)))), ((int)(((byte)(92))))),
-        System.Drawing.Color.FromArgb(((int)(((byte)(51)))), ((int)(((byte)(141)))), ((int)(((byte)(72))))),
-        System.Drawing.Color.FromArgb(((int)(((byte)(96)))), ((int)(((byte)(150)))), ((int)(((byte)(146))))),
-        System.Drawing.Color.FromArgb(((int)(((byte)(172)))), ((int)(((byte)(102)))), ((int)(((byte)(138)))))};
             this.overwatchCircle2.Location = new System.Drawing.Point(37, 6);
             this.overwatchCircle2.Name = "overwatchCircle2";
             this.overwatchCircle2.Size = new System.Drawing.Size(233, 233);

@@ -42,6 +42,7 @@
             this.tabFull = new System.Windows.Forms.TabPage();
             this.tabs = new System.Windows.Forms.TabControl();
             this.tabAnalog = new System.Windows.Forms.TabPage();
+            this.tabCircle = new System.Windows.Forms.TabPage();
             this.TimeOnlyTime = new NewTimer.FormParts.AutoLabel();
             this.HoursOnlyHour = new NewTimer.FormParts.AutoLabel();
             this.HoursOnlyFraction = new NewTimer.FormParts.AutoLabel();
@@ -81,12 +82,12 @@
             // tabSecondsOnly
             // 
             this.tabSecondsOnly.Controls.Add(this.splitContainer7);
-            this.tabSecondsOnly.Location = new System.Drawing.Point(4, 22);
+            this.tabSecondsOnly.Location = new System.Drawing.Point(4, 58);
             this.tabSecondsOnly.Name = "tabSecondsOnly";
             this.tabSecondsOnly.Padding = new System.Windows.Forms.Padding(3);
-            this.tabSecondsOnly.Size = new System.Drawing.Size(362, 245);
+            this.tabSecondsOnly.Size = new System.Drawing.Size(362, 209);
             this.tabSecondsOnly.TabIndex = 4;
-            this.tabSecondsOnly.Text = "Seconds";
+            this.tabSecondsOnly.Text = "Sec";
             // 
             // splitContainer7
             // 
@@ -104,19 +105,19 @@
             // 
             this.splitContainer7.Panel2.Controls.Add(this.SecondsOnlyTitle);
             this.splitContainer7.Panel2.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.splitContainer7.Size = new System.Drawing.Size(356, 239);
-            this.splitContainer7.SplitterDistance = 175;
+            this.splitContainer7.Size = new System.Drawing.Size(356, 203);
+            this.splitContainer7.SplitterDistance = 148;
             this.splitContainer7.TabIndex = 0;
             // 
             // tabMinutesOnly
             // 
             this.tabMinutesOnly.Controls.Add(this.splitContainer5);
-            this.tabMinutesOnly.Location = new System.Drawing.Point(4, 22);
+            this.tabMinutesOnly.Location = new System.Drawing.Point(4, 58);
             this.tabMinutesOnly.Name = "tabMinutesOnly";
             this.tabMinutesOnly.Padding = new System.Windows.Forms.Padding(3);
-            this.tabMinutesOnly.Size = new System.Drawing.Size(362, 245);
+            this.tabMinutesOnly.Size = new System.Drawing.Size(362, 209);
             this.tabMinutesOnly.TabIndex = 3;
-            this.tabMinutesOnly.Text = "Minutes";
+            this.tabMinutesOnly.Text = "Min";
             // 
             // splitContainer5
             // 
@@ -134,8 +135,8 @@
             // 
             this.splitContainer5.Panel2.Controls.Add(this.splitContainer6);
             this.splitContainer5.Panel2.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.splitContainer5.Size = new System.Drawing.Size(356, 239);
-            this.splitContainer5.SplitterDistance = 122;
+            this.splitContainer5.Size = new System.Drawing.Size(356, 203);
+            this.splitContainer5.SplitterDistance = 103;
             this.splitContainer5.TabIndex = 1;
             // 
             // splitContainer6
@@ -154,19 +155,19 @@
             // 
             this.splitContainer6.Panel2.Controls.Add(this.MinutesOnlyTitle);
             this.splitContainer6.Panel2.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.splitContainer6.Size = new System.Drawing.Size(356, 113);
-            this.splitContainer6.SplitterDistance = 67;
+            this.splitContainer6.Size = new System.Drawing.Size(356, 96);
+            this.splitContainer6.SplitterDistance = 56;
             this.splitContainer6.TabIndex = 0;
             // 
             // tabHoursOnly
             // 
             this.tabHoursOnly.Controls.Add(this.splitContainer3);
-            this.tabHoursOnly.Location = new System.Drawing.Point(4, 22);
+            this.tabHoursOnly.Location = new System.Drawing.Point(4, 40);
             this.tabHoursOnly.Name = "tabHoursOnly";
             this.tabHoursOnly.Padding = new System.Windows.Forms.Padding(3);
-            this.tabHoursOnly.Size = new System.Drawing.Size(362, 245);
+            this.tabHoursOnly.Size = new System.Drawing.Size(362, 227);
             this.tabHoursOnly.TabIndex = 2;
-            this.tabHoursOnly.Text = "Hours";
+            this.tabHoursOnly.Text = "Hr";
             // 
             // splitContainer3
             // 
@@ -184,8 +185,8 @@
             // 
             this.splitContainer3.Panel2.Controls.Add(this.splitContainer4);
             this.splitContainer3.Panel2.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.splitContainer3.Size = new System.Drawing.Size(356, 239);
-            this.splitContainer3.SplitterDistance = 122;
+            this.splitContainer3.Size = new System.Drawing.Size(356, 221);
+            this.splitContainer3.SplitterDistance = 112;
             this.splitContainer3.TabIndex = 1;
             // 
             // splitContainer4
@@ -204,25 +205,25 @@
             // 
             this.splitContainer4.Panel2.Controls.Add(this.HoursOnlyTitle);
             this.splitContainer4.Panel2.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.splitContainer4.Size = new System.Drawing.Size(356, 113);
-            this.splitContainer4.SplitterDistance = 67;
+            this.splitContainer4.Size = new System.Drawing.Size(356, 105);
+            this.splitContainer4.SplitterDistance = 62;
             this.splitContainer4.TabIndex = 0;
             // 
             // tabTimeOnly
             // 
             this.tabTimeOnly.Controls.Add(this.TimeOnlyTime);
-            this.tabTimeOnly.Location = new System.Drawing.Point(4, 22);
+            this.tabTimeOnly.Location = new System.Drawing.Point(4, 40);
             this.tabTimeOnly.Name = "tabTimeOnly";
             this.tabTimeOnly.Padding = new System.Windows.Forms.Padding(3);
-            this.tabTimeOnly.Size = new System.Drawing.Size(362, 245);
+            this.tabTimeOnly.Size = new System.Drawing.Size(362, 227);
             this.tabTimeOnly.TabIndex = 1;
             this.tabTimeOnly.Text = "Time";
             // 
             // tabBarOnly
             // 
-            this.tabBarOnly.Location = new System.Drawing.Point(4, 22);
+            this.tabBarOnly.Location = new System.Drawing.Point(4, 40);
             this.tabBarOnly.Name = "tabBarOnly";
-            this.tabBarOnly.Size = new System.Drawing.Size(362, 245);
+            this.tabBarOnly.Size = new System.Drawing.Size(362, 227);
             this.tabBarOnly.TabIndex = 6;
             this.tabBarOnly.Text = "Bar";
             this.tabBarOnly.UseVisualStyleBackColor = true;
@@ -240,19 +241,21 @@
             // 
             this.tabs.Controls.Add(this.tabFull);
             this.tabs.Controls.Add(this.tabAnalog);
+            this.tabs.Controls.Add(this.tabCircle);
             this.tabs.Controls.Add(this.tabBarOnly);
             this.tabs.Controls.Add(this.tabTimeOnly);
             this.tabs.Controls.Add(this.tabHoursOnly);
             this.tabs.Controls.Add(this.tabMinutesOnly);
             this.tabs.Controls.Add(this.tabSecondsOnly);
             this.tabs.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tabs.ItemSize = new System.Drawing.Size(30, 18);
             this.tabs.Location = new System.Drawing.Point(0, 0);
             this.tabs.Multiline = true;
             this.tabs.Name = "tabs";
             this.tabs.RightToLeft = System.Windows.Forms.RightToLeft.No;
             this.tabs.SelectedIndex = 0;
             this.tabs.Size = new System.Drawing.Size(370, 271);
-            this.tabs.SizeMode = System.Windows.Forms.TabSizeMode.FillToRight;
+            this.tabs.SizeMode = System.Windows.Forms.TabSizeMode.Fixed;
             this.tabs.TabIndex = 0;
             this.tabs.Selected += new System.Windows.Forms.TabControlEventHandler(this.OnTabSelected);
             // 
@@ -265,6 +268,15 @@
             this.tabAnalog.Text = "Ana";
             this.tabAnalog.UseVisualStyleBackColor = true;
             // 
+            // tabCircle
+            // 
+            this.tabCircle.Location = new System.Drawing.Point(4, 22);
+            this.tabCircle.Name = "tabCircle";
+            this.tabCircle.Size = new System.Drawing.Size(362, 245);
+            this.tabCircle.TabIndex = 8;
+            this.tabCircle.Text = "Cir";
+            this.tabCircle.UseVisualStyleBackColor = true;
+            // 
             // TimeOnlyTime
             // 
             this.TimeOnlyTime.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -273,7 +285,7 @@
             this.TimeOnlyTime.GetText = null;
             this.TimeOnlyTime.Location = new System.Drawing.Point(3, 3);
             this.TimeOnlyTime.Name = "TimeOnlyTime";
-            this.TimeOnlyTime.Size = new System.Drawing.Size(356, 239);
+            this.TimeOnlyTime.Size = new System.Drawing.Size(356, 221);
             this.TimeOnlyTime.TabIndex = 0;
             this.TimeOnlyTime.Text = "0?";
             this.TimeOnlyTime.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -286,7 +298,7 @@
             this.HoursOnlyHour.GetText = null;
             this.HoursOnlyHour.Location = new System.Drawing.Point(0, 0);
             this.HoursOnlyHour.Name = "HoursOnlyHour";
-            this.HoursOnlyHour.Size = new System.Drawing.Size(356, 122);
+            this.HoursOnlyHour.Size = new System.Drawing.Size(356, 112);
             this.HoursOnlyHour.TabIndex = 0;
             this.HoursOnlyHour.Text = "0?";
             this.HoursOnlyHour.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -299,7 +311,7 @@
             this.HoursOnlyFraction.GetText = null;
             this.HoursOnlyFraction.Location = new System.Drawing.Point(0, 0);
             this.HoursOnlyFraction.Name = "HoursOnlyFraction";
-            this.HoursOnlyFraction.Size = new System.Drawing.Size(356, 67);
+            this.HoursOnlyFraction.Size = new System.Drawing.Size(356, 62);
             this.HoursOnlyFraction.TabIndex = 1;
             this.HoursOnlyFraction.Text = "0?";
             this.HoursOnlyFraction.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -312,7 +324,7 @@
             this.HoursOnlyTitle.GetText = null;
             this.HoursOnlyTitle.Location = new System.Drawing.Point(0, 0);
             this.HoursOnlyTitle.Name = "HoursOnlyTitle";
-            this.HoursOnlyTitle.Size = new System.Drawing.Size(356, 42);
+            this.HoursOnlyTitle.Size = new System.Drawing.Size(356, 39);
             this.HoursOnlyTitle.TabIndex = 0;
             this.HoursOnlyTitle.Text = "0?";
             this.HoursOnlyTitle.TextAlign = System.Drawing.ContentAlignment.BottomRight;
@@ -325,7 +337,7 @@
             this.MinutesOnlyMinutes.GetText = null;
             this.MinutesOnlyMinutes.Location = new System.Drawing.Point(0, 0);
             this.MinutesOnlyMinutes.Name = "MinutesOnlyMinutes";
-            this.MinutesOnlyMinutes.Size = new System.Drawing.Size(356, 122);
+            this.MinutesOnlyMinutes.Size = new System.Drawing.Size(356, 103);
             this.MinutesOnlyMinutes.TabIndex = 0;
             this.MinutesOnlyMinutes.Text = "0?";
             this.MinutesOnlyMinutes.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -338,7 +350,7 @@
             this.MinutesOnlyFraction.GetText = null;
             this.MinutesOnlyFraction.Location = new System.Drawing.Point(0, 0);
             this.MinutesOnlyFraction.Name = "MinutesOnlyFraction";
-            this.MinutesOnlyFraction.Size = new System.Drawing.Size(356, 67);
+            this.MinutesOnlyFraction.Size = new System.Drawing.Size(356, 56);
             this.MinutesOnlyFraction.TabIndex = 1;
             this.MinutesOnlyFraction.Text = "0?";
             this.MinutesOnlyFraction.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -351,7 +363,7 @@
             this.MinutesOnlyTitle.GetText = null;
             this.MinutesOnlyTitle.Location = new System.Drawing.Point(0, 0);
             this.MinutesOnlyTitle.Name = "MinutesOnlyTitle";
-            this.MinutesOnlyTitle.Size = new System.Drawing.Size(356, 42);
+            this.MinutesOnlyTitle.Size = new System.Drawing.Size(356, 36);
             this.MinutesOnlyTitle.TabIndex = 0;
             this.MinutesOnlyTitle.Text = "0?";
             this.MinutesOnlyTitle.TextAlign = System.Drawing.ContentAlignment.BottomRight;
@@ -364,7 +376,7 @@
             this.SecondsOnlySecond.GetText = null;
             this.SecondsOnlySecond.Location = new System.Drawing.Point(0, 0);
             this.SecondsOnlySecond.Name = "SecondsOnlySecond";
-            this.SecondsOnlySecond.Size = new System.Drawing.Size(356, 175);
+            this.SecondsOnlySecond.Size = new System.Drawing.Size(356, 148);
             this.SecondsOnlySecond.TabIndex = 1;
             this.SecondsOnlySecond.Text = "0?";
             this.SecondsOnlySecond.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -377,7 +389,7 @@
             this.SecondsOnlyTitle.GetText = null;
             this.SecondsOnlyTitle.Location = new System.Drawing.Point(0, 0);
             this.SecondsOnlyTitle.Name = "SecondsOnlyTitle";
-            this.SecondsOnlyTitle.Size = new System.Drawing.Size(356, 60);
+            this.SecondsOnlyTitle.Size = new System.Drawing.Size(356, 51);
             this.SecondsOnlyTitle.TabIndex = 0;
             this.SecondsOnlyTitle.Text = "0?";
             this.SecondsOnlyTitle.TextAlign = System.Drawing.ContentAlignment.BottomRight;
@@ -445,5 +457,6 @@
         private System.Windows.Forms.TabControl tabs;
         private FormParts.AutoLabel TimeOnlyTime;
         private System.Windows.Forms.TabPage tabAnalog;
+        private System.Windows.Forms.TabPage tabCircle;
     }
 }

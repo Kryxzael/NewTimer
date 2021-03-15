@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Bars;
+
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
@@ -7,211 +9,24 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
+//This file is a mess. Sorry
+
 namespace NewTimer.FormParts
 {
-    class OverwatchCircle : UserControl
+    class OverwatchCircle : UserControl, ICountdown
     {
+        private int _interval;
+        private float _maxValue;
+        private Color _fillColor;
+        private Color _overflowColor;
+        private float _value;
+
         [Bindable(false)]
         public Color[] Colors { get; set; } = Config.ColorScheme.GenerateMany(9, Config.MasterRandom).ToArray();
 
         public OverwatchCircle()
         {
             SetStyle(ControlStyles.AllPaintingInWmPaint, true);
-        }
-
-        public override Color ForeColor
-        {
-            get
-            {
-                TimeSpan tl = Config.TimeLeft;
-
-                if (tl.TotalSeconds < 10)
-                {
-                    return Color.White;
-                }
-                else if (tl.TotalMinutes < 1)
-                {
-                    return Colors[0];
-                }
-                else if (tl.TotalMinutes < 10)
-                {
-                    return Colors[1];
-                }
-                else if (tl.TotalMinutes < 30)
-                {
-                    return Colors[2];
-                }
-                else if (tl.TotalMinutes < 60 + 15)
-                {
-                    return Colors[3];
-                }
-                else if (tl.TotalDays < 1)
-                {
-                    return Colors[4];
-                }
-                else if (tl.TotalDays < 21)
-                {
-                    return Colors[5];
-                }
-                else if (tl.TotalDays < 60)
-                {
-                    return Colors[6];
-                }
-
-                return Colors[7];
-            }
-            set
-            {
-
-            }
-        }
-
-
-        public Color OverflowColor
-        {
-            get
-            {
-                TimeSpan tl = Config.TimeLeft;
-
-                if (tl.TotalSeconds < 10)
-                {
-                    return Colors[0];
-                }
-                else if (tl.TotalMinutes < 1)
-                {
-                    return Colors[1];
-                }
-                else if (tl.TotalMinutes < 10)
-                {
-                    return Colors[2];
-                }
-                else if (tl.TotalMinutes < 30)
-                {
-                    return Colors[3];
-                }
-                else if (tl.TotalMinutes < 60 + 15)
-                {
-                    return Colors[4];
-                }
-                else if (tl.TotalDays < 1)
-                {
-                    return Colors[5];
-                }
-                else if (tl.TotalDays < 21)
-                {
-                    return Colors[6];
-                }
-                else if (tl.TotalDays < 60)
-                {
-                    return Colors[7];
-                }
-
-                return Colors[8];
-            }
-        }
-
-        public float Value
-        {
-            get
-            {
-                TimeSpan tl = Config.TimeLeft;
-
-                if (tl.TotalMinutes < 1)
-                {
-                    return (float)Math.Floor(tl.TotalSeconds);
-                }
-                else if (tl.TotalDays < 1)
-                {
-                    return (float)tl.TotalMinutes;
-                }
-                return (float)tl.TotalDays;
-            }
-        }
-
-        public float MaxValue
-        {
-            get
-            {
-                TimeSpan tl = Config.TimeLeft;
-
-                if (tl.TotalSeconds < 10)
-                {
-                    return 1;
-                }
-                else if (tl.TotalMinutes < 1)
-                {
-                    return 10;
-                }
-                else if (tl.TotalMinutes < 10)
-                {
-                    return 1;
-                }
-                else if (tl.TotalMinutes < 30)
-                {
-                    return 10;
-                }
-                else if (tl.TotalMinutes < 60 + 15)
-                {
-                    return 30;
-                }
-                else if (tl.TotalDays < 1)
-                {
-                    return 60 + 15;
-                }
-                else if (tl.TotalDays < 21)
-                {
-                    return 1;
-                }
-                else if (tl.TotalDays < 60)
-                {
-                    return 21;
-                }
-
-                return 60;
-            }
-        }
-
-        public int StepValue
-        {
-            get
-            {
-                TimeSpan tl = Config.TimeLeft;
-
-                if (tl.TotalSeconds < 10)
-                {
-                    return 1;
-                }
-                else if (tl.TotalMinutes < 1)
-                {
-                    return 10;
-                }
-                else if (tl.TotalMinutes < 10)
-                {
-                    return 1;
-                }
-                else if (tl.TotalMinutes < 30)
-                {
-                    return 5;
-                }
-                else if (tl.TotalMinutes < 60 + 15)
-                {
-                    return 15;
-                }
-                else if (tl.TotalDays < 1)
-                {
-                    return 60;
-                }
-                else if (tl.TotalDays < 21)
-                {
-                    return 1;
-                }
-                else if (tl.TotalDays < 60)
-                {
-                    return 7;
-                }
-
-                return 30;
-            }
         }
 
         protected override bool DoubleBuffered
@@ -222,10 +37,25 @@ namespace NewTimer.FormParts
             }
         }
 
+        protected virtual string GetStringForSegment(int segmentValue)
+        {
+            if (Config.TimeLeft.TotalMinutes < 1) return segmentValue + "s";
+            else if (Config.TimeLeft.TotalHours < 1) return segmentValue + "m";
+            else if (Config.TimeLeft.TotalDays < 1) return segmentValue + "h";
+            else if (Config.TimeLeft.TotalDays < 365) return segmentValue + "d";
+            else return segmentValue + "y";
+        }
+
+        protected override void OnPaintBackground(PaintEventArgs e)
+        {
+            e.Graphics.Clear(Config.Overtime ? Config.GlobalOvertimeColor : Config.GlobalBackColor);
+        }
+
         protected override void OnPaint(PaintEventArgs e)
         {
             Brush brshBG, brshFG, brshOF;
             Graphics g = e.Graphics;
+            g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
 
             Rectangle dBounds;
             {
@@ -235,55 +65,55 @@ namespace NewTimer.FormParts
             }
             Rectangle edgeBounds = new Rectangle(dBounds.X + dBounds.Width / 12, dBounds.Y + dBounds.Height / 12, dBounds.Width - dBounds.Width / 6, dBounds.Height - dBounds.Width / 6);
 
-            brshBG = new SolidBrush(BackColor);
-            brshFG = new SolidBrush(ForeColor);
-            brshOF = new SolidBrush(OverflowColor);
+            brshBG = new SolidBrush(Config.Overtime ? Config.GlobalOvertimeColor : Config.GlobalBackColor);
+            brshFG = new SolidBrush(_fillColor);
+            brshOF = new SolidBrush(_overflowColor);
 
             g.FillEllipse(Brushes.LightGray, dBounds);
             
 
-            if (Value > 0)
+            if (_value > 0)
             {
-                if (Value > MaxValue)
+                if (_value > _maxValue)
                 {
                     g.FillEllipse(brshOF, dBounds);
-                    g.FillPie(brshFG, dBounds, -90, MaxValue / Value * 360);
+                    g.FillPie(brshFG, dBounds, -90, _maxValue / _value * 360);
                 }
                 else
                 {
-                    g.FillPie(brshFG, dBounds, -90, Value / MaxValue * 360);   
+                    g.FillPie(brshFG, dBounds, -90, _value / _maxValue * 360);   
                 }
             }
             else
             {
-                if (Math.Abs(Value) > MaxValue)
+                if (Math.Abs(_value) > _maxValue)
                 {
                     g.FillEllipse(Brushes.OrangeRed, dBounds);
-                    g.FillPie(Brushes.Yellow, dBounds, -90, MaxValue / Value * 360);
+                    g.FillPie(Brushes.Yellow, dBounds, -90, _maxValue / _value * 360);
                 }
                 else
                 {
-                    g.FillPie(Brushes.Yellow, dBounds, -90, Value / MaxValue * 360);
+                    g.FillPie(Brushes.Yellow, dBounds, -90, _value / _maxValue * 360);
                 }
             }
 
-            float localMaxValue = Math.Max(MaxValue, Math.Abs(Value));
+            float localMaxValue = Math.Max(_maxValue, Math.Abs(_value));
 
             for (int i = 0; i < localMaxValue; i++)
             {
-                if (i % StepValue == 0)
+                if (i % _interval == 0)
                 {
-                    g.FillPie(Brushes.Silver, dBounds, -90.5f + i / localMaxValue * 360, 2);
+                    g.FillPie(brshBG, dBounds, -90.5f + i / localMaxValue * 360, 2);
                 }
             }
 
             g.FillEllipse(brshBG, edgeBounds);
 
-            for (int i = StepValue; i < localMaxValue; i++)
+            for (int i = _interval; i < localMaxValue; i++)
             {
-                if (i % StepValue == 0)
+                if (i % _interval == 0)
                 {
-                    g.DrawString(i.ToString(), SystemFonts.DefaultFont, brshFG, OriginAngleAndDistanceToPoint(new PointF(dBounds.Width / 2 - 10, dBounds.Height / 2), AngleToRadiants(-90.5f + i / localMaxValue * 360), dBounds.Width / 2 - dBounds.Width / 7), new StringFormat() { LineAlignment = StringAlignment.Center });
+                    g.DrawString(GetStringForSegment(i), SystemFonts.DefaultFont, brshFG, OriginAngleAndDistanceToPoint(new PointF(dBounds.Width / 2 - 10, dBounds.Height / 2), AngleToRadiants(-90.5f + i / localMaxValue * 360), dBounds.Width / 2 - dBounds.Width / 7), new StringFormat() { LineAlignment = StringAlignment.Center });
                 }
             }
 
@@ -305,7 +135,32 @@ namespace NewTimer.FormParts
 
         protected override void OnClick(EventArgs e)
         {
-            Colors = Config.ColorScheme.GenerateMany(5, Config.MasterRandom).ToArray();
+            Config.ColorizeTimerBar();
+        }
+
+        public void OnCountdownTick(TimeSpan span, bool isOvertime)
+        {
+            _value = TimerBar.GetNewValue(span);
+
+            //Apply the correct bar settings for the current time left
+            ApplySettings(Config.BarSettings.First(i => i.Key <= span).Value);
+
+            Refresh();
+        }
+
+        /// <summary>
+        /// Applies a bar-settings instance to this bar
+        /// </summary>
+        /// <param name="settings"></param>
+        public void ApplySettings(BarSettings settings)
+        {
+            _interval = settings.Interval;
+            _maxValue = settings.MaxValue;
+            _fillColor = settings.FillColor;
+            _overflowColor = settings.OverflowColor;
+
+            Refresh();
+
         }
     }
 }

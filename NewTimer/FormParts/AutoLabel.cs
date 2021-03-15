@@ -48,7 +48,7 @@ namespace NewTimer.FormParts
                 float newFontEm = NewFontSize(e.Graphics, Size, Font, Text);
 
                 //Upon error, use the current font size
-                if (newFontEm == -1)
+                if (newFontEm < 0)
                 {
                     newFontEm = Font.Size;
                 }

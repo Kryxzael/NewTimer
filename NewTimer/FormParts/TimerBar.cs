@@ -21,30 +21,35 @@ namespace NewTimer.FormParts
             /*
              * Sets the base value, This is the segment(s) that "stand out" at the left side of the bar
              */
+            Value = GetNewValue(span);
 
-            if (span >= new TimeSpan(360, 0, 0, 0)) //Sets base to 1 year
-            {
-                Value = (float)span.TotalDays / 360f;
-            }
-            else if (span >= new TimeSpan(1, 0, 0, 0)) //Sets base to 1 day
-            {
-                Value = (float)span.TotalDays;
-            }
-            else if (span >= new TimeSpan(0, 1, 0, 0)) //Sets base to 1 hour
-            {
-                Value = (float)span.TotalHours;
-            }
-            else if (span >= new TimeSpan(0, 0, 1, 0)) //Sets base to 1 minute
-            {
-                Value = (float)span.TotalMinutes;
-            }
-            else //Sets base to 1 second
-            {
-                Value = (float)span.TotalSeconds;
-            }
 
             //Apply the correct bar settings for the current time left
             ApplySettings(Config.BarSettings.First(i => i.Key <= span).Value);
+        }
+
+        public static float GetNewValue(TimeSpan span)
+        {
+            if (span >= new TimeSpan(360, 0, 0, 0)) //Sets base to 1 year
+            {
+                return (float)span.TotalDays / 360f;
+            }
+            else if (span >= new TimeSpan(1, 0, 0, 0)) //Sets base to 1 day
+            {
+                return (float)span.TotalDays;
+            }
+            else if (span >= new TimeSpan(0, 1, 0, 0)) //Sets base to 1 hour
+            {
+                return (float)span.TotalHours;
+            }
+            else if (span >= new TimeSpan(0, 0, 1, 0)) //Sets base to 1 minute
+            {
+                return (float)span.TotalMinutes;
+            }
+            else //Sets base to 1 second
+            {
+                return (float)span.TotalSeconds;
+            }
         }
 
         /// <summary>
@@ -55,7 +60,7 @@ namespace NewTimer.FormParts
         /// <summary>
         /// Gets the text color of the control
         /// </summary>
-        public override Color ForeColor => Color.Black;
+        public override Color ForeColor => Config.GlobalBackColor;
 
         /// <summary>
         /// Gets the text that will be displayed on a given segment on the bar

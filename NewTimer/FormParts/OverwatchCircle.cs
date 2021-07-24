@@ -53,7 +53,7 @@ namespace NewTimer.FormParts
 
         protected override void OnPaint(PaintEventArgs e)
         {
-            Brush brshBG, brshFG, brshOF;
+            Brush brshBG, brshFG, brshOF, brshTrack;
             Graphics g = e.Graphics;
             g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
 
@@ -68,16 +68,17 @@ namespace NewTimer.FormParts
             brshBG = new SolidBrush(Config.Overtime ? Config.GlobalOvertimeColor : Config.GlobalBackColor);
             brshFG = new SolidBrush(_fillColor);
             brshOF = new SolidBrush(_overflowColor);
+            brshTrack = new SolidBrush(Color.FromArgb(0x22, 0x22, 0x22));
 
-            g.FillEllipse(Brushes.LightGray, dBounds);
+            g.FillEllipse(brshTrack, dBounds);
             
 
             if (_value > 0)
             {
                 if (_value > _maxValue)
                 {
-                    g.FillEllipse(brshOF, dBounds);
-                    g.FillPie(brshFG, dBounds, -90, _maxValue / _value * 360);
+                    g.FillPie(brshOF, dBounds, -90, _value / RoundUpByInterval(_value, _interval, 1f) * 360f);
+                    g.FillPie(brshFG, dBounds, -90, _maxValue / RoundUpByInterval(_value, _interval, 1f) * 360);
                 }
                 else
                 {
@@ -97,7 +98,7 @@ namespace NewTimer.FormParts
                 }
             }
 
-            float localMaxValue = Math.Max(_maxValue, Math.Abs(_value));
+            float localMaxValue = RoundUpByInterval(Math.Max(_maxValue, Math.Abs(_value)), _interval, 1f);
 
             for (int i = 0; i < localMaxValue; i++)
             {
@@ -161,6 +162,29 @@ namespace NewTimer.FormParts
 
             Refresh();
 
+        }
+
+        //This implementation sucks
+        private static float RoundUpByInterval(float value, float interval, float smoothTime)
+        {
+            for (float i = 0;; i += interval)
+            {
+                if (i > value)
+                {
+                    float difference = i - value;
+
+                    if (difference < smoothTime && false)
+                    {
+                        float start = i - interval;
+                        float end = i;
+                        float lerpBy = (value - start) / (end - start);
+
+                        return start * (1 - lerpBy) + end * lerpBy;
+                    }
+
+                    return i;
+                }
+            }
         }
     }
 }

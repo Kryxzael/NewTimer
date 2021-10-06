@@ -26,8 +26,8 @@ namespace NewTimer.Schemes
                 Color clr = Color.FromArgb(RandByte(rng), RandByte(rng), RandByte(rng));
                 float sat = clr.GetSaturation();
 
-                //If the saturation is too high or too low or the color is too dark: Discard it
-                if (sat > 0.8f || sat < 0.2f || clr.GetBrightness() < 0.2f)
+                //If the saturation is too high or the color is too dark: Discard it
+                if (sat > 0.8f || clr.GetBrightness() < 0.2f)
                 {
                     continue;
                 }

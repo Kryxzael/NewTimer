@@ -1,5 +1,5 @@
 ﻿using Bars;
-
+using NewTimer.Schemes;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -28,6 +28,8 @@ namespace NewTimer.FormParts
         {
             SetStyle(ControlStyles.AllPaintingInWmPaint, true);
         }
+
+        public bool ProgressMode { get; set; }
 
         protected override bool DoubleBuffered
         {
@@ -141,10 +143,25 @@ namespace NewTimer.FormParts
 
         public void OnCountdownTick(TimeSpan span, bool isOvertime)
         {
-            _value = TimerBar.GetNewValue(span);
+            if (ProgressMode)
+            {
+                //                                v Don't ask
+                ApplySettings(new BarSettings(1f, 2, Config.BarSettings.Last().Value.FillColor, default, 0));
 
-            //Apply the correct bar settings for the current time left
-            ApplySettings(Config.BarSettings.First(i => i.Key <= span).Value);
+                long minValue = Config.Target.Ticks;
+                long maxValue = Config.StartTime.Ticks;
+
+                _value = (float)(DateTime.Now.Ticks - minValue) / (maxValue - minValue);
+            }
+            else
+            {
+                _value = TimerBar.GetNewValue(span);
+
+                //Apply the correct bar settings for the current time left
+                ApplySettings(Config.BarSettings.First(i => i.Key <= span).Value);
+            }
+
+            
 
             Refresh();
         }

@@ -13,9 +13,20 @@ namespace NewTimer.Forms.Circle
 {
     public partial class FullContents : UserControl, ICountdown
     {
-        public FullContents()
+        public FullContents(bool simpleMode)
         {
             InitializeComponent();
+
+            overwatchCircle2.ProgressMode = simpleMode;
+
+            FullH.MouseDown += OnTextClick;
+            FullM.MouseDown += OnTextClick;
+            FullS.MouseDown += OnTextClick;
+        }
+
+        private void OnTextClick(object sender, MouseEventArgs e)
+        {
+            
         }
 
         public void OnCountdownTick(TimeSpan span, bool isOvertime)

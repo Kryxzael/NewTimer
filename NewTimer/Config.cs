@@ -17,6 +17,8 @@ namespace NewTimer
     /// </summary>
     public static class Config
     {
+        public static DateTime StartTime { get; set; } = DateTime.Now;
+
         /// <summary>
         /// Gets or sets the time the timer targets
         /// </summary>
@@ -215,6 +217,7 @@ namespace NewTimer
         {
             //Set target and color scheme
             Target = target;
+            StartTime = DateTime.Now;
             ColorScheme = colorScheme;
             StopAtZero = stopAtZero;
 

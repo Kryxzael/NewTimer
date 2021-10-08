@@ -77,7 +77,8 @@ namespace NewTimer.Forms
         {
             setControlDefaults(new Bar.FullContents(), tabFull);
             setControlDefaults(new ClockControl(), tabAnalog);
-            setControlDefaults(new Circle.FullContents(), tabCircle);
+            setControlDefaults(new Circle.FullContents(simpleMode: false), tabCircle);
+            setControlDefaults(new Circle.FullContents(simpleMode: true), tabCircleSimple);
             setControlDefaults(new TimerBar(), tabBarOnly);
 
             //Normalizes settings for the given control. This function returns its input

@@ -54,6 +54,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ColorConverter.cs" />
+    <Compile Include="Commands\StartTime.cs" />
     <Compile Include="Commands\ColorScheme.cs" />
     <Compile Include="Commands\EndMode.cs" />
     <Compile Include="Commands\Freeze.cs" />

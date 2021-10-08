@@ -62,13 +62,13 @@ namespace NewTimer.Schemes
             }
         }
 
-        private int Lerp(int a, int b, double t) => (int)(a * (1 - t) + b * t);
+        public static int Lerp(int a, int b, double t) => (int)(a * (1 - t) + b * t);
 
-        private Color Lerp(Color a, Color b, double t) => Color.FromArgb(
+        public static Color Lerp(Color a, Color b, double t) => Color.FromArgb(
             alpha: Lerp(a.A, b.A, t),
             red: Lerp(a.R, b.R, t),
             green: Lerp(a.G, b.G, t),
             blue: Lerp(a.B, b.B, t)
-            );
+        );
     }
 }

@@ -213,6 +213,15 @@ namespace NewTimer.Forms
 
                 _overtimeBackColorSet = true;
             }
+            else if (!Config.Overtime && _overtimeBackColorSet)
+            {
+                foreach (Control i in tabs.Controls)
+                {
+                    i.BackColor = Config.GlobalBackColor;
+                }
+
+                _overtimeBackColorSet = false;
+            }
         }
 
         /// <summary>

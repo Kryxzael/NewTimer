@@ -372,6 +372,7 @@ namespace NewTimer.Forms
                 case Keys.F1:
                     MessageBox.Show(string.Join(Environment.NewLine, 
                         "F1: Help",
+                        "F10: Collapse/Uncollapse",
                         "F11: Translucency Mode",
                         "F12: Console",
                         "Del: Reset to zero",
@@ -387,6 +388,25 @@ namespace NewTimer.Forms
 
                 case Keys.F11:
                     ToggleWindowTranslucencyMode();
+                    break;
+
+                case Keys.F10:
+                    const int COLLAPSE_HEIGHT = 125;
+
+                    if (tabs.SelectedIndex == 4)
+                    {
+                        int lastHeigh = Height;
+                        tabs.SelectedIndex = 0;
+                        Top -= (Height - lastHeigh);
+                    }
+                    else
+                    {
+                        tabs.SelectedIndex = 4;
+                        Top += (Height - COLLAPSE_HEIGHT);
+                        Height = COLLAPSE_HEIGHT;
+                    }
+
+                    
                     break;
 
                 case Keys.F12:

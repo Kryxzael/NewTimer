@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -37,6 +38,12 @@ namespace NewTimer.Forms
         /// The console associated with this window
         /// </summary>
         private UserConsole _console;
+
+        /// <summary>
+        /// Gets or sets the text the user is currently typing when the window is selected
+        /// </summary>
+        private string InvisibleInputText { get; set; } = "";
+        private DateTime LastInvisibileInputTextUpdateTime { get; set; }
 
         protected override bool DoubleBuffered { get => true; }
 
@@ -136,6 +143,13 @@ namespace NewTimer.Forms
         /// <param name="e"></param>
         private void UpdateICountdowns(object sender, EventArgs e)
         {
+            if (LastInvisibileInputTextUpdateTime != default && (DateTime.Now - LastInvisibileInputTextUpdateTime).TotalSeconds > 2.0)
+            {
+                InvisibleInputText                = "";
+                LastInvisibileInputTextUpdateTime = default;
+            }
+                
+
             //Update ICountdowns
             recursiveUpdate(this);
 
@@ -262,15 +276,76 @@ namespace NewTimer.Forms
         {
             base.OnKeyDown(e);
 
-            if (e.KeyCode == Keys.F12)
+            switch (e.KeyCode)
             {
-                if (_console == null || _console.IsDisposed)
-                {
-                    _console = new UserConsole();
-                }
-                _console.Show();
-                _console.BringToFront();
+                case Keys.D0:
+                case Keys.NumPad0:
+                    InvisibleInputText += "0";
+                    break;
+                case Keys.D1:
+                case Keys.NumPad1:
+                    InvisibleInputText += "1";
+                    break;
+                case Keys.D2:
+                case Keys.NumPad2:
+                    InvisibleInputText += "2";
+                    break;
+                case Keys.D3:
+                case Keys.NumPad3:
+                    InvisibleInputText += "3";
+                    break;
+                case Keys.D4:
+                case Keys.NumPad4:
+                    InvisibleInputText += "4";
+                    break;
+                case Keys.D5:
+                case Keys.NumPad5:
+                    InvisibleInputText += "5";
+                    break;
+                case Keys.D6:
+                case Keys.NumPad6:
+                    InvisibleInputText += "6";
+                    break;
+                case Keys.D7:
+                case Keys.NumPad7:
+                    InvisibleInputText += "7";
+                    break;
+                case Keys.D8:
+                case Keys.NumPad8:
+                    InvisibleInputText += "8";
+                    break;
+                case Keys.D9:
+                case Keys.NumPad9:
+                    InvisibleInputText += "9";
+                    break;
+
+                case Keys.F12:
+                    if (_console == null || _console.IsDisposed)
+                        _console = new UserConsole();
+
+                    _console.Show();
+                    _console.BringToFront();
+                    return;
             }
+
+            if (InvisibleInputText.Length == 4)
+            {
+                int hour   = int.Parse(InvisibleInputText.Substring(0, 2), NumberStyles.Integer, CultureInfo.InvariantCulture);
+                int minute = int.Parse(InvisibleInputText.Substring(2, 2), NumberStyles.Integer, CultureInfo.InvariantCulture);
+
+                if (hour < 24 && minute < 60)
+                {
+                    DateTime newTarget = DateTime.Today.AddHours(hour).AddMinutes(minute);
+
+                    if (newTarget < DateTime.Now && (DateTime.Now - newTarget).Hours >= 3.0)
+                        newTarget = newTarget.AddDays(1.0);
+
+                    Config.Target = newTarget;
+                    InvisibleInputText = "";
+                }
+            }
+
+            LastInvisibileInputTextUpdateTime = DateTime.Now;
         }
     }
 }

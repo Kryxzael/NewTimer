@@ -350,6 +350,18 @@ namespace NewTimer.Forms
         }
 
         /// <summary>
+        /// Simulates the click of the 'Start' button off the current tab
+        /// </summary>
+        public void StartWithCurrentSettings()
+        {
+            if (tabs.SelectedIndex == 0)
+                OnClickStart(btnStartTime, null);
+
+            else
+                OnClickStart(btnLoadDuration, null);
+        }
+
+        /// <summary>
         /// Handler: Handles the user having pressed any of the two 'Start Countdown' buttons
         /// </summary>
         /// <param name="sender"></param>

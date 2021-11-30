@@ -39,10 +39,14 @@ namespace NewTimer
             if (args.Length > 0)
             {
                 setupForm.LoadFile(args[0]);
+                setupForm.StartWithCurrentSettings();
+            }
+            else
+            {
+                //Show window and run message pump
+                setupForm.Show();
             }
 
-            //Show window and run message pump
-            setupForm.Show();
             Application.Run();
 
             //Dispose taskbar icon before shutdown

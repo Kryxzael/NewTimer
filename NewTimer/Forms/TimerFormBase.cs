@@ -241,7 +241,7 @@ namespace NewTimer.Forms
                 }
 
                 _overtimeBackColorSet = true;
-                _overtimeBackColorSet = false;
+                _freeModeBackColorSet = false;
             }
             else if ((!Config.Overtime && !Config.InFreeMode) && (_overtimeBackColorSet || _freeModeBackColorSet))
             {

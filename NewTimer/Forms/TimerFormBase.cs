@@ -1,4 +1,5 @@
-﻿using NewTimer.FormParts;
+﻿using NewTimer.Commands;
+using NewTimer.FormParts;
 using NewTimer.Forms.Bar;
 using System;
 using System.Collections.Generic;
@@ -7,6 +8,7 @@ using System.Data;
 using System.Drawing;
 using System.Globalization;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -328,6 +330,43 @@ namespace NewTimer.Forms
                     InvisibleInputText += "9";
                     break;
 
+                case Keys.Delete:
+                    Config.Target = DateTime.Now;
+                    return;
+
+                case Keys.Pause:
+                    ConsoleInterface nul = new ConsoleInterface();
+                    Command.GetByType<Freeze>().Execute(new string[0], nul);
+                    return;
+
+                case Keys.PageUp:
+                    Config.Target = Config.Target.AddDays(1.0);
+                    return;
+
+                case Keys.PageDown:
+                    Config.Target = Config.Target.AddDays(-1.0);
+                    return;
+
+                case Keys.Insert:
+                    Config.StopAtZero = !Config.StopAtZero;
+                    MessageBox.Show(Config.StopAtZero ? "End Mode: Stop" : "End Mode: Continue");
+                    return;
+
+                case Keys.F1:
+                    MessageBox.Show(string.Join(Environment.NewLine, 
+                        "F1: Help",
+                        "F12: Console",
+                        "Del: Reset to zero",
+                        "Ins: Change end mode",
+                        "Pause: Freeze/Unfreeze",
+                        "0930: Set target to 09:30 (Must be in 24h format)",
+                        "Shift + 0930: Set countdown to 9 minutes and 30 seconds",
+                        "Ctrl + 0930: Set countdown to 9 hours and 30 minutes",
+                        "Page Up: Add 1 day to target",
+                        "Page Dn: Subtract 1 day from to target"
+                    ), "Keyboard Shortcuts");
+                    return;
+
                 case Keys.F12:
                     if (_console == null || _console.IsDisposed)
                         _console = new UserConsole();
@@ -339,22 +378,52 @@ namespace NewTimer.Forms
 
             if (InvisibleInputText.Length == 4)
             {
-                int hour   = int.Parse(InvisibleInputText.Substring(0, 2), NumberStyles.Integer, CultureInfo.InvariantCulture);
-                int minute = int.Parse(InvisibleInputText.Substring(2, 2), NumberStyles.Integer, CultureInfo.InvariantCulture);
+                int a = int.Parse(InvisibleInputText.Substring(0, 2), NumberStyles.Integer, CultureInfo.InvariantCulture);
+                int b = int.Parse(InvisibleInputText.Substring(2, 2), NumberStyles.Integer, CultureInfo.InvariantCulture);
 
-                if (hour < 24 && minute < 60)
+                //Duration
+                if (e.Shift || e.Alt)
                 {
-                    DateTime newTarget = DateTime.Today.AddHours(hour).AddMinutes(minute);
+                    int hour;
+                    int minute;
+                    int second;
 
-                    if (newTarget < DateTime.Now && (DateTime.Now - newTarget).Hours >= 3.0)
-                        newTarget = newTarget.AddDays(1.0);
+                    if (e.Alt)
+                    {
+                        hour = a;
+                        minute = b;
+                        second = 0;
+                    }
+                    else
+                    {
+                        hour   = 0;
+                        minute = a;
+                        second = b;
+                    }
 
-                    Config.Target = newTarget;
-                    InvisibleInputText = "";
+                    TimeSpan newTarget = new TimeSpan(hour, minute, second);
+                    Config.Target = DateTime.Now + newTarget;
                 }
+
+                //Target
+                else
+                {
+                    int hour   = a;
+                    int minute = b;
+
+                    if (hour < 24 && minute < 60)
+                        Config.Target = DateTime.Today.AddHours(hour).AddMinutes(minute);
+                }
+
+                LastInvisibileInputTextUpdateTime = default;
+                InvisibleInputText = "";
+            }
+            else
+            {
+                LastInvisibileInputTextUpdateTime = DateTime.Now;
             }
 
-            LastInvisibileInputTextUpdateTime = DateTime.Now;
+            
         }
     }
 }

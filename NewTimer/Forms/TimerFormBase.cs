@@ -8,6 +8,7 @@ using System.Data;
 using System.Drawing;
 using System.Globalization;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
@@ -40,6 +41,11 @@ namespace NewTimer.Forms
         /// The console associated with this window
         /// </summary>
         private UserConsole _console;
+
+        /// <summary>
+        /// Whether the window is currently translucent and non-corporeal
+        /// </summary>
+        private bool translucencyEnabled;
 
         /// <summary>
         /// Gets or sets the text the user is currently typing when the window is selected
@@ -171,6 +177,16 @@ namespace NewTimer.Forms
         }
 
         /// <summary>
+        /// Toggles whether the window is translucent and non-corporeal
+        /// </summary>
+        public void ToggleWindowTranslucencyMode()
+        {
+            translucencyEnabled = !translucencyEnabled;
+            Opacity = translucencyEnabled ? 0.25f : 1f;
+            ClickThroughHelper.SetClickThrough(this, translucencyEnabled);
+        }
+
+        /// <summary>
         /// Regenerates the window icon and set the taskbar status
         /// </summary>
         /// <param name="sender"></param>
@@ -285,6 +301,8 @@ namespace NewTimer.Forms
         /// <param name="e"></param>
         protected override void OnKeyDown(KeyEventArgs e)
         {
+            ConsoleInterface nullOutput = new ConsoleInterface();
+
             base.OnKeyDown(e);
 
             switch (e.KeyCode)
@@ -335,8 +353,7 @@ namespace NewTimer.Forms
                     return;
 
                 case Keys.Pause:
-                    ConsoleInterface nul = new ConsoleInterface();
-                    Command.GetByType<Freeze>().Execute(new string[0], nul);
+                    Command.GetByType<Freeze>().Execute(new string[0], nullOutput);
                     return;
 
                 case Keys.PageUp:
@@ -355,17 +372,22 @@ namespace NewTimer.Forms
                 case Keys.F1:
                     MessageBox.Show(string.Join(Environment.NewLine, 
                         "F1: Help",
+                        "F11: Translucency Mode",
                         "F12: Console",
                         "Del: Reset to zero",
                         "Ins: Change end mode",
                         "Pause: Freeze/Unfreeze",
                         "0930: Set target to 09:30 (Must be in 24h format)",
                         "Shift + 0930: Set countdown to 9 minutes and 30 seconds",
-                        "Ctrl + 0930: Set countdown to 9 hours and 30 minutes",
+                        "Alt + 0930: Set countdown to 9 hours and 30 minutes",
                         "Page Up: Add 1 day to target",
                         "Page Dn: Subtract 1 day from to target"
                     ), "Keyboard Shortcuts");
                     return;
+
+                case Keys.F11:
+                    ToggleWindowTranslucencyMode();
+                    break;
 
                 case Keys.F12:
                     if (_console == null || _console.IsDisposed)

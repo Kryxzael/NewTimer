@@ -53,6 +53,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ClickThroughHelper.cs" />
     <Compile Include="ColorConverter.cs" />
     <Compile Include="Commands\StartTime.cs" />
     <Compile Include="Commands\ColorScheme.cs" />

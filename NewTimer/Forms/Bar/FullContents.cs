@@ -84,16 +84,16 @@ namespace NewTimer.Forms.Bar
             FullH.RenderLeadingZeros = true;
 
             //Main hours
-            FullH.Text = span.Hours.ToString("00");
-            FullH.RenderLeadingZeros = span.TotalDays >= 1;
+            FullH.Text = Config.InFreeMode ? DateTime.Now.Hour.ToString("00") : span.Hours.ToString("00");
+            FullH.RenderLeadingZeros = Config.InFreeMode || span.TotalDays >= 1;
 
             //Main minutes
-            FullM.Text = span.Minutes.ToString("00");
-            FullM.RenderLeadingZeros = span.TotalHours >= 1;
+            FullM.Text = Config.InFreeMode ? DateTime.Now.Minute.ToString("00") : span.Minutes.ToString("00");
+            FullM.RenderLeadingZeros = Config.InFreeMode || span.TotalHours >= 1;
 
             //Main seconds
-            FullS.Text = span.Seconds.ToString("00");
-            FullS.RenderLeadingZeros = span.TotalMinutes >= 1;
+            FullS.Text = Config.InFreeMode ? DateTime.Now.Second.ToString("00") : span.Seconds.ToString("00");
+            FullS.RenderLeadingZeros = Config.InFreeMode || span.TotalMinutes >= 1;
 
 
             //Total hours

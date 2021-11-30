@@ -101,18 +101,19 @@ namespace NewTimer.FormParts
             //Set smoothing mode to anti-alias for smoothness
             e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
 
-            //In this application, the background pie is not drawn if the target time is set to midnight of the current day
-            if (Config.Target != DateTime.Now.Date)
+            //Only draw this when not in free mode
+            if (!Config.InFreeMode)
+            {
                 OnDrawBackCircle(e);
-
-            OnDrawNumbers(e);
+                OnDrawNumbers(e);
+            }
 
             OnDrawMinuteHand(e);
             OnDrawSecondHand(e);
             OnDrawHourHand(e);
 
-            //Once again, do not draw anything more if target is midnight of today
-            if (Config.Target == DateTime.Now.Date)
+            //Once again, do not draw anything more in free mode
+            if (Config.InFreeMode)
                 return;
 
             OnDrawMinutesLeftHand(e);

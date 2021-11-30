@@ -36,6 +36,7 @@ namespace NewTimer.Forms
         /// Has the overtime's dark red background color already been applied?
         /// </summary>
         private bool _overtimeBackColorSet = false;
+        private bool _freeModeBackColorSet = false;
 
         /// <summary>
         /// The console associated with this window
@@ -115,7 +116,7 @@ namespace NewTimer.Forms
         private void InitializeAutoLabels()
         {
             //'Time' panel
-            TimeOnlyTime.GetText = () => Config.RealTimeLeft.ToString("h':'mm':'ss");
+            TimeOnlyTime.GetText = () => Config.InFreeMode ? DateTime.Now.ToLongTimeString() : Config.RealTimeLeft.ToString("h':'mm':'ss");
 
             //'Hours' panel
             HoursOnlyHour.GetText = () => Math.Floor(Config.TimeLeft.TotalHours).ToString();
@@ -182,7 +183,7 @@ namespace NewTimer.Forms
         public void ToggleWindowTranslucencyMode()
         {
             translucencyEnabled = !translucencyEnabled;
-            Opacity = translucencyEnabled ? 0.25f : 1f;
+            Opacity = translucencyEnabled ? Config.OPACITY_TRANSLUCENT : Config.OPACITY_NORMAL;
             ClickThroughHelper.SetClickThrough(this, translucencyEnabled);
         }
 
@@ -221,8 +222,18 @@ namespace NewTimer.Forms
                 pie.Dispose();
             }
 
-            //We have reached overtime. Make background red. This happens only once
-            if (Config.Overtime && !_overtimeBackColorSet)
+            //Set background
+            if (Config.InFreeMode && !_freeModeBackColorSet)
+            {
+                foreach (Control i in tabs.Controls)
+                {
+                    i.BackColor = Config.GlobalFreeModeBackColor;
+                }
+
+                _overtimeBackColorSet = false;
+                _freeModeBackColorSet = true;
+            }
+            else if (Config.Overtime && !_overtimeBackColorSet)
             {
                 foreach (Control i in tabs.Controls)
                 {
@@ -230,8 +241,9 @@ namespace NewTimer.Forms
                 }
 
                 _overtimeBackColorSet = true;
+                _overtimeBackColorSet = false;
             }
-            else if (!Config.Overtime && _overtimeBackColorSet)
+            else if ((!Config.Overtime && !Config.InFreeMode) && (_overtimeBackColorSet || _freeModeBackColorSet))
             {
                 foreach (Control i in tabs.Controls)
                 {
@@ -239,6 +251,7 @@ namespace NewTimer.Forms
                 }
 
                 _overtimeBackColorSet = false;
+                _freeModeBackColorSet = false;
             }
         }
 
@@ -349,7 +362,11 @@ namespace NewTimer.Forms
                     break;
 
                 case Keys.Delete:
-                    Config.Target = DateTime.Now;
+                    if (e.Shift)
+                        Config.InFreeMode = !Config.InFreeMode;
+                    else
+                        Config.Target = DateTime.Now;
+
                     return;
 
                 case Keys.Pause:
@@ -376,6 +393,7 @@ namespace NewTimer.Forms
                         "F11: Translucency Mode",
                         "F12: Console",
                         "Del: Reset to zero",
+                        "Shift + Del: Idle Mode",
                         "Ins: Change end mode",
                         "Pause: Freeze/Unfreeze",
                         "0930: Set target to 09:30 (Must be in 24h format)",

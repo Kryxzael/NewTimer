@@ -50,7 +50,18 @@ namespace NewTimer.FormParts
 
         protected override void OnPaintBackground(PaintEventArgs e)
         {
-            e.Graphics.Clear(Config.Overtime ? Config.GlobalOvertimeColor : Config.GlobalBackColor);
+            Color c;
+
+            if (Config.InFreeMode)
+                c = Config.GlobalFreeModeBackColor;
+
+            else if (Config.Overtime)
+                c = Config.GlobalOvertimeColor;
+
+            else
+                c = Config.GlobalBackColor;
+
+            e.Graphics.Clear(c);
         }
 
         protected override void OnPaint(PaintEventArgs e)
@@ -67,7 +78,15 @@ namespace NewTimer.FormParts
             }
             Rectangle edgeBounds = new Rectangle(dBounds.X + dBounds.Width / 12, dBounds.Y + dBounds.Height / 12, dBounds.Width - dBounds.Width / 6, dBounds.Height - dBounds.Width / 6);
 
-            brshBG = new SolidBrush(Config.Overtime ? Config.GlobalOvertimeColor : Config.GlobalBackColor);
+            if (Config.InFreeMode)
+                brshBG = new SolidBrush(Config.GlobalFreeModeBackColor);
+
+            else if (Config.Overtime)
+                brshBG = new SolidBrush(Config.GlobalOvertimeColor);
+
+            else
+                brshBG = new SolidBrush(Config.GlobalBackColor);
+
             brshFG = new SolidBrush(_fillColor);
             brshOF = new SolidBrush(_overflowColor);
             brshTrack = new SolidBrush(Color.FromArgb(0x22, 0x22, 0x22));

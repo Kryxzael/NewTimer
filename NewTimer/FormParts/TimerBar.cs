@@ -16,8 +16,31 @@ namespace NewTimer.FormParts
     [DesignerCategory("")]
     public class TimerBar : SegmentedBar, ICountdown
     {
+        /// <summary>
+        /// Gets the "time left" that is displayed at the bar. This is exceptional in free mode
+        /// </summary>
+        private TimeSpan DisplayedTimeLeft
+        {
+            get
+            {
+                if (Config.InFreeMode)
+                {
+                    if (DateTime.Now.Minute >= 30)
+                        return DateTime.Today.AddHours(DateTime.Now.Hour + 1) - DateTime.Now;
+
+                    return DateTime.Now - DateTime.Today.AddHours(DateTime.Now.Hour);
+                }
+
+                return Config.TimeLeft;
+            }
+        }
+
         public void OnCountdownTick(TimeSpan span, bool isOvertime)
         {
+            //Sorry about this but
+            if (Config.InFreeMode)
+                span = DisplayedTimeLeft;
+
             /*
              * Sets the base value, This is the segment(s) that "stand out" at the left side of the bar
              */
@@ -69,10 +92,10 @@ namespace NewTimer.FormParts
         /// <returns></returns>
         protected override string GetStringForBarSegment(int segmentValue)
         {
-            if (Config.TimeLeft.TotalMinutes < 1) return segmentValue + "sec";
-            else if (Config.TimeLeft.TotalHours < 1) return segmentValue + "min";
-            else if (Config.TimeLeft.TotalDays < 1) return segmentValue + "hr";
-            else if (Config.TimeLeft.TotalDays < 365) return segmentValue + "d";
+            if (DisplayedTimeLeft.TotalMinutes < 1) return segmentValue + "sec";
+            else if (DisplayedTimeLeft.TotalHours < 1) return segmentValue + "min";
+            else if (DisplayedTimeLeft.TotalDays < 1) return segmentValue + "hr";
+            else if (DisplayedTimeLeft.TotalDays < 365) return segmentValue + "d";
             else return segmentValue + "y";
         }
 
@@ -109,7 +132,7 @@ namespace NewTimer.FormParts
 
         protected override void OnPaint(PaintEventArgs e)
         {
-            //Draws the actuall bar
+            //Draws the actual bar
             base.OnPaint(e);
 
             Rectangle bounds = new Rectangle(BarMargin, BarMargin, Width - (2 * BarMargin), Height - (2 * BarMargin));
@@ -131,7 +154,7 @@ namespace NewTimer.FormParts
             using (Pen transparentPen = new Pen(Color.FromArgb((int)(overflowWidth / bounds.Width * 0x8F), Color.White)) { DashStyle = System.Drawing.Drawing2D.DashStyle.Dash })
             {
                 //Draw subsegments
-                int subSegmentCount = GetSubSegmentCount(Config.TimeLeft);
+                int subSegmentCount = GetSubSegmentCount(DisplayedTimeLeft);
                 for (int i = 0; i < subSegmentCount; i++)
                 {
                     e.Graphics.DrawLine(

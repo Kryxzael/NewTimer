@@ -17,6 +17,14 @@ namespace NewTimer
     /// </summary>
     public static class Config
     {
+        /// <summary>
+        /// Gets or sets whether the timer is not currently tracking a target time. Also referred to as 'idle'
+        /// </summary>
+        public static bool InFreeMode { get; set; }
+
+        /// <summary>
+        /// Gets the time the timer was started at
+        /// </summary>
         public static DateTime StartTime { get; set; } = DateTime.Now;
 
         /// <summary>
@@ -47,10 +55,13 @@ namespace NewTimer
         {
             get
             {
+                if (InFreeMode)
+                    return default;
+
                 if (DateTime.Now > Target)
                 {
                     if (StopAtZero)
-                        return new TimeSpan();
+                        return default;
 
                     return DateTime.Now - Target;
                 }
@@ -64,12 +75,31 @@ namespace NewTimer
         /// Gets the real time left until the target time. This value will go negative after the target time
         /// </summary>
         /// <returns></returns>
-        public static TimeSpan RealTimeLeft => Target - DateTime.Now;
+        public static TimeSpan RealTimeLeft
+        {
+            get
+            {
+                if (InFreeMode)
+                    return default;
+
+                return Target - DateTime.Now;
+            }
+        }
 
         /// <summary>
         /// Has the target time passed?
         /// </summary>
-        public static bool Overtime => DateTime.Now > Target;
+        public static bool Overtime 
+        {
+            get
+            {
+                if (InFreeMode)
+                    return false;
+
+                return DateTime.Now > Target;
+            }
+            
+        }
 
         /*
          * Constants
@@ -93,6 +123,11 @@ namespace NewTimer
         /// <summary>
         /// The color that will be used as the background color for the whole application
         /// </summary>
+        public static Color GlobalFreeModeBackColor { get; } = ColorTranslator.FromHtml("#222222");
+
+        /// <summary>
+        /// The color that will be used as the background color for the whole application
+        /// </summary>
         public static Color GlobalOvertimeColor { get; } = ColorTranslator.FromHtml("#330000");
 
         /// <summary>
@@ -100,6 +135,19 @@ namespace NewTimer
         /// </summary>
         public static Color GlobalGrayedColor { get; } = ColorTranslator.FromHtml("#333333");
 
+        /*
+         * Translucencies
+         */
+
+        /// <summary>
+        /// The opacity of the main window under normal operation 
+        /// </summary>
+        public static float OPACITY_NORMAL = 1f;
+
+        /// <summary>
+        /// The opacity of the main window when translucency mode is enabled
+        /// </summary>
+        public static float OPACITY_TRANSLUCENT = 0.25f;
 
         /// <summary>
         /// Gets the configuration settings that the time bar will use. The key is the minimum unit time that will be used to apply the settings

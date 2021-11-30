@@ -18,11 +18,20 @@ namespace NewTimer
         /// <param name="f">Form to set title of</param>
         public static void SetTitle(Form f)
         {
+            
+                
+
             TimeSpan tl = Config.TimeLeft;
             string title;
 
+            //Free mode, show current date and time
+            if (Config.InFreeMode)
+            {
+                title = DateTime.Now.ToString();
+            }
+
             //Less than one minute, show amount of seconds left
-            if (tl.TotalMinutes < 1)
+            else if (tl.TotalMinutes < 1)
             {
                 title = tl.Seconds.ToString() + (tl.Seconds == 1 ? " second" : " seconds");
             }

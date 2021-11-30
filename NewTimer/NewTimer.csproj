@@ -55,6 +55,7 @@
   <ItemGroup>
     <Compile Include="ClickThroughHelper.cs" />
     <Compile Include="ColorConverter.cs" />
+    <Compile Include="Commands\Idle.cs" />
     <Compile Include="Commands\StartTime.cs" />
     <Compile Include="Commands\ColorScheme.cs" />
     <Compile Include="Commands\EndMode.cs" />

@@ -92,10 +92,14 @@ namespace NewTimer.Forms
         private void InitializeCustomControls()
         {
             setControlDefaults(new Bar.FullContents(), tabFull);
-            setControlDefaults(new ClockControl(), tabAnalog);
+            setControlDefaults(new ClockControl(), analogSplitContainer.Panel1);
+            setControlDefaults(new TimerBar() { StaticMargin = true }, analogSplitContainer.Panel2);
             setControlDefaults(new Circle.FullContents(simpleMode: false), tabCircle);
             setControlDefaults(new Circle.FullContents(simpleMode: true), tabCircleSimple);
             setControlDefaults(new TimerBar(), tabBarOnly);
+
+            //Designer doesn't allow the panel to be this small, so setting it here
+            analogSplitContainer.SplitterDistance = 222;
 
             //Normalizes settings for the given control. This function returns its input
             /* local */ Control setControlDefaults(Control ctrl, Control parent)

@@ -43,6 +43,8 @@
             this.tabs = new System.Windows.Forms.TabControl();
             this.tabAnalog = new System.Windows.Forms.TabPage();
             this.tabCircle = new System.Windows.Forms.TabPage();
+            this.tabCircleSimple = new System.Windows.Forms.TabPage();
+            this.analogSplitContainer = new System.Windows.Forms.SplitContainer();
             this.TimeOnlyTime = new NewTimer.FormParts.AutoLabel();
             this.HoursOnlyHour = new NewTimer.FormParts.AutoLabel();
             this.HoursOnlyFraction = new NewTimer.FormParts.AutoLabel();
@@ -52,7 +54,6 @@
             this.MinutesOnlyTitle = new NewTimer.FormParts.AutoLabel();
             this.SecondsOnlySecond = new NewTimer.FormParts.AutoLabel();
             this.SecondsOnlyTitle = new NewTimer.FormParts.AutoLabel();
-            this.tabCircleSimple = new System.Windows.Forms.TabPage();
             this.tabSecondsOnly.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer7)).BeginInit();
             this.splitContainer7.Panel1.SuspendLayout();
@@ -78,6 +79,9 @@
             this.splitContainer4.SuspendLayout();
             this.tabTimeOnly.SuspendLayout();
             this.tabs.SuspendLayout();
+            this.tabAnalog.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.analogSplitContainer)).BeginInit();
+            this.analogSplitContainer.SuspendLayout();
             this.SuspendLayout();
             // 
             // tabSecondsOnly
@@ -263,6 +267,7 @@
             // 
             // tabAnalog
             // 
+            this.tabAnalog.Controls.Add(this.analogSplitContainer);
             this.tabAnalog.Location = new System.Drawing.Point(4, 22);
             this.tabAnalog.Name = "tabAnalog";
             this.tabAnalog.Size = new System.Drawing.Size(362, 245);
@@ -278,6 +283,26 @@
             this.tabCircle.TabIndex = 8;
             this.tabCircle.Text = "Cir";
             this.tabCircle.UseVisualStyleBackColor = true;
+            // 
+            // tabCircleSimple
+            // 
+            this.tabCircleSimple.Location = new System.Drawing.Point(4, 22);
+            this.tabCircleSimple.Name = "tabCircleSimple";
+            this.tabCircleSimple.Size = new System.Drawing.Size(362, 245);
+            this.tabCircleSimple.TabIndex = 9;
+            this.tabCircleSimple.Text = "Cdn";
+            this.tabCircleSimple.UseVisualStyleBackColor = true;
+            // 
+            // analogSplitContainer
+            // 
+            this.analogSplitContainer.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.analogSplitContainer.Location = new System.Drawing.Point(0, 0);
+            this.analogSplitContainer.Name = "analogSplitContainer";
+            this.analogSplitContainer.Orientation = System.Windows.Forms.Orientation.Horizontal;
+            this.analogSplitContainer.Panel2MinSize = 2;
+            this.analogSplitContainer.Size = new System.Drawing.Size(362, 245);
+            this.analogSplitContainer.SplitterDistance = 239;
+            this.analogSplitContainer.TabIndex = 0;
             // 
             // TimeOnlyTime
             // 
@@ -396,15 +421,6 @@
             this.SecondsOnlyTitle.Text = "0?";
             this.SecondsOnlyTitle.TextAlign = System.Drawing.ContentAlignment.BottomRight;
             // 
-            // tabCircleSimple
-            // 
-            this.tabCircleSimple.Location = new System.Drawing.Point(4, 22);
-            this.tabCircleSimple.Name = "tabCircleSimple";
-            this.tabCircleSimple.Size = new System.Drawing.Size(362, 245);
-            this.tabCircleSimple.TabIndex = 9;
-            this.tabCircleSimple.Text = "Cdn";
-            this.tabCircleSimple.UseVisualStyleBackColor = true;
-            // 
             // TimerFormBase
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -440,6 +456,9 @@
             this.splitContainer4.ResumeLayout(false);
             this.tabTimeOnly.ResumeLayout(false);
             this.tabs.ResumeLayout(false);
+            this.tabAnalog.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.analogSplitContainer)).EndInit();
+            this.analogSplitContainer.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -470,5 +489,6 @@
         private System.Windows.Forms.TabPage tabAnalog;
         private System.Windows.Forms.TabPage tabCircle;
         private System.Windows.Forms.TabPage tabCircleSimple;
+        private System.Windows.Forms.SplitContainer analogSplitContainer;
     }
 }

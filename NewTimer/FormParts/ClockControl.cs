@@ -60,8 +60,6 @@ namespace NewTimer.FormParts
         private static readonly Pen PEN_DOTTED = new Pen(COLOR_HAND_WEAK, 4) { EndCap = LineCap.Round, StartCap = LineCap.Round, DashCap = DashCap.Round, DashStyle = DashStyle.Dot };
         private static readonly Pen PEN_DOTTED_THIN = new Pen(COLOR_HAND_WEAK, 2) { EndCap = LineCap.Round, StartCap = LineCap.Round, DashCap = DashCap.Round, DashStyle = DashStyle.Dot };
 
-        private static readonly Brush BRUSH_NUMBER = new SolidBrush(COLOR_NUMBER);
-
         //Disc settings
         private const float DISC_INITAL_SCALE = (1 - BG_FRAME_SCALE) * 0.95f;
         private const float DISC_INITAL_SCALE_HOURS = (1 - HOUR_HAND_SCALE) * 0.95f;

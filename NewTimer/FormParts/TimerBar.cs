@@ -35,6 +35,21 @@ namespace NewTimer.FormParts
             }
         }
 
+        /// <summary>
+        /// Gets the margin level to use when StaticMargin is set true
+        /// </summary>
+        private const int STATIC_MARGIN = 2;
+
+        /// <summary>
+        /// Gets or sets whether the margin of this bar will change depending on its resolution
+        /// </summary>
+        public bool StaticMargin { get; set; }
+
+        /// <summary>
+        /// <inheritdoc />
+        /// </summary>
+        /// <param name="span"></param>
+        /// <param name="isOvertime"></param>
         public void OnCountdownTick(TimeSpan span, bool isOvertime)
         {
             //Sorry about this but
@@ -49,6 +64,9 @@ namespace NewTimer.FormParts
 
             //Apply the correct bar settings for the current time left
             ApplySettings(Config.BarSettings.First(i => i.Key <= span).Value);
+
+            if (StaticMargin)
+                BarMargin = STATIC_MARGIN;
         }
 
         public static float GetNewValue(TimeSpan span)

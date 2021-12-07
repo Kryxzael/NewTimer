@@ -42,7 +42,7 @@ namespace NewTimer.Forms
             numYear.Maximum = DateTime.Now.Year + 1;
 
             //Initialize the color scheme selector
-            cboxColors.Items.AddRange(Config.ColorSchemes);
+            cboxColors.Items.AddRange(Globals.ColorSchemes);
             cboxColors.SelectedIndex = 0;
 
             //Force trigger ChkAdv.CheckedChange (for some reason)
@@ -109,7 +109,7 @@ namespace NewTimer.Forms
             if (DateTime.Now.TimeOfDay > new TimeSpan(h, m, 0))
             {
                 createTimeWithText(
-                    text: new DateTime(1, 1, 1, h, m, 0).ToString(Config.Use24HourSelector ? "HH:mm" : "h:mm tt") + " tomorrow", 
+                    text: new DateTime(1, 1, 1, h, m, 0).ToString(Globals.Use24HourSelector ? "HH:mm" : "h:mm tt") + " tomorrow", 
                     target: DateTime.Now.Date.AddHours(h).AddMinutes(m).AddDays(1)
                 );
             }
@@ -118,7 +118,7 @@ namespace NewTimer.Forms
             else
             {
                 createTimeWithText(
-                    text: new DateTime(1, 1, 1, h, m, 0).ToString(Config.Use24HourSelector ? "HH:mm" : "h:mm tt") + " today", 
+                    text: new DateTime(1, 1, 1, h, m, 0).ToString(Globals.Use24HourSelector ? "HH:mm" : "h:mm tt") + " today", 
                     target: DateTime.Now.Date.AddHours(h).AddMinutes(m)
                 );
             }
@@ -182,7 +182,7 @@ namespace NewTimer.Forms
             /* local */ void createTime(DateTime target)
             {
                 flwTimeSuggestions.Controls.Add(new FormParts.Setup.TimeSugestion(
-                    text: target.ToString(Config.Use24HourSelector ? "HH:mm" : "h:mm tt"), 
+                    text: target.ToString(Globals.Use24HourSelector ? "HH:mm" : "h:mm tt"), 
                     getTarget: () => target)
                 );
             }
@@ -219,7 +219,7 @@ namespace NewTimer.Forms
         private void OnChangeHourMode(object sender, EventArgs e)
         {
             //Update settings
-            Config.Use24HourSelector = chk24h.Checked;
+            Globals.Use24HourSelector = chk24h.Checked;
 
             //Redraw hour knob and suggestions to use the correct hour format
             knbHour.Invalidate();
@@ -371,7 +371,7 @@ namespace NewTimer.Forms
             //The user is starting a to-time countdown
             if (sender == btnStartTime)
             {
-                Config.StartTimer(
+                Globals.StartTimer(
                     target: new DateTime((int)numYear.Value, (int)knbMonth.Value, (int)knbDay.Value, (int)knbHour.Value, (int)knbMin.Value, (int)knbSec.Value),
                     stopAtZero: chkStopAtZero.Checked,
                     colorScheme: GetSelectedColorScheme(),
@@ -382,7 +382,7 @@ namespace NewTimer.Forms
             //The user is starting a duration countdown
             else if (sender == btnStartDuration)
             {
-                Config.StartTimer(
+                Globals.StartTimer(
                     target: DateTime.Now.Add(new TimeSpan((int)knbDurHour.Value, (int)knbDurMin.Value, (int)knbDurSec.Value)),
                     stopAtZero: chkStopAtZero.Checked, 
                     colorScheme: GetSelectedColorScheme(),

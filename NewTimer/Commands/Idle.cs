@@ -23,9 +23,9 @@ namespace NewTimer.Commands
 
         protected override void Executed(Params args, IConsoleOutput target)
         {
-            Config.InFreeMode = !Config.InFreeMode;
+            Globals.PrimaryTimer.InFreeMode = !Globals.PrimaryTimer.InFreeMode;
 
-            if (Config.InFreeMode)
+            if (Globals.PrimaryTimer.InFreeMode)
                 target.WriteLine("Idling");
 
             else

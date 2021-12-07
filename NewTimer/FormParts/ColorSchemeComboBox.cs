@@ -31,7 +31,7 @@ namespace NewTimer.FormParts
                 Size cellSize = new Size(e.Bounds.Height - MARGIN * 2, e.Bounds.Height - MARGIN * 2);
 
                 //Get colors to use
-                Brush[] previewColors = s.GenerateForPreview(5, Config.MasterRandom)
+                Brush[] previewColors = s.GenerateForPreview(5, Globals.MasterRandom)
                     .Select(i => new SolidBrush(i))
                     .ToArray();
 

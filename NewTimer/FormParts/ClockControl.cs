@@ -12,7 +12,7 @@ namespace NewTimer.FormParts
 {
     public class ClockControl : UserControl, ICountdown
     {
-        private Color[] _colors;
+        private Dictionary<TimerConfig, Color[]> _colors = new Dictionary<TimerConfig, Color[]>();
         private bool _showDottedHourHand;
 
         /*
@@ -22,7 +22,7 @@ namespace NewTimer.FormParts
         //Background
         private static readonly Brush FRAME_BRUSH = new SolidBrush(ColorTranslator.FromHtml("#333"));
         private static readonly Brush BG_BRUSH = new SolidBrush(ColorTranslator.FromHtml("#222"));
-        private static readonly Brush BG_TRUE_BRUSH = new SolidBrush(Config.GlobalBackColor);
+        private static readonly Brush BG_TRUE_BRUSH = new SolidBrush(Globals.GlobalBackColor);
 
         private static readonly Pen FRAME_MARK_PEN = new Pen(ColorTranslator.FromHtml("#444"), 3) { EndCap = LineCap.Round };
         private static readonly Pen FRAME_MARK_SMALL_PEN = new Pen(ColorTranslator.FromHtml("#444"), 1.5f) { EndCap = LineCap.Round };
@@ -74,7 +74,8 @@ namespace NewTimer.FormParts
         {
             DoubleBuffered = true;
             SetStyle(ControlStyles.OptimizedDoubleBuffer | ControlStyles.AllPaintingInWmPaint, true);
-            _colors = Config.ColorScheme.GenerateMany(24, Config.MasterRandom).ToArray();
+            _colors[Globals.PrimaryTimer]   = Globals.PrimaryTimer  .ColorScheme.GenerateMany(24, Globals.MasterRandom).ToArray();
+            _colors[Globals.SecondaryTimer] = Globals.SecondaryTimer.ColorScheme.GenerateMany(24, Globals.MasterRandom).ToArray();
 
             Font = new Font(DefaultFont.FontFamily, FONT_SIZE);
         }
@@ -100,18 +101,22 @@ namespace NewTimer.FormParts
             e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
 
             //Only draw this when not in free mode
-            if (!Config.InFreeMode)
-            {
-                OnDrawBackCircle(e);
+            if (!Globals.PrimaryTimer.InFreeMode)
+                OnDrawBackCircle(e, Globals.PrimaryTimer, i => new SolidBrush(i), true);
+
+            if (!Globals.SecondaryTimer.InFreeMode)
+                OnDrawBackCircle(e, Globals.SecondaryTimer, i => new HatchBrush(HatchStyle.BackwardDiagonal, i, Color.Transparent), false);
+
+            //Same for numbers
+            if (!Globals.PrimaryTimer.InFreeMode)
                 OnDrawNumbers(e);
-            }
 
             OnDrawMinuteHand(e);
             OnDrawSecondHand(e);
             OnDrawHourHand(e);
 
             //Once again, do not draw anything more in free mode
-            if (Config.InFreeMode)
+            if (Globals.PrimaryTimer.InFreeMode)
                 return;
 
             OnDrawMinutesLeftHand(e);
@@ -172,10 +177,10 @@ namespace NewTimer.FormParts
             /*
              * Overdraw colored ticks
              */
-            if (!Config.InFreeMode)
+            if (!Globals.PrimaryTimer.InFreeMode)
             {
                 //Calculates the start and end positions
-                float target = getSegmentPosition(Config.Target);
+                float target = getSegmentPosition(Globals.PrimaryTimer.Target);
                 int i = getSegmentPosition(DateTime.Now);
 
                 //Goes from the start to the target
@@ -187,15 +192,15 @@ namespace NewTimer.FormParts
 
                     //Uses a big pen for intervals of 15 minutes
                     if (i % 15 == 0)
-                        pen = new Pen(_colors[0], FRAME_MARK_BIG_PEN.Width) { EndCap = LineCap.Round };
+                        pen = new Pen(_colors[Globals.PrimaryTimer][0], FRAME_MARK_BIG_PEN.Width) { EndCap = LineCap.Round };
 
                     //Uses a medium pen for intervals of 5 minutes
                     else if (i % 5 == 0)
-                        pen = new Pen(_colors[0], FRAME_MARK_PEN.Width) { EndCap = LineCap.Round };
+                        pen = new Pen(_colors[Globals.PrimaryTimer][0], FRAME_MARK_PEN.Width) { EndCap = LineCap.Round };
 
                     //Uses a small pen for intervals of 1 minutes
                     else
-                        pen = new Pen(_colors[0], FRAME_MARK_SMALL_PEN.Width) { EndCap = LineCap.Round };
+                        pen = new Pen(_colors[Globals.PrimaryTimer][0], FRAME_MARK_SMALL_PEN.Width) { EndCap = LineCap.Round };
 
                     //Draws colored tick
                     e.Graphics.DrawLine(
@@ -225,7 +230,7 @@ namespace NewTimer.FormParts
                 height: (int)(squareArea.Height * (1 - BG_FRAME_SCALE))
             );
 
-            e.Graphics.FillEllipse(Config.RealTimeLeft.TotalMinutes < 1f ? BG_TRUE_BRUSH : BG_BRUSH, nonFrameArea);
+            e.Graphics.FillEllipse(Globals.PrimaryTimer.RealTimeLeft.TotalMinutes < 1f ? BG_TRUE_BRUSH : BG_BRUSH, nonFrameArea);
         }
 
         /// <summary>
@@ -283,7 +288,7 @@ namespace NewTimer.FormParts
             if (!_showDottedHourHand)
             {
                 //Do not show the hours left hand
-                if (Config.TimeLeft.Hours < 1)
+                if (Globals.PrimaryTimer.TimeLeft.Hours < 1)
                     return;
 
                 //If there all of a sudden are more than one hour left, we want to show the hand again
@@ -296,7 +301,7 @@ namespace NewTimer.FormParts
             OnDrawHand(
                 e: e,
                 scale: HOUR_HAND_SCALE, 
-                angle: CalculateAngle((float)Config.TimeLeft.TotalHours % 12, 12), 
+                angle: CalculateAngle((float)Globals.PrimaryTimer.TimeLeft.TotalHours % 12, 12), 
                 fillPen: PEN_DOTTED, 
                 borderPen: null
             );
@@ -311,7 +316,7 @@ namespace NewTimer.FormParts
             OnDrawHand(
                 e: e,
                 scale: MINUTE_HAND_SCALE, 
-                angle: CalculateAngle((float)Config.TimeLeft.TotalMinutes, 60), 
+                angle: CalculateAngle((float)Globals.PrimaryTimer.TimeLeft.TotalMinutes, 60), 
                 fillPen: PEN_DOTTED, 
                 borderPen: null
             );
@@ -324,14 +329,14 @@ namespace NewTimer.FormParts
         protected virtual void OnDrawSecondsLeftHand(PaintEventArgs e)
         {
             //Only show the seconds left hand if the target's seconds component is non-zero
-            if (Config.Target.Second == 0)
+            if (Globals.PrimaryTimer.Target.Second == 0)
                 return;
 
             //Draw hand
             OnDrawHand(
                 e: e, 
                 scale: SECOND_HAND_SCALE, 
-                angle: CalculateAngle((float)Config.TimeLeft.TotalSeconds, 60), 
+                angle: CalculateAngle((float)Globals.PrimaryTimer.TimeLeft.TotalSeconds, 60), 
                 fillPen: PEN_DOTTED_THIN, 
                 borderPen: null
             );
@@ -341,7 +346,7 @@ namespace NewTimer.FormParts
         /// Draws the background pie
         /// </summary>
         /// <param name="e"></param>
-        protected virtual void OnDrawBackCircle(PaintEventArgs e)
+        protected virtual void OnDrawBackCircle(PaintEventArgs e, TimerConfig timer, Func<Color, Brush> createBrush, bool createLastCountdownEffects)
         {
             /*
              * Creates a filled pie
@@ -373,13 +378,16 @@ namespace NewTimer.FormParts
                 e.Graphics.DrawPie(color, area, -90 + startAngle, angle);
             }
 
+            //Color scheme to use
+            Color[] colors = _colors[timer];
+
             //Create the final-minute color shift
-            if (Config.TimeLeft.TotalMinutes < 1f && !Config.Overtime)
+            if (createLastCountdownEffects && timer.TimeLeft.TotalMinutes < 1f && !timer.Overtime)
             {
                 fillPie(
                     color: BG_BRUSH,
                     startAngle: (DateTime.Now.Second + DateTime.Now.Millisecond / 1000f) / 60f * 360f,
-                    angle: (float)Config.RealTimeLeft.TotalSeconds / 60f * 360f,
+                    angle: (float)timer.RealTimeLeft.TotalSeconds / 60f * 360f,
                     scale: 1 - BG_FRAME_SCALE
                 );
             }
@@ -389,20 +397,20 @@ namespace NewTimer.FormParts
              */
 
             //Draw for days (more than 1 day)
-            if (Config.TimeLeft.TotalDays >= 1)
+            if (timer.TimeLeft.TotalDays >= 1)
             {
                 float dividend = 1f;
-                for (int i = 0; i < Math.Ceiling(Config.TimeLeft.TotalDays / 12); i++)
+                for (int i = 0; i < Math.Ceiling(timer.TimeLeft.TotalDays / 12); i++)
                 {
                     //Create a colored pen based on what days we are drawing
-                    using (Brush b = new SolidBrush(_colors[(i + 6) % _colors.Length]))
+                    using (Brush b = createBrush(colors[(i + 6) % colors.Length]))
                     {
-                        if (i == Math.Floor(Config.TimeLeft.TotalDays / 12))
+                        if (i == Math.Floor(timer.TimeLeft.TotalDays / 12))
                         {
                             fillPie(
                                 color: b,
                                 startAngle: 0f,
-                                angle: (float)Config.TimeLeft.TotalDays % 12f * 360f / 12f,
+                                angle: (float)timer.TimeLeft.TotalDays % 12f * 360f / 12f,
                                 scale: DISC_INITAL_SCALE / dividend);
                         }
                         else
@@ -422,10 +430,10 @@ namespace NewTimer.FormParts
                 //Draw lines segmenting the bar
                 using (Pen p = new Pen(Color.FromArgb(0x7F, Color.Silver), 1.5f) { DashStyle = DashStyle.Dash })
                 {
-                    for (int a = 0; a < Math.Min(12, Config.TimeLeft.TotalDays); a++)
+                    for (int a = 0; a < Math.Min(12, timer.TimeLeft.TotalDays); a++)
                     {
                         Point startPoint = new Point(squareArea.X + squareArea.Width / 2, squareArea.Y + squareArea.Height / 2);
-                        PointF endPoint = GetPointAtAngle(startPoint, (int)(DISC_INITAL_SCALE * squareArea.Width / 2), CalculateAngle(a * (Config.Overtime ? -1 : 1), 12));
+                        PointF endPoint = GetPointAtAngle(startPoint, (int)(DISC_INITAL_SCALE * squareArea.Width / 2), CalculateAngle(a * (timer.Overtime ? -1 : 1), 12));
 
                         e.Graphics.DrawLine(p, startPoint, endPoint);
                     }
@@ -434,30 +442,30 @@ namespace NewTimer.FormParts
                 //Draw week indicators
                 fillPie(Brushes.Gray, 7 / 12f * 360f, 1f, DISC_INITAL_SCALE);
 
-                if (Config.TimeLeft.TotalDays >= 7f)
+                if (timer.TimeLeft.TotalDays >= 7f)
                     fillPie(Brushes.Gray, 2 / 12f * 360f, 1f, DISC_INITAL_SCALE);
 
-                if (Config.TimeLeft.TotalDays >= 14f)
+                if (timer.TimeLeft.TotalDays >= 14f)
                     fillPie(Brushes.Gray, 9 / 12f * 360f, 1f, DISC_INITAL_SCALE);
 
                 fillPie(BG_BRUSH, 0f, 360f, DISC_INITAL_SCALE_HOURS);
             }
 
             //Draw for hours (more than 3 hours)
-            else if (Config.TimeLeft.TotalHours >= 3)
+            else if (timer.TimeLeft.TotalHours >= 3)
             {
                 float dividend = 1f;
-                for (int i = 0; i < Math.Ceiling(Config.TimeLeft.TotalDays * 2); i++)
+                for (int i = 0; i < Math.Ceiling(timer.TimeLeft.TotalDays * 2); i++)
                 {
                     //Create a colored pen based on what hours we are drawing
-                    using (Brush b = new SolidBrush(_colors[(i + 4) % _colors.Length]))
+                    using (Brush b = createBrush(colors[(i + 4) % colors.Length]))
                     {
-                        if (i == Math.Floor(Config.TimeLeft.TotalDays * 2))
+                        if (i == Math.Floor(timer.TimeLeft.TotalDays * 2))
                         {
                             fillPie(
                                 color: b,
                                 startAngle: ((DateTime.Now.Hour % 12) + DateTime.Now.Minute / 60f) / 12f * 360f,
-                                angle: (float)(Config.RealTimeLeft.TotalHours % 12) / 12f * 360f,
+                                angle: (float)(timer.RealTimeLeft.TotalHours % 12) / 12f * 360f,
                                 scale: DISC_INITAL_SCALE_HOURS / dividend
                             );
                         }
@@ -480,17 +488,17 @@ namespace NewTimer.FormParts
             else
             {
                 float dividend = 1f;
-                for (int i = 0; i < Math.Ceiling(Config.TimeLeft.TotalHours); i++)
+                for (int i = 0; i < Math.Ceiling(timer.TimeLeft.TotalHours); i++)
                 {
                     //Create a colored pen based on what hour we are drawing
-                    using (SolidBrush b = new SolidBrush(_colors[i % _colors.Length]))
+                    using (Brush b = createBrush(colors[i % colors.Length]))
                     {
-                        if (i == Math.Floor(Config.TimeLeft.TotalHours))
+                        if (i == Math.Floor(timer.TimeLeft.TotalHours))
                         {
                             fillPie(
                                 color: b,
                                 startAngle: (DateTime.Now.Minute + DateTime.Now.Second / 60f) / 60f * 360f,
-                                angle: (float)(Config.RealTimeLeft.TotalMinutes % 60) / 60f * 360f,
+                                angle: (float)(timer.RealTimeLeft.TotalMinutes % 60) / 60f * 360f,
                                 scale: DISC_INITAL_SCALE / dividend
                             );
                         }
@@ -510,14 +518,14 @@ namespace NewTimer.FormParts
             }
 
             //Draw for seconds (less than 12 minutes)
-            if (Config.TimeLeft.TotalMinutes < 12)
+            if (createLastCountdownEffects && timer.TimeLeft.TotalMinutes < 12)
             {
-                using (Pen p = new Pen(_colors[10 % _colors.Length], 2f) { DashStyle = DashStyle.Dash })
+                using (Pen p = new Pen(colors[10 % colors.Length], 2f) { DashStyle = DashStyle.Dash })
                 {
                     drawPie(
                         color: p,
                         startAngle: 0f,
-                        angle: (float)Config.RealTimeLeft.TotalMinutes / 12f * 360f,
+                        angle: (float)timer.RealTimeLeft.TotalMinutes / 12f * 360f,
                         scale: DISC_INITAL_SCALE
                     );
                 }
@@ -543,11 +551,11 @@ namespace NewTimer.FormParts
                     angle: CalculateAngle(DateTime.Now.Hour % 12 + DateTime.Now.Minute / 60f, 12) + NUMBER_HOUR_DEGREE_OFFSET
                 );
 
-                byte s = (byte)(Math.Min(byte.MaxValue, Math.Max((Config.TimeLeft.TotalHours - 1), 0) / (1 / 6f) * byte.MaxValue));
+                byte s = (byte)(Math.Min(byte.MaxValue, Math.Max((Globals.PrimaryTimer.TimeLeft.TotalHours - 1), 0) / (1 / 6f) * byte.MaxValue));
                 using (Brush brush = new SolidBrush(Color.FromArgb(s, Color.White)))
                 {
                     e.Graphics.DrawString(
-                        s: Config.TimeLeft.Hours.ToString(),
+                        s: Globals.PrimaryTimer.TimeLeft.Hours.ToString(),
                         font: Font,
                         brush: brush,
                         point: p,
@@ -566,11 +574,11 @@ namespace NewTimer.FormParts
                 );
 
                 //Calculates transparency
-                byte s = (byte)(Math.Min(byte.MaxValue, Math.Max((Config.TimeLeft.TotalMinutes - 1), 0) / 5f * byte.MaxValue));
+                byte s = (byte)(Math.Min(byte.MaxValue, Math.Max((Globals.PrimaryTimer.TimeLeft.TotalMinutes - 1), 0) / 5f * byte.MaxValue));
                 using (Brush brush = new SolidBrush(Color.FromArgb(s, Color.White)))
                 {
                     e.Graphics.DrawString(
-                        s: Config.TimeLeft.Minutes.ToString("00"),
+                        s: Globals.PrimaryTimer.TimeLeft.Minutes.ToString("00"),
                         font: Font,
                         brush: brush,
                         point: p,
@@ -589,11 +597,11 @@ namespace NewTimer.FormParts
                 );
 
                 //Calculates transparency
-                byte s = (byte)(Config.RealTimeLeft.Milliseconds / 1000f * 255);
+                byte s = (byte)(Globals.PrimaryTimer.RealTimeLeft.Milliseconds / 1000f * 255);
                 using (Brush brush = new SolidBrush(Color.FromArgb(s, Color.White)))
                 {
                     e.Graphics.DrawString(
-                        s: Config.TimeLeft.Seconds.ToString("00"),
+                        s: Globals.PrimaryTimer.TimeLeft.Seconds.ToString("00"),
                         font: Font,
                         brush: brush,
                         point: p,
@@ -635,7 +643,7 @@ namespace NewTimer.FormParts
         protected override void OnClick(EventArgs e)
         {
             base.OnClick(e);
-            _colors = Config.ColorScheme.GenerateMany(12, Config.MasterRandom).ToArray();
+            _colors[Globals.PrimaryTimer] = Globals.PrimaryTimer.ColorScheme.GenerateMany(12, Globals.MasterRandom).ToArray();
             Invalidate();
         }
 

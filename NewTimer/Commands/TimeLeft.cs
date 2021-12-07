@@ -29,22 +29,34 @@ namespace NewTimer.Commands
 
                     if (arg.EndsWith("h"))
                     {
-                        Config.Target = DateTime.Now.AddHours(double.Parse(args[0].TrimEnd('h'), NumberStyles.Float, CultureInfo.InvariantCulture));
+                        Globals.PrimaryTimer.Target = DateTime.Now.AddHours(
+                            double.Parse(args[0].TrimEnd('h'), 
+                            NumberStyles.Float, 
+                            CultureInfo.InvariantCulture)
+                        );
                     }
                     else if (arg.EndsWith("m"))
                     {
-                        Config.Target = DateTime.Now.AddMinutes(double.Parse(args[0].TrimEnd('m'), NumberStyles.Float, CultureInfo.InvariantCulture));
+                        Globals.PrimaryTimer.Target = DateTime.Now.AddMinutes(
+                            double.Parse(args[0].TrimEnd('m'), 
+                            NumberStyles.Float, 
+                            CultureInfo.InvariantCulture)
+                        );
                     }
                     else if (arg.EndsWith("s"))
                     {
-                        Config.Target = DateTime.Now.AddSeconds(double.Parse(args[0].TrimEnd('s'), NumberStyles.Float, CultureInfo.InvariantCulture));
+                        Globals.PrimaryTimer.Target = DateTime.Now.AddSeconds(
+                            double.Parse(args[0].TrimEnd('s'), 
+                            NumberStyles.Float, 
+                            CultureInfo.InvariantCulture)
+                        );
                     }
                     else
                     {
-                        Config.Target = DateTime.Now + TimeSpan.Parse(args.JoinEnd(0));
+                        Globals.PrimaryTimer.Target = DateTime.Now + TimeSpan.Parse(args.JoinEnd(0));
                     }
 
-                    target.WriteLine("Target time has been updated to " + Config.Target);
+                    target.WriteLine("Target time has been updated to " + Globals.PrimaryTimer.Target);
                 }
                 catch (Exception)
                 {

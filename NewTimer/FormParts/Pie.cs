@@ -34,7 +34,7 @@ namespace NewTimer.FormParts
             const int W = 10;
 
             base.OnPaint(e);
-            TimeSpan tl = Config.TimeLeft;
+            TimeSpan tl = Globals.PrimaryTimer.TimeLeft;
 
             using (Brush b1 = new SolidBrush(ForeColor))
             using (Brush b2 = new SolidBrush(ForeColorSecondary))

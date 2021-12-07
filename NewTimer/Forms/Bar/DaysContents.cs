@@ -17,8 +17,8 @@ namespace NewTimer.Forms.Bar
             InitializeComponent();
 
             //Initializes autolabels
-            autoLabel1.GetText = () => Config.TimeLeft.Days.ToString();
-            autoLabel2.GetText = () => "." + Config.GetDecimals(Config.TimeLeft.TotalDays, 5).ToString("00000") + " " + (Math.Abs(Math.Floor(Config.TimeLeft.TotalDays)) == 1 ? "day" : "days");
+            autoLabel1.GetText = () => Globals.PrimaryTimer.TimeLeft.Days.ToString();
+            autoLabel2.GetText = () => "." + Globals.GetDecimals(Globals.PrimaryTimer.TimeLeft.TotalDays, 5).ToString("00000") + " " + (Math.Abs(Math.Floor(Globals.PrimaryTimer.TimeLeft.TotalDays)) == 1 ? "day" : "days");
         }
     }
 }

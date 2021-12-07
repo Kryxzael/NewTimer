@@ -21,11 +21,17 @@ namespace NewTimer.FormParts
         private Color _overflowColor;
         private float _value;
 
+        /// <summary>
+        /// Gets the timer instance to render for
+        /// </summary>
+        private TimerConfig Timer => Globals.PrimaryTimer; //TODO: Make this changeable
+
         [Bindable(false)]
-        public Color[] Colors { get; set; } = Config.ColorScheme.GenerateMany(9, Config.MasterRandom).ToArray();
+        public Color[] Colors { get; set; }
 
         public OverwatchCircle()
         {
+            Colors = Timer.ColorScheme.GenerateMany(9, Globals.MasterRandom).ToArray();
             SetStyle(ControlStyles.AllPaintingInWmPaint, true);
         }
 
@@ -41,10 +47,10 @@ namespace NewTimer.FormParts
 
         protected virtual string GetStringForSegment(int segmentValue)
         {
-            if (Config.TimeLeft.TotalMinutes < 1) return segmentValue + "s";
-            else if (Config.TimeLeft.TotalHours < 1) return segmentValue + "m";
-            else if (Config.TimeLeft.TotalDays < 1) return segmentValue + "h";
-            else if (Config.TimeLeft.TotalDays < 365) return segmentValue + "d";
+            if (Timer.TimeLeft.TotalMinutes < 1) return segmentValue + "s";
+            else if (Timer.TimeLeft.TotalHours < 1) return segmentValue + "m";
+            else if (Timer.TimeLeft.TotalDays < 1) return segmentValue + "h";
+            else if (Timer.TimeLeft.TotalDays < 365) return segmentValue + "d";
             else return segmentValue + "y";
         }
 
@@ -52,14 +58,14 @@ namespace NewTimer.FormParts
         {
             Color c;
 
-            if (Config.InFreeMode)
-                c = Config.GlobalFreeModeBackColor;
+            if (Timer.InFreeMode)
+                c = Globals.GlobalFreeModeBackColor;
 
-            else if (Config.Overtime)
-                c = Config.GlobalOvertimeColor;
+            else if (Timer.Overtime)
+                c = Globals.GlobalOvertimeColor;
 
             else
-                c = Config.GlobalBackColor;
+                c = Globals.GlobalBackColor;
 
             e.Graphics.Clear(c);
         }
@@ -78,14 +84,14 @@ namespace NewTimer.FormParts
             }
             Rectangle edgeBounds = new Rectangle(dBounds.X + dBounds.Width / 12, dBounds.Y + dBounds.Height / 12, dBounds.Width - dBounds.Width / 6, dBounds.Height - dBounds.Width / 6);
 
-            if (Config.InFreeMode)
-                brshBG = new SolidBrush(Config.GlobalFreeModeBackColor);
+            if (Timer.InFreeMode)
+                brshBG = new SolidBrush(Globals.GlobalFreeModeBackColor);
 
-            else if (Config.Overtime)
-                brshBG = new SolidBrush(Config.GlobalOvertimeColor);
+            else if (Timer.Overtime)
+                brshBG = new SolidBrush(Globals.GlobalOvertimeColor);
 
             else
-                brshBG = new SolidBrush(Config.GlobalBackColor);
+                brshBG = new SolidBrush(Globals.GlobalBackColor);
 
             brshFG = new SolidBrush(_fillColor);
             brshOF = new SolidBrush(_overflowColor);
@@ -157,7 +163,7 @@ namespace NewTimer.FormParts
 
         protected override void OnClick(EventArgs e)
         {
-            Config.ColorizeTimerBar();
+            Timer.ColorizeTimerBar();
         }
 
         public void OnCountdownTick(TimeSpan span, bool isOvertime)
@@ -165,10 +171,10 @@ namespace NewTimer.FormParts
             if (ProgressMode)
             {
                 //                                v Don't ask
-                ApplySettings(new BarSettings(1f, 2, Config.BarSettings.Last().Value.FillColor, default, 0));
+                ApplySettings(new BarSettings(1f, 2, Timer.BarSettings.Last().Value.FillColor, default, 0));
 
-                long minValue = Config.Target.Ticks;
-                long maxValue = Config.StartTime.Ticks;
+                long minValue = Timer.Target.Ticks;
+                long maxValue = Timer.StartTime.Ticks;
 
                 _value = (float)(DateTime.Now.Ticks - minValue) / (maxValue - minValue);
             }
@@ -177,7 +183,7 @@ namespace NewTimer.FormParts
                 _value = TimerBar.GetNewValue(span);
 
                 //Apply the correct bar settings for the current time left
-                ApplySettings(Config.BarSettings.First(i => i.Key <= span).Value);
+                ApplySettings(Timer.BarSettings.First(i => i.Key <= span).Value);
             }
 
             

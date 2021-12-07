@@ -77,7 +77,7 @@
     <Compile Include="Schemes\SchemeCustom.cs" />
     <Compile Include="Schemes\SchemeRandom.cs" />
     <Compile Include="ColorScheme.cs" />
-    <Compile Include="Config.cs" />
+    <Compile Include="Globals.cs" />
     <Compile Include="DigitalNumber.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -159,6 +159,7 @@
     <Compile Include="Schemes\SchemeSingle.cs" />
     <Compile Include="TaskbarIconHelper.cs" />
     <Compile Include="TaskbarUtility.cs" />
+    <Compile Include="TimerConfig.cs" />
     <EmbeddedResource Include="FormParts\Setup\Knob.resx">
       <DependentUpon>Knob.cs</DependentUpon>
     </EmbeddedResource>

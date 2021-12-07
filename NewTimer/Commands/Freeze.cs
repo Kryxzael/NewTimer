@@ -16,6 +16,7 @@ namespace NewTimer.Commands
         public override string HelpDescription => "Freezes or unfreezes the timer";
 
         // Used to keep timer frozen
+        //TODO: Update this
         private System.Windows.Forms.Timer _timer = new System.Windows.Forms.Timer() { Interval = 10 };
         private System.Diagnostics.Stopwatch _deltaTime = new System.Diagnostics.Stopwatch();
 
@@ -37,7 +38,7 @@ namespace NewTimer.Commands
 
         private void OnTimerTick(object sender, EventArgs e)
         {
-            Config.Target += _deltaTime.Elapsed;
+            Globals.PrimaryTimer.Target += _deltaTime.Elapsed;
             _deltaTime.Restart();
         }
     }

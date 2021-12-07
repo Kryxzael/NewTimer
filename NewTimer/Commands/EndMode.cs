@@ -22,11 +22,11 @@ namespace NewTimer.Commands
             switch (args[0])
             {
                 case "stop":
-                    Config.StopAtZero = true;
+                    Globals.PrimaryTimer.StopAtZero = true;
                     target.WriteLine("End mode updated to 'Stop at Zero'");
                     break;
                 case "continue":
-                    Config.StopAtZero = false;
+                    Globals.PrimaryTimer.StopAtZero = false;
                     target.WriteLine("End mode updated to 'Continue Counting after Zero'");
                     break;
             }

@@ -18,31 +18,22 @@ namespace NewTimer.Forms.Circle
             InitializeComponent();
 
             overwatchCircle2.ProgressMode = simpleMode;
-
-            FullH.MouseDown += OnTextClick;
-            FullM.MouseDown += OnTextClick;
-            FullS.MouseDown += OnTextClick;
-        }
-
-        private void OnTextClick(object sender, MouseEventArgs e)
-        {
-            
         }
 
         public void OnCountdownTick(TimeSpan span, bool isOvertime)
         {
-            overwatchCircle2.BackColor = Config.GlobalBackColor;
+            overwatchCircle2.BackColor = Globals.GlobalBackColor;
 
-            FullH.Text = Config.TimeLeft.Hours.ToString("00");
-            FullM.Text = Config.TimeLeft.Minutes.ToString("00");
-            FullS.Text = Config.TimeLeft.Seconds.ToString("00");
+            FullH.Text = Globals.PrimaryTimer.TimeLeft.Hours.ToString("00");
+            FullM.Text = Globals.PrimaryTimer.TimeLeft.Minutes.ToString("00");
+            FullS.Text = Globals.PrimaryTimer.TimeLeft.Seconds.ToString("00");
 
-            FullTotalH.Text = Config.TimeLeft.TotalHours.ToString("00");
-            FullTotalM.Text = Config.TimeLeft.TotalMinutes.ToString("000");
-            FullTotalS.Text = Config.TimeLeft.TotalSeconds.ToString("0000000");
+            FullTotalH.Text = Globals.PrimaryTimer.TimeLeft.TotalHours.ToString("00");
+            FullTotalM.Text = Globals.PrimaryTimer.TimeLeft.TotalMinutes.ToString("000");
+            FullTotalS.Text = Globals.PrimaryTimer.TimeLeft.TotalSeconds.ToString("0000000");
 
-            FullFracH.Text = ((Math.Ceiling(Config.TimeLeft.TotalHours) - Config.TimeLeft.TotalHours) * 1000).ToString("000");
-            FullFracM.Text = ((Math.Ceiling(Config.TimeLeft.TotalMinutes) - Config.TimeLeft.TotalMinutes) * 100).ToString("00");
+            FullFracH.Text = ((Math.Ceiling(Globals.PrimaryTimer.TimeLeft.TotalHours) - Globals.PrimaryTimer.TimeLeft.TotalHours) * 1000).ToString("000");
+            FullFracM.Text = ((Math.Ceiling(Globals.PrimaryTimer.TimeLeft.TotalMinutes) - Globals.PrimaryTimer.TimeLeft.TotalMinutes) * 100).ToString("00");
         }
     }
 }

@@ -23,7 +23,7 @@ namespace NewTimer.Commands
         {
             if (args.Count == 0)
             {
-                target.WriteLine(Config.StartTime.ToString());
+                target.WriteLine(Globals.PrimaryTimer.StartTime.ToString());
                 return;
             }
 
@@ -32,7 +32,7 @@ namespace NewTimer.Commands
                 case "stamp":
                     try
                     {
-                        Config.StartTime = DateTime.Parse(args.JoinEnd(1));
+                        Globals.PrimaryTimer.StartTime = DateTime.Parse(args.JoinEnd(1));
                     }
                     catch (Exception)
                     {
@@ -48,19 +48,31 @@ namespace NewTimer.Commands
 
                         if (arg.EndsWith("h"))
                         {
-                            Config.StartTime = DateTime.Now.AddHours(double.Parse(args[1].TrimEnd('h'), NumberStyles.Float, CultureInfo.InvariantCulture));
+                            Globals.PrimaryTimer.StartTime = DateTime.Now.AddHours(
+                                double.Parse(args[1].TrimEnd('h'), 
+                                NumberStyles.Float, 
+                                CultureInfo.InvariantCulture)
+                            );
                         }
                         else if (arg.EndsWith("m"))
                         {
-                            Config.StartTime = DateTime.Now.AddMinutes(double.Parse(args[1].TrimEnd('m'), NumberStyles.Float, CultureInfo.InvariantCulture));
+                            Globals.PrimaryTimer.StartTime = DateTime.Now.AddMinutes(
+                                double.Parse(args[1].TrimEnd('m'), 
+                                NumberStyles.Float, 
+                                CultureInfo.InvariantCulture)
+                            );
                         }
                         else if (arg.EndsWith("s"))
                         {
-                            Config.StartTime = DateTime.Now.AddSeconds(double.Parse(args[1].TrimEnd('s'), NumberStyles.Float, CultureInfo.InvariantCulture));
+                            Globals.PrimaryTimer.StartTime = DateTime.Now.AddSeconds(
+                                double.Parse(args[1].TrimEnd('s'), 
+                                NumberStyles.Float, 
+                                CultureInfo.InvariantCulture)
+                            );
                         }
                         else
                         {
-                            Config.StartTime = DateTime.Now + TimeSpan.Parse(args.JoinEnd(1));
+                            Globals.PrimaryTimer.StartTime = DateTime.Now + TimeSpan.Parse(args.JoinEnd(1));
                         }
                     }
                     catch (Exception)

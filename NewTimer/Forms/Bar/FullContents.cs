@@ -18,17 +18,17 @@ namespace NewTimer.Forms.Bar
             InitializeComponent();
 
             //Sets foreground colors to comply with global settings
-            FullD.ForeColor = Config.GlobalForeColor;
-            FullH.ForeColor = Config.GlobalForeColor;
-            FullM.ForeColor = Config.GlobalForeColor;
-            FullS.ForeColor = Config.GlobalForeColor;
+            FullD.ForeColor = Globals.GlobalForeColor;
+            FullH.ForeColor = Globals.GlobalForeColor;
+            FullM.ForeColor = Globals.GlobalForeColor;
+            FullS.ForeColor = Globals.GlobalForeColor;
 
-            FullTotalH.ForeColor = Config.GlobalForeColor;
-            FullTotalM.ForeColor = Config.GlobalForeColor;
-            FullTotalS.ForeColor = Config.GlobalForeColor;
+            FullTotalH.ForeColor = Globals.GlobalForeColor;
+            FullTotalM.ForeColor = Globals.GlobalForeColor;
+            FullTotalS.ForeColor = Globals.GlobalForeColor;
 
-            FullFracM.ForeColor = Config.GlobalForeColor;
-            FullFracM.ForeColor = Config.GlobalForeColor;
+            FullFracM.ForeColor = Globals.GlobalForeColor;
+            FullFracM.ForeColor = Globals.GlobalForeColor;
 
             /*
              * Initialize dynamic fill colors
@@ -55,18 +55,18 @@ namespace NewTimer.Forms.Bar
 
             //Main display
             FullD.LeadingZerosColor = Color.Transparent;
-            FullH.LeadingZerosColor = Config.GlobalGrayedColor;
-            FullM.LeadingZerosColor = Config.GlobalGrayedColor;
-            FullS.LeadingZerosColor = Config.GlobalGrayedColor;
+            FullH.LeadingZerosColor = Globals.GlobalGrayedColor;
+            FullM.LeadingZerosColor = Globals.GlobalGrayedColor;
+            FullS.LeadingZerosColor = Globals.GlobalGrayedColor;
 
             //Integer portions of total hours, minutes and seconds
-            FullTotalH.LeadingZerosColor = Config.GlobalGrayedColor;
-            FullTotalM.LeadingZerosColor = Config.GlobalGrayedColor;
-            FullTotalS.LeadingZerosColor = Config.GlobalGrayedColor;
+            FullTotalH.LeadingZerosColor = Globals.GlobalGrayedColor;
+            FullTotalM.LeadingZerosColor = Globals.GlobalGrayedColor;
+            FullTotalS.LeadingZerosColor = Globals.GlobalGrayedColor;
 
             //Fraction portions of total hours and minutes
-            FullFracH.LeadingZerosColor = Config.GlobalGrayedColor;
-            FullFracM.LeadingZerosColor = Config.GlobalGrayedColor;
+            FullFracH.LeadingZerosColor = Globals.GlobalGrayedColor;
+            FullFracM.LeadingZerosColor = Globals.GlobalGrayedColor;
         }
 
         /// <summary>
@@ -84,26 +84,26 @@ namespace NewTimer.Forms.Bar
             FullH.RenderLeadingZeros = true;
 
             //Main hours
-            FullH.Text = Config.InFreeMode ? DateTime.Now.Hour.ToString("00") : span.Hours.ToString("00");
-            FullH.RenderLeadingZeros = Config.InFreeMode || span.TotalDays >= 1;
+            FullH.Text = Globals.PrimaryTimer.InFreeMode ? DateTime.Now.Hour.ToString("00") : span.Hours.ToString("00");
+            FullH.RenderLeadingZeros = Globals.PrimaryTimer.InFreeMode || span.TotalDays >= 1;
 
             //Main minutes
-            FullM.Text = Config.InFreeMode ? DateTime.Now.Minute.ToString("00") : span.Minutes.ToString("00");
-            FullM.RenderLeadingZeros = Config.InFreeMode || span.TotalHours >= 1;
+            FullM.Text = Globals.PrimaryTimer.InFreeMode ? DateTime.Now.Minute.ToString("00") : span.Minutes.ToString("00");
+            FullM.RenderLeadingZeros = Globals.PrimaryTimer.InFreeMode || span.TotalHours >= 1;
 
             //Main seconds
-            FullS.Text = Config.InFreeMode ? DateTime.Now.Second.ToString("00") : span.Seconds.ToString("00");
-            FullS.RenderLeadingZeros = Config.InFreeMode || span.TotalMinutes >= 1;
+            FullS.Text = Globals.PrimaryTimer.InFreeMode ? DateTime.Now.Second.ToString("00") : span.Seconds.ToString("00");
+            FullS.RenderLeadingZeros = Globals.PrimaryTimer.InFreeMode || span.TotalMinutes >= 1;
 
 
             //Total hours
             FullTotalH.Text = Math.Floor(span.TotalHours) >= 100 ? "BIG" : Math.Floor(span.TotalHours).ToString("00");
-            FullFracH.Text = Config.GetDecimals(span.TotalHours, 3).ToString("000");
+            FullFracH.Text = Globals.GetDecimals(span.TotalHours, 3).ToString("000");
             FullFracH.RenderLeadingZeros = span.TotalHours >= 1;
 
             //Total minutes
             FullTotalM.Text = Math.Floor(span.TotalMinutes) >= 1000 ? "BIG" : Math.Floor(span.TotalMinutes).ToString("000");
-            FullFracM.Text = Config.GetDecimals(span.TotalMinutes, 2).ToString("00");
+            FullFracM.Text = Globals.GetDecimals(span.TotalMinutes, 2).ToString("00");
             FullFracM.RenderLeadingZeros = span.TotalMinutes >= 1;
 
             //Total seconds
@@ -113,25 +113,25 @@ namespace NewTimer.Forms.Bar
              * Set fill effects
              */
             //Main days
-            FullD.Progress = (float)(isOvertime ? ReversedTimeLeft() : Config.TimeLeft).TotalDays / 7f;
+            FullD.Progress = (float)(isOvertime ? ReversedTimeLeft() : Globals.PrimaryTimer.TimeLeft).TotalDays / 7f;
 
             //Main hours
-            FullH.Progress = (isOvertime ? ReversedTimeLeft() : Config.TimeLeft).Hours  / 24f;
+            FullH.Progress = (isOvertime ? ReversedTimeLeft() : Globals.PrimaryTimer.TimeLeft).Hours  / 24f;
 
             //Main minutes
-            FullM.Progress = (isOvertime ? ReversedTimeLeft() : Config.TimeLeft).Minutes / 60f;
+            FullM.Progress = (isOvertime ? ReversedTimeLeft() : Globals.PrimaryTimer.TimeLeft).Minutes / 60f;
 
             //Main seconds
-            FullS.Progress = (isOvertime ? ReversedTimeLeft() : Config.TimeLeft).Seconds / 60f;
+            FullS.Progress = (isOvertime ? ReversedTimeLeft() : Globals.PrimaryTimer.TimeLeft).Seconds / 60f;
 
 
             //Total hours
             FullTotalH.Progress = FullH.Progress;
-            FullFracH.Progress = Config.GetDecimals((float)(isOvertime ? ReversedTimeLeft() : Config.TimeLeft).TotalHours, 3) / 1000f;
+            FullFracH.Progress = Globals.GetDecimals((float)(isOvertime ? ReversedTimeLeft() : Globals.PrimaryTimer.TimeLeft).TotalHours, 3) / 1000f;
 
             //Total minutes
             FullTotalM.Progress = FullM.Progress;
-            FullFracM.Progress = Config.GetDecimals((float)(isOvertime ? ReversedTimeLeft() : Config.TimeLeft).TotalMinutes, 3) / 1000f;
+            FullFracM.Progress = Globals.GetDecimals((float)(isOvertime ? ReversedTimeLeft() : Globals.PrimaryTimer.TimeLeft).TotalMinutes, 3) / 1000f;
 
             //Total seconds
             FullTotalS.Progress = FullS.Progress;
@@ -140,7 +140,7 @@ namespace NewTimer.Forms.Bar
 
         private TimeSpan ReversedTimeLeft()
         {
-            return new TimeSpan(1000, 0, 0, 0) - Config.TimeLeft;
+            return new TimeSpan(1000, 0, 0, 0) - Globals.PrimaryTimer.TimeLeft;
         }
     }
 }

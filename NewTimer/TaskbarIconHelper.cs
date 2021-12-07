@@ -147,7 +147,7 @@ namespace NewTimer
                     brush: Math.Floor(value) % 2 == 0 ? b2 : b1, //Alternating between two colors
                     rect: bounds,
                     startAngle: startAngle,
-                    sweepAngle: (ccw ? -1 : 1) * Config.GetDecimals(value, 3) / 1000f * 360
+                    sweepAngle: (ccw ? -1 : 1) * Globals.GetDecimals(value, 3) / 1000f * 360
                 );
 
                 //Draw the pie's border
@@ -155,7 +155,7 @@ namespace NewTimer
                     pen: pen, 
                     rect: Rectangle.Inflate(bounds, -1, -1), 
                     startAngle: startAngle, 
-                    sweepAngle: (ccw ? -1 : 1) * Config.GetDecimals(value, 3) / 1000f * 360
+                    sweepAngle: (ccw ? -1 : 1) * Globals.GetDecimals(value, 3) / 1000f * 360
                 );
 
             }

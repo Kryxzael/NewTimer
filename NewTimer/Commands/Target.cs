@@ -27,7 +27,7 @@ namespace NewTimer.Commands
             {
                 try
                 {
-                    Config.Target = DateTime.Parse(args.JoinEnd(0));
+                    Globals.PrimaryTimer.Target = DateTime.Parse(args.JoinEnd(0));
                     target.WriteLine("Target time has been updated");
                 }
                 catch (Exception)
@@ -37,7 +37,7 @@ namespace NewTimer.Commands
             }
 
             //Read target
-            target.WriteLine(Config.Target.ToString());
+            target.WriteLine(Globals.PrimaryTimer.Target.ToString());
         }
     }
 }

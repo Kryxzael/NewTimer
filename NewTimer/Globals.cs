@@ -15,91 +15,23 @@ namespace NewTimer
     /// <summary>
     /// Stores configuration and other global settings
     /// </summary>
-    public static class Config
+    public static class Globals
     {
-        /// <summary>
-        /// Gets or sets whether the timer is not currently tracking a target time. Also referred to as 'idle'
-        /// </summary>
-        public static bool InFreeMode { get; set; }
-
-        /// <summary>
-        /// Gets the time the timer was started at
-        /// </summary>
-        public static DateTime StartTime { get; set; } = DateTime.Now;
-
-        /// <summary>
-        /// Gets or sets the time the timer targets
-        /// </summary>
-        public static DateTime Target { get; set; } = new DateTime(2017, 4, 7, 15, 05, 0);
-
         /// <summary>
         /// Will the time selector use 24-hour time?
         /// </summary>
         public static bool Use24HourSelector { get; set; } = false;
 
         /// <summary>
-        /// The color scheme that is selected. This value is set when the timer starts
+        /// Gets the current primary timer. The primary and secondary timers can be swaped with SwapTimers()
         /// </summary>
-        public static ColorScheme ColorScheme { get; set; }
+        public static TimerConfig PrimaryTimer { get; private set; } = new TimerConfig();
 
         /// <summary>
-        /// Gets or sets whether the timer should stop when it reaches zero
+        /// Gets the current secondary timer. The primary and secondary timers can be swaped with SwapTimers()
         /// </summary>
-        public static bool StopAtZero { get; set; }
 
-        /// <summary>
-        /// Gets the time to display on the timer. This is value will start incrementing once the target time has passed
-        /// </summary>
-        /// <returns></returns>
-        public static TimeSpan TimeLeft
-        {
-            get
-            {
-                if (InFreeMode)
-                    return default;
-
-                if (DateTime.Now > Target)
-                {
-                    if (StopAtZero)
-                        return default;
-
-                    return DateTime.Now - Target;
-                }
-                    
-
-                return Target - DateTime.Now;
-            }
-        }
-
-        /// <summary>
-        /// Gets the real time left until the target time. This value will go negative after the target time
-        /// </summary>
-        /// <returns></returns>
-        public static TimeSpan RealTimeLeft
-        {
-            get
-            {
-                if (InFreeMode)
-                    return default;
-
-                return Target - DateTime.Now;
-            }
-        }
-
-        /// <summary>
-        /// Has the target time passed?
-        /// </summary>
-        public static bool Overtime 
-        {
-            get
-            {
-                if (InFreeMode)
-                    return false;
-
-                return DateTime.Now > Target;
-            }
-            
-        }
+        public static TimerConfig SecondaryTimer { get; private set; } = new TimerConfig();
 
         /*
          * Constants
@@ -148,29 +80,6 @@ namespace NewTimer
         /// The opacity of the main window when translucency mode is enabled
         /// </summary>
         public static float OPACITY_TRANSLUCENT = 0.25f;
-
-        /// <summary>
-        /// Gets the configuration settings that the time bar will use. The key is the minimum unit time that will be used to apply the settings
-        /// </summary>
-        public static Dictionary<TimeSpan, BarSettings> BarSettings = new Dictionary<TimeSpan, BarSettings>()
-        {
-            /*  1y */ { new TimeSpan(365, 0, 0, 0), CreateBarSettings(1, 1, 30)},
-
-            /* 30d */ { new TimeSpan(30, 0, 0, 0), CreateBarSettings(30, 30, 25) },
-            /*  7d */ { new TimeSpan(7, 0, 0, 0), CreateBarSettings(7, 7, 20) },
-            /*  1d */ { new TimeSpan(1, 0, 0, 0), CreateBarSettings(1, 1, 15) },
-
-            /*  3h */ { new TimeSpan(12, 0, 0), CreateBarSettings(12, 3, 10) },
-            /*  2h */ { new TimeSpan(6, 0, 0), CreateBarSettings(6, 2, 9) },
-            /*  1h */ { new TimeSpan(1, 0, 0), CreateBarSettings(1, 1, 8) },
-
-            /* 15m */ { new TimeSpan(0, 30, 0), CreateBarSettings(30, 15, 5) },
-            /*  5m */ { new TimeSpan(0, 10, 0), CreateBarSettings(10, 5, 4) },
-
-            /*  1m */ { new TimeSpan(0, 1, 0), CreateBarSettings(1, 1, 3) },
-            /* 10s */ { new TimeSpan(0, 0, 10), CreateBarSettings(10, 10, 2) },
-            /*  1s */ { new TimeSpan(0, 0, 0), CreateBarSettings(1, 1, 1) }
-        };
 
         /// <summary>
         /// Gets the available color schemes
@@ -264,10 +173,17 @@ namespace NewTimer
         public static void StartTimer(DateTime target, ColorScheme colorScheme, bool stopAtZero, Form closingForm = null)
         {
             //Set target and color scheme
-            Target = target;
-            StartTime = DateTime.Now;
-            ColorScheme = colorScheme;
-            StopAtZero = stopAtZero;
+            PrimaryTimer.Target      = target;
+            PrimaryTimer.StartTime   = DateTime.Now;
+            PrimaryTimer.ColorScheme = colorScheme;
+            PrimaryTimer.StopAtZero  = stopAtZero;
+            PrimaryTimer.InFreeMode  = false;
+
+            SecondaryTimer.Target = target;
+            SecondaryTimer.StartTime = DateTime.Now;
+            SecondaryTimer.ColorScheme = colorScheme;
+            SecondaryTimer.StopAtZero = stopAtZero;
+            SecondaryTimer.InFreeMode = true;
 
             //Close the closing form with a result of OK so that the application doesn't exit
             if (closingForm != null)
@@ -277,41 +193,21 @@ namespace NewTimer
             }
 
             //Colorize the bar
-            ColorizeTimerBar();
+            PrimaryTimer.ColorizeTimerBar();
+            SecondaryTimer.ColorizeTimerBar();
 
             //Show main form
             new TimerFormBase().Show();
         }
 
-
         /// <summary>
-        /// Creates a bar setting object with the given minValue and interval
+        /// Swaps the positions of the primary and secondary timers
         /// </summary>
-        /// <param name="maxValue"></param>
-        /// <param name="interval"></param>
-        /// <returns></returns>
-        private static BarSettings CreateBarSettings(float maxValue, int interval, int margin)
+        public static void SwapTimers()
         {
-            return new BarSettings(maxValue, interval, Color.White, Color.White, margin);
-        }
-
-        /// <summary>
-        /// Populates the bar control with a colors from the current color scheme
-        /// </summary>
-        internal static void ColorizeTimerBar()
-        {
-            //Get colors
-            Color[] color = ColorScheme.GenerateMany(BarSettings.Count, MasterRandom).ToArray();
-
-            //Apply colors to bar settings
-            for (int i = 0; i < BarSettings.Count - 1; i++)
-            {
-                //Apply fill color
-                BarSettings.Values.ElementAt(BarSettings.Count - (i + 1)).FillColor = color[i];
-
-                //Apply overflow color
-                BarSettings.Values.ElementAt(BarSettings.Count - (i + 1)).OverflowColor = color[i + 1];
-            }
+            TimerConfig swap = PrimaryTimer;
+            PrimaryTimer = SecondaryTimer;
+            SecondaryTimer = swap;
         }
 
         /// <summary>

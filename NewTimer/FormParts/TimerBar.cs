@@ -17,13 +17,18 @@ namespace NewTimer.FormParts
     public class TimerBar : SegmentedBar, ICountdown
     {
         /// <summary>
+        /// Gets the timer that the bar is rendering for
+        /// </summary>
+        private TimerConfig Timer => Globals.PrimaryTimer; //TODO: Make this configurable
+
+        /// <summary>
         /// Gets the "time left" that is displayed at the bar. This is exceptional in free mode
         /// </summary>
         private TimeSpan DisplayedTimeLeft
         {
             get
             {
-                if (Config.InFreeMode)
+                if (Timer.InFreeMode)
                 {
                     if (DateTime.Now.Minute >= 30)
                         return DateTime.Today.AddHours(DateTime.Now.Hour + 1) - DateTime.Now;
@@ -31,7 +36,7 @@ namespace NewTimer.FormParts
                     return DateTime.Now - DateTime.Today.AddHours(DateTime.Now.Hour);
                 }
 
-                return Config.TimeLeft;
+                return Timer.TimeLeft;
             }
         }
 
@@ -53,7 +58,7 @@ namespace NewTimer.FormParts
         public void OnCountdownTick(TimeSpan span, bool isOvertime)
         {
             //Sorry about this but
-            if (Config.InFreeMode)
+            if (Timer.InFreeMode)
                 span = DisplayedTimeLeft;
 
             /*
@@ -63,9 +68,9 @@ namespace NewTimer.FormParts
 
 
             //Apply the correct bar settings for the current time left
-            ApplySettings(Config.BarSettings.First(i => i.Key <= span).Value);
+            ApplySettings(Timer.BarSettings.First(i => i.Key <= span).Value);
 
-            if (Config.InFreeMode)
+            if (Timer.InFreeMode)
             {
                 float brightness;
 
@@ -107,12 +112,12 @@ namespace NewTimer.FormParts
         /// <summary>
         /// Gets the background color of the control
         /// </summary>
-        public override Color BackColor => Config.GlobalBackColor;
+        public override Color BackColor => Globals.GlobalBackColor;
 
         /// <summary>
         /// Gets the text color of the control
         /// </summary>
-        public override Color ForeColor => Config.GlobalBackColor;
+        public override Color ForeColor => Globals.GlobalBackColor;
 
         /// <summary>
         /// Gets the text that will be displayed on a given segment on the bar
@@ -156,7 +161,7 @@ namespace NewTimer.FormParts
         protected override void OnClick(EventArgs e)
         {
             base.OnClick(e);
-            Config.ColorizeTimerBar();
+            Timer.ColorizeTimerBar();
         }
 
         protected override void OnPaint(PaintEventArgs e)

@@ -21,11 +21,11 @@ namespace NewTimer
             
                 
 
-            TimeSpan tl = Config.TimeLeft;
+            TimeSpan tl = Globals.PrimaryTimer.TimeLeft;
             string title;
 
             //Free mode, show current date and time
-            if (Config.InFreeMode)
+            if (Globals.PrimaryTimer.InFreeMode)
             {
                 title = DateTime.Now.ToString();
             }
@@ -62,7 +62,7 @@ namespace NewTimer
 
 
             //We are in overtime, add "ago" to the end of the title
-            if (Config.Overtime)
+            if (Globals.PrimaryTimer.Overtime)
             {
                 title += " ago";
             }
@@ -76,13 +76,13 @@ namespace NewTimer
         /// <param name="f"></param>
         public static void SetProgress(Form f)
         {
-            TimeSpan tl = Config.TimeLeft;
+            TimeSpan tl = Globals.PrimaryTimer.TimeLeft;
 
             //Get handle of form
             IntPtr handle = f.Handle;
 
             //Overtime -> Indeterminate state (Value does not apply)
-            if (Config.Overtime)
+            if (Globals.PrimaryTimer.Overtime)
             {
                 TaskbarHelper.SetState(handle, TaskbarHelper.TaskbarStates.Indeterminate);
                 return;

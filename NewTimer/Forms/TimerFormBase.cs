@@ -61,8 +61,8 @@ namespace NewTimer.Forms
             InitializeComponent();
 
             //Normalize the colors of the form to comply with global settings
-            BackColor = Config.GlobalBackColor;
-            ForeColor = Config.GlobalForeColor;
+            BackColor = Globals.GlobalBackColor;
+            ForeColor = Globals.GlobalForeColor;
             tabs.BackColor = Color.Transparent;
 
             //Position window to the bottom right corner of the screen
@@ -105,7 +105,7 @@ namespace NewTimer.Forms
             /* local */ Control setControlDefaults(Control ctrl, Control parent)
             {
                 ctrl.Parent = parent;                
-                ctrl.ForeColor = Config.GlobalForeColor;
+                ctrl.ForeColor = Globals.GlobalForeColor;
                 ctrl.Padding = new Padding(0);
 
                 ctrl.Dock = DockStyle.Fill;
@@ -120,21 +120,21 @@ namespace NewTimer.Forms
         private void InitializeAutoLabels()
         {
             //'Time' panel
-            TimeOnlyTime.GetText = () => Config.InFreeMode ? DateTime.Now.ToLongTimeString() : Config.RealTimeLeft.ToString("h':'mm':'ss");
+            TimeOnlyTime.GetText = () => Globals.PrimaryTimer.InFreeMode ? DateTime.Now.ToLongTimeString() : Globals.PrimaryTimer.RealTimeLeft.ToString("h':'mm':'ss");
 
             //'Hours' panel
-            HoursOnlyHour.GetText = () => Math.Floor(Config.TimeLeft.TotalHours).ToString();
-            HoursOnlyFraction.GetText = () => "." + Config.GetDecimals(Config.TimeLeft.TotalHours, 5).ToString("00000");
-            HoursOnlyTitle.GetText = () => Math.Abs(Math.Floor(Config.TimeLeft.TotalHours)) == 1 ? "hour" : "hours";
+            HoursOnlyHour.GetText = () => Math.Floor(Globals.PrimaryTimer.TimeLeft.TotalHours).ToString();
+            HoursOnlyFraction.GetText = () => "." + Globals.GetDecimals(Globals.PrimaryTimer.TimeLeft.TotalHours, 5).ToString("00000");
+            HoursOnlyTitle.GetText = () => Math.Abs(Math.Floor(Globals.PrimaryTimer.TimeLeft.TotalHours)) == 1 ? "hour" : "hours";
 
             //'Minutes' panel
-            MinutesOnlyMinutes.GetText = () => Math.Floor(Config.TimeLeft.TotalMinutes).ToString();
-            MinutesOnlyFraction.GetText = () => "." + Config.GetDecimals(Config.TimeLeft.TotalMinutes, 3).ToString("000");
-            MinutesOnlyTitle.GetText = () => Math.Abs(Math.Floor(Config.TimeLeft.TotalMinutes)) == 1 ? "minute" : "minutes";
+            MinutesOnlyMinutes.GetText = () => Math.Floor(Globals.PrimaryTimer.TimeLeft.TotalMinutes).ToString();
+            MinutesOnlyFraction.GetText = () => "." + Globals.GetDecimals(Globals.PrimaryTimer.TimeLeft.TotalMinutes, 3).ToString("000");
+            MinutesOnlyTitle.GetText = () => Math.Abs(Math.Floor(Globals.PrimaryTimer.TimeLeft.TotalMinutes)) == 1 ? "minute" : "minutes";
 
             //'Seconds' panel
-            SecondsOnlySecond.GetText = () => Math.Floor(Config.RealTimeLeft.TotalSeconds).ToString();
-            SecondsOnlyTitle.GetText = () => Math.Abs(Math.Floor(Config.RealTimeLeft.TotalSeconds)) == 1 ? "second" : "seconds";
+            SecondsOnlySecond.GetText = () => Math.Floor(Globals.PrimaryTimer.RealTimeLeft.TotalSeconds).ToString();
+            SecondsOnlyTitle.GetText = () => Math.Abs(Math.Floor(Globals.PrimaryTimer.RealTimeLeft.TotalSeconds)) == 1 ? "second" : "seconds";
         }
 
         /// <summary>
@@ -144,8 +144,8 @@ namespace NewTimer.Forms
         {
             foreach (Control i in tabs.Controls)
             {
-                i.BackColor = Config.GlobalBackColor;
-                i.ForeColor = Config.GlobalForeColor;
+                i.BackColor = Globals.GlobalBackColor;
+                i.ForeColor = Globals.GlobalForeColor;
             }
         }
 
@@ -171,7 +171,7 @@ namespace NewTimer.Forms
             {
                 if (c is ICountdown ic)
                 {
-                    ic.OnCountdownTick(Config.TimeLeft, Config.Overtime);
+                    ic.OnCountdownTick(Globals.PrimaryTimer.TimeLeft, Globals.PrimaryTimer.Overtime);
                 }
 
                 foreach (Control i in c.Controls)
@@ -187,7 +187,7 @@ namespace NewTimer.Forms
         public void ToggleWindowTranslucencyMode()
         {
             translucencyEnabled = !translucencyEnabled;
-            Opacity = translucencyEnabled ? Config.OPACITY_TRANSLUCENT : Config.OPACITY_NORMAL;
+            Opacity = translucencyEnabled ? Globals.OPACITY_TRANSLUCENT : Globals.OPACITY_NORMAL;
             ClickThroughHelper.SetClickThrough(this, translucencyEnabled);
         }
 
@@ -205,20 +205,20 @@ namespace NewTimer.Forms
             TaskbarUtility.SetTitle(this);
 
             //A new window icon must be created. This happens once per minute
-            if (_lastMinuteIconWasCreated != Config.RealTimeLeft.Minutes)
+            if (_lastMinuteIconWasCreated != Globals.PrimaryTimer.RealTimeLeft.Minutes)
             {
-                _lastMinuteIconWasCreated = Config.RealTimeLeft.Minutes;
+                _lastMinuteIconWasCreated = Globals.PrimaryTimer.RealTimeLeft.Minutes;
 
                 //Create new pie
                 Bitmap pie = TaskbarHelper.CreatePie(
-                    bounds: new Rectangle(0, 0, 64, 64),
-                    primary: Properties.Resources.clrUpper.GetPixel(Config.TimeLeft.Minutes, 0),
-                    secondary: Properties.Resources.clrLower.GetPixel(Config.TimeLeft.Minutes, 0),
-                    primaryBG: Properties.Resources.clrToGreen.GetPixel(Config.TimeLeft.Minutes, 0),
-                    secondaryBG: Properties.Resources.clrToRed.GetPixel(Config.TimeLeft.Minutes, 0),
-                    value: (float)Config.TimeLeft.TotalMinutes / 60f,
-                    startAngle: (int)Math.Floor(Config.Target.Minute / 60f * 360 - 90),
-                    ccw: !Config.Overtime
+                    bounds:      new Rectangle(0, 0, 64, 64),
+                    primary:     Properties.Resources.clrUpper  .GetPixel(Globals.PrimaryTimer.TimeLeft.Minutes, 0),
+                    secondary:   Properties.Resources.clrLower  .GetPixel(Globals.PrimaryTimer.TimeLeft.Minutes, 0),
+                    primaryBG:   Properties.Resources.clrToGreen.GetPixel(Globals.PrimaryTimer.TimeLeft.Minutes, 0),
+                    secondaryBG: Properties.Resources.clrToRed  .GetPixel(Globals.PrimaryTimer.TimeLeft.Minutes, 0),
+                    value:       (float)Globals.PrimaryTimer.TimeLeft.TotalMinutes / 60f,
+                    startAngle:  (int)Math.Floor(Globals.PrimaryTimer.Target.Minute / 60f * 360 - 90),
+                    ccw:         !Globals.PrimaryTimer.Overtime
                 );
 
                 //Update icon
@@ -227,31 +227,31 @@ namespace NewTimer.Forms
             }
 
             //Set background
-            if (Config.InFreeMode && !_freeModeBackColorSet)
+            if (Globals.PrimaryTimer.InFreeMode && !_freeModeBackColorSet)
             {
                 foreach (Control i in tabs.Controls)
                 {
-                    i.BackColor = Config.GlobalFreeModeBackColor;
+                    i.BackColor = Globals.GlobalFreeModeBackColor;
                 }
 
                 _overtimeBackColorSet = false;
                 _freeModeBackColorSet = true;
             }
-            else if (Config.Overtime && !_overtimeBackColorSet)
+            else if (Globals.PrimaryTimer.Overtime && !_overtimeBackColorSet)
             {
                 foreach (Control i in tabs.Controls)
                 {
-                    i.BackColor = Config.GlobalOvertimeColor;
+                    i.BackColor = Globals.GlobalOvertimeColor;
                 }
 
                 _overtimeBackColorSet = true;
                 _freeModeBackColorSet = false;
             }
-            else if ((!Config.Overtime && !Config.InFreeMode) && (_overtimeBackColorSet || _freeModeBackColorSet))
+            else if ((!Globals.PrimaryTimer.Overtime && !Globals.PrimaryTimer.InFreeMode) && (_overtimeBackColorSet || _freeModeBackColorSet))
             {
                 foreach (Control i in tabs.Controls)
                 {
-                    i.BackColor = Config.GlobalBackColor;
+                    i.BackColor = Globals.GlobalBackColor;
                 }
 
                 _overtimeBackColorSet = false;
@@ -367,9 +367,9 @@ namespace NewTimer.Forms
 
                 case Keys.Delete:
                     if (e.Shift)
-                        Config.InFreeMode = !Config.InFreeMode;
+                        Globals.PrimaryTimer.InFreeMode = !Globals.PrimaryTimer.InFreeMode;
                     else
-                        Config.Target = DateTime.Now;
+                        Globals.PrimaryTimer.Target = DateTime.Now;
 
                     return;
 
@@ -378,16 +378,20 @@ namespace NewTimer.Forms
                     return;
 
                 case Keys.PageUp:
-                    Config.Target = Config.Target.AddDays(1.0);
+                    Globals.PrimaryTimer.Target = Globals.PrimaryTimer.Target.AddDays(1.0);
                     return;
 
                 case Keys.PageDown:
-                    Config.Target = Config.Target.AddDays(-1.0);
+                    Globals.PrimaryTimer.Target = Globals.PrimaryTimer.Target.AddDays(-1.0);
                     return;
 
                 case Keys.Insert:
-                    Config.StopAtZero = !Config.StopAtZero;
-                    MessageBox.Show(Config.StopAtZero ? "End Mode: Stop" : "End Mode: Continue");
+                    Globals.PrimaryTimer.StopAtZero = !Globals.PrimaryTimer.StopAtZero;
+                    MessageBox.Show(Globals.PrimaryTimer.StopAtZero ? "End Mode: Stop" : "End Mode: Continue");
+                    return;
+
+                case Keys.Return:
+                    Globals.SwapTimers();
                     return;
 
                 case Keys.F1:
@@ -398,6 +402,7 @@ namespace NewTimer.Forms
                         "F12: Console",
                         "Del: Reset to zero",
                         "Shift + Del: Idle Mode",
+                        "Enter: Swap Primary/Secondary Timer",
                         "Ins: Change end mode",
                         "Pause: Freeze/Unfreeze",
                         "0930: Set target to 09:30 (Must be in 24h format)",
@@ -466,7 +471,7 @@ namespace NewTimer.Forms
                     }
 
                     TimeSpan newTarget = new TimeSpan(hour, minute, second);
-                    Config.Target = DateTime.Now + newTarget;
+                    Globals.PrimaryTimer.Target = DateTime.Now + newTarget;
                 }
 
                 //Target
@@ -476,7 +481,7 @@ namespace NewTimer.Forms
                     int minute = b;
 
                     if (hour < 24 && minute < 60)
-                        Config.Target = DateTime.Today.AddHours(hour).AddMinutes(minute);
+                        Globals.PrimaryTimer.Target = DateTime.Today.AddHours(hour).AddMinutes(minute);
                 }
 
                 LastInvisibileInputTextUpdateTime = default;

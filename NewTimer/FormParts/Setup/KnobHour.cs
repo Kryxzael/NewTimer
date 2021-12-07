@@ -14,7 +14,7 @@ namespace NewTimer.FormParts.Setup
         protected override string GetValueString()
         {
             //Use the normal format for 24 hour time
-            if (Config.Use24HourSelector)
+            if (Globals.Use24HourSelector)
             {
                 return base.GetValueString();
             }

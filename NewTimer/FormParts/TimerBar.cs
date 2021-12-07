@@ -67,8 +67,13 @@ namespace NewTimer.FormParts
 
             if (Config.InFreeMode)
             {
-                FillColor     = Color.Silver;
-                OverflowColor = Color.Silver;
+                float brightness;
+
+                brightness = FillColor.GetBrightness();
+                FillColor = Color.FromArgb((int)(brightness * 0x100), (int)(brightness * 0x100), (int)(brightness * 0x100));
+
+                brightness = OverflowColor.GetBrightness();
+                OverflowColor = Color.FromArgb((int)(brightness * 0x100), (int)(brightness * 0x100), (int)(brightness * 0x100));
             }    
 
             if (StaticMargin)

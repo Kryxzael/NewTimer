@@ -65,6 +65,12 @@ namespace NewTimer.FormParts
             //Apply the correct bar settings for the current time left
             ApplySettings(Config.BarSettings.First(i => i.Key <= span).Value);
 
+            if (Config.InFreeMode)
+            {
+                FillColor     = Color.Silver;
+                OverflowColor = Color.Silver;
+            }    
+
             if (StaticMargin)
                 BarMargin = STATIC_MARGIN;
         }

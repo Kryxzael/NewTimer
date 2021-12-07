@@ -172,6 +172,7 @@ namespace NewTimer.FormParts
             /*
              * Overdraw colored ticks
              */
+            if (!Config.InFreeMode)
             {
                 //Calculates the start and end positions
                 float target = getSegmentPosition(Config.Target);

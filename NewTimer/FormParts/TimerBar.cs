@@ -70,10 +70,10 @@ namespace NewTimer.FormParts
                 float brightness;
 
                 brightness = FillColor.GetBrightness();
-                FillColor = Color.FromArgb((int)(brightness * 0x100), (int)(brightness * 0x100), (int)(brightness * 0x100));
+                FillColor = Color.FromArgb((int)(brightness * 0xFF), (int)(brightness * 0xFF), (int)(brightness * 0xFF));
 
                 brightness = OverflowColor.GetBrightness();
-                OverflowColor = Color.FromArgb((int)(brightness * 0x100), (int)(brightness * 0x100), (int)(brightness * 0x100));
+                OverflowColor = Color.FromArgb((int)(brightness * 0xFF), (int)(brightness * 0xFF), (int)(brightness * 0xFF));
             }    
 
             if (StaticMargin)

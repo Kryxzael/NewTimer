@@ -13,6 +13,19 @@ namespace NewTimer.FormParts
     public class ClockControl : UserControl, ICountdown
     {
         private Dictionary<TimerConfig, Color[]> _colors = new Dictionary<TimerConfig, Color[]>();
+
+        private static readonly Func<Color, Brush>[] _primaryBrushGenerators = new Func<Color, Brush>[] 
+        { 
+            i => new SolidBrush(i) 
+        };
+
+        private static readonly Func<Color, Brush>[] _secondaryBrushGenerators = new Func<Color, Brush>[] 
+        { 
+            i => new HatchBrush(HatchStyle.BackwardDiagonal, i, Color.Transparent),
+            i => new HatchBrush(HatchStyle.ForwardDiagonal, i, Color.Transparent),
+            i => new HatchBrush(HatchStyle.Cross, i, Color.Transparent), 
+        };
+
         private bool _showDottedHourHand;
 
         /*
@@ -102,10 +115,10 @@ namespace NewTimer.FormParts
 
             //Only draw this when not in free mode
             if (!Globals.PrimaryTimer.InFreeMode)
-                OnDrawBackCircle(e, Globals.PrimaryTimer, i => new SolidBrush(i), true);
+                OnDrawBackCircle(e, Globals.PrimaryTimer, _primaryBrushGenerators, true);
 
             if (!Globals.SecondaryTimer.InFreeMode)
-                OnDrawBackCircle(e, Globals.SecondaryTimer, i => new HatchBrush(HatchStyle.BackwardDiagonal, i, Color.Transparent), false);
+                OnDrawBackCircle(e, Globals.SecondaryTimer, _secondaryBrushGenerators, false);
 
             //Same for numbers
             if (!Globals.PrimaryTimer.InFreeMode)
@@ -346,7 +359,7 @@ namespace NewTimer.FormParts
         /// Draws the background pie
         /// </summary>
         /// <param name="e"></param>
-        protected virtual void OnDrawBackCircle(PaintEventArgs e, TimerConfig timer, Func<Color, Brush> createBrush, bool createLastCountdownEffects)
+        protected virtual void OnDrawBackCircle(PaintEventArgs e, TimerConfig timer, Func<Color, Brush>[] createBrush, bool createLastCountdownEffects)
         {
             /*
              * Creates a filled pie
@@ -428,7 +441,7 @@ namespace NewTimer.FormParts
                 for (int i = 0; i < Math.Ceiling(timer.TimeLeft.TotalDays / 12); i++)
                 {
                     //Create a colored pen based on what days we are drawing
-                    using (Brush b = createBrush(colors[(i + 6) % colors.Length]))
+                    using (Brush b = createBrush[i % createBrush.Length](colors[(i + 6) % colors.Length]))
                     {
                         if (i == Math.Floor(timer.TimeLeft.TotalDays / 12))
                         {
@@ -486,7 +499,7 @@ namespace NewTimer.FormParts
                 for (int i = 0; i < Math.Ceiling(timer.TimeLeft.TotalDays * 2); i++)
                 {
                     //Create a colored pen based on what hours we are drawing
-                    using (Brush b = createBrush(colors[(i + 4) % colors.Length]))
+                    using (Brush b = createBrush[i % createBrush.Length](colors[(i + 4) % colors.Length]))
                     {
                         if (i == Math.Floor(timer.TimeLeft.TotalDays * 2))
                         {
@@ -521,7 +534,7 @@ namespace NewTimer.FormParts
                 for (int i = 0; i < Math.Ceiling(timer.TimeLeft.TotalHours); i++)
                 {
                     //Create a colored pen based on what hour we are drawing
-                    using (Brush b = createBrush(colors[i % colors.Length]))
+                    using (Brush b = createBrush[i % createBrush.Length](colors[i % colors.Length]))
                     {
                         if (i == Math.Floor(timer.TimeLeft.TotalHours))
                         {

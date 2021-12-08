@@ -351,7 +351,7 @@ namespace NewTimer.FormParts
             /*
              * Creates a filled pie
              */
-            /* local */ void fillPie(Brush color, float startAngle, float angle, float scale)
+            /* local */ void fillPie(Brush color, float startAngle, float angle, float scale, float centerOffset)
             {
                 Rectangle area = new Rectangle(
                     x: squareArea.X + (int)(squareArea.Width * (1 - scale) / 2f),
@@ -360,7 +360,31 @@ namespace NewTimer.FormParts
                     height: Math.Max(1, (int)(squareArea.Height * scale))
                 );
 
-                e.Graphics.FillPie(color, area, -90 + startAngle, angle);
+                Region region = new Region();
+                GraphicsPath path = new GraphicsPath();
+                path.AddPie(area, -90 + startAngle, angle);
+
+                region.MakeEmpty();
+                region.Union(path);
+
+                if (centerOffset > 0)
+                {
+                    GraphicsPath exclPath = new GraphicsPath();
+                    Rectangle exclArea = new Rectangle(
+                        x: squareArea.X + (int)(squareArea.Width * (1 - centerOffset) / 2f),
+                        y: squareArea.Y + (int)(squareArea.Height * (1 - centerOffset) / 2f),
+                        width: Math.Max(1, (int)(squareArea.Width * centerOffset)),
+                        height: Math.Max(1, (int)(squareArea.Height * centerOffset))
+                    );
+
+                    exclPath.AddEllipse(exclArea);
+                    region.Exclude(exclPath);
+                    exclPath.Dispose();
+                }
+
+                e.Graphics.FillRegion(color, region);
+                region.Dispose();
+                path.Dispose();
             }
 
             /*
@@ -388,7 +412,8 @@ namespace NewTimer.FormParts
                     color: BG_BRUSH,
                     startAngle: (DateTime.Now.Second + DateTime.Now.Millisecond / 1000f) / 60f * 360f,
                     angle: (float)timer.RealTimeLeft.TotalSeconds / 60f * 360f,
-                    scale: 1 - BG_FRAME_SCALE
+                    scale: 1 - BG_FRAME_SCALE,
+                    centerOffset: 0f
                 );
             }
 
@@ -411,7 +436,9 @@ namespace NewTimer.FormParts
                                 color: b,
                                 startAngle: 0f,
                                 angle: (float)timer.TimeLeft.TotalDays % 12f * 360f / 12f,
-                                scale: DISC_INITAL_SCALE / dividend);
+                                scale: DISC_INITAL_SCALE / dividend,
+                                centerOffset: DISC_INITAL_SCALE_HOURS
+                            );
                         }
                         else
                         {
@@ -419,7 +446,8 @@ namespace NewTimer.FormParts
                                 color: b,
                                 startAngle: 0f,
                                 angle: 360f,
-                                scale: DISC_INITAL_SCALE / dividend
+                                scale: DISC_INITAL_SCALE / dividend,
+                                centerOffset: DISC_INITAL_SCALE_HOURS
                             );
                         }
                     }
@@ -440,15 +468,15 @@ namespace NewTimer.FormParts
                 }
 
                 //Draw week indicators
-                fillPie(Brushes.Gray, 7 / 12f * 360f, 1f, DISC_INITAL_SCALE);
+                fillPie(Brushes.Gray, 7 / 12f * 360f, 1f, DISC_INITAL_SCALE, DISC_INITAL_SCALE_HOURS);
 
                 if (timer.TimeLeft.TotalDays >= 7f)
-                    fillPie(Brushes.Gray, 2 / 12f * 360f, 1f, DISC_INITAL_SCALE);
+                    fillPie(Brushes.Gray, 2 / 12f * 360f, 1f, DISC_INITAL_SCALE, DISC_INITAL_SCALE_HOURS);
 
                 if (timer.TimeLeft.TotalDays >= 14f)
-                    fillPie(Brushes.Gray, 9 / 12f * 360f, 1f, DISC_INITAL_SCALE);
+                    fillPie(Brushes.Gray, 9 / 12f * 360f, 1f, DISC_INITAL_SCALE, DISC_INITAL_SCALE_HOURS);
 
-                fillPie(BG_BRUSH, 0f, 360f, DISC_INITAL_SCALE_HOURS);
+                //fillPie(BG_BRUSH, 0f, 360f, DISC_INITAL_SCALE_HOURS);
             }
 
             //Draw for hours (more than 3 hours)
@@ -466,7 +494,8 @@ namespace NewTimer.FormParts
                                 color: b,
                                 startAngle: ((DateTime.Now.Hour % 12) + DateTime.Now.Minute / 60f) / 12f * 360f,
                                 angle: (float)(timer.RealTimeLeft.TotalHours % 12) / 12f * 360f,
-                                scale: DISC_INITAL_SCALE_HOURS / dividend
+                                scale: DISC_INITAL_SCALE_HOURS / dividend,
+                                centerOffset: 0f
                             );
                         }
                         else
@@ -475,7 +504,8 @@ namespace NewTimer.FormParts
                                 color: b,
                                 startAngle: 0f,
                                 angle: 360f,
-                                scale: DISC_INITAL_SCALE_HOURS / dividend
+                                scale: DISC_INITAL_SCALE_HOURS / dividend,
+                                centerOffset: 0f
                             );
                         }
                     }
@@ -499,7 +529,8 @@ namespace NewTimer.FormParts
                                 color: b,
                                 startAngle: (DateTime.Now.Minute + DateTime.Now.Second / 60f) / 60f * 360f,
                                 angle: (float)(timer.RealTimeLeft.TotalMinutes % 60) / 60f * 360f,
-                                scale: DISC_INITAL_SCALE / dividend
+                                scale: DISC_INITAL_SCALE / dividend,
+                                centerOffset: 0f
                             );
                         }
                         else
@@ -508,7 +539,8 @@ namespace NewTimer.FormParts
                                 color: b,
                                 startAngle: 0f,
                                 angle: 360f,
-                                scale: DISC_INITAL_SCALE / dividend
+                                scale: DISC_INITAL_SCALE / dividend,
+                                centerOffset: 0f
                             );
                         }
                     }

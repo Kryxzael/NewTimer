@@ -473,8 +473,9 @@ namespace NewTimer.FormParts
                 {
                     for (int a = 0; a < Math.Min(12, timer.TimeLeft.TotalDays); a++)
                     {
-                        Point startPoint = new Point(squareArea.X + squareArea.Width / 2, squareArea.Y + squareArea.Height / 2);
-                        PointF endPoint = GetPointAtAngle(startPoint, (int)(DISC_INITAL_SCALE * squareArea.Width / 2), CalculateAngle(a * (timer.Overtime ? -1 : 1), 12));
+                        Point center = new Point(squareArea.X + squareArea.Width / 2, squareArea.Y + squareArea.Height / 2);
+                        PointF startPoint = GetPointAtAngle(center, (int)(DISC_INITAL_SCALE_HOURS * squareArea.Width / 2), CalculateAngle(a * (timer.Overtime ? -1 : 1), 12));
+                        PointF endPoint   = GetPointAtAngle(center, (int)(DISC_INITAL_SCALE       * squareArea.Width / 2), CalculateAngle(a * (timer.Overtime ? -1 : 1), 12));
 
                         e.Graphics.DrawLine(p, startPoint, endPoint);
                     }

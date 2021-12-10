@@ -464,19 +464,26 @@ namespace NewTimer.Forms
                     break;
 
                 case Keys.F10:
-                    const int COLLAPSE_HEIGHT = 125;
+                    const int COLLAPSE_HEIGHT = 90;
 
                     if (tabs.SelectedIndex == 4)
                     {
                         int lastHeigh = Height;
                         tabs.SelectedIndex = 0;
                         Top -= (Height - lastHeigh);
+
+                        //Found this solution on stack
+                        tabs.Appearance = TabAppearance.Normal;
+                        tabs.ItemSize = new Size(30, 18);
                     }
                     else
                     {
                         tabs.SelectedIndex = 4;
                         Top += (Height - COLLAPSE_HEIGHT);
                         Height = COLLAPSE_HEIGHT;
+
+                        tabs.Appearance = TabAppearance.FlatButtons;
+                        tabs.ItemSize = new Size(0, 1);
                     }
 
                     

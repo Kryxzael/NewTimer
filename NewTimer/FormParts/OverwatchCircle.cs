@@ -166,7 +166,7 @@ namespace NewTimer.FormParts
             Timer.ColorizeTimerBar();
         }
 
-        public void OnCountdownTick(TimeSpan span, bool isOvertime)
+        public void OnCountdownTick(TimeSpan span, TimeSpan secondSpan, bool isOvertime)
         {
             if (ProgressMode)
             {

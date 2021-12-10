@@ -31,6 +31,8 @@
             this.label11 = new System.Windows.Forms.Label();
             this.label10 = new System.Windows.Forms.Label();
             this.label9 = new System.Windows.Forms.Label();
+            this.timerBar1 = new NewTimer.FormParts.TimerBar();
+            this.FullD = new NewTimer.FormParts.LabelGrayedLeadingZeros();
             this.overwatchBar2 = new NewTimer.FormParts.TimerBar();
             this.FullS = new NewTimer.FormParts.LabelGrayedLeadingZeros();
             this.FullH = new NewTimer.FormParts.LabelGrayedLeadingZeros();
@@ -40,7 +42,6 @@
             this.FullTotalH = new NewTimer.FormParts.LabelGrayedLeadingZeros();
             this.FullM = new NewTimer.FormParts.LabelGrayedLeadingZeros();
             this.FullTotalS = new NewTimer.FormParts.LabelGrayedLeadingZeros();
-            this.FullD = new NewTimer.FormParts.LabelGrayedLeadingZeros();
             this.SuspendLayout();
             // 
             // label11
@@ -73,6 +74,38 @@
             this.label9.TabIndex = 19;
             this.label9.Text = "Seconds";
             // 
+            // timerBar1
+            // 
+            this.timerBar1.BarMargin = 0;
+            this.timerBar1.FillColor = System.Drawing.Color.Empty;
+            this.timerBar1.Interval = 1;
+            this.timerBar1.Location = new System.Drawing.Point(0, 221);
+            this.timerBar1.MaxValue = 1F;
+            this.timerBar1.Name = "timerBar1";
+            this.timerBar1.OverflowColor = System.Drawing.Color.FromArgb(((int)(((byte)(62)))), ((int)(((byte)(0)))), ((int)(((byte)(255)))));
+            this.timerBar1.OverrideValueCode = null;
+            this.timerBar1.Size = new System.Drawing.Size(311, 24);
+            this.timerBar1.TabIndex = 25;
+            this.timerBar1.TabStop = false;
+            this.timerBar1.TrackSecondaryTimer = true;
+            this.timerBar1.Value = 0F;
+            // 
+            // FullD
+            // 
+            this.FullD.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.FullD.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(221)))), ((int)(((byte)(221)))), ((int)(((byte)(221)))));
+            this.FullD.HighlightColor = System.Drawing.Color.Empty;
+            this.FullD.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.FullD.LeadingZerosColor = System.Drawing.Color.Gray;
+            this.FullD.Location = new System.Drawing.Point(8, 87);
+            this.FullD.Name = "FullD";
+            this.FullD.Progress = 0F;
+            this.FullD.RenderLeadingZeros = false;
+            this.FullD.Size = new System.Drawing.Size(29, 35);
+            this.FullD.TabIndex = 24;
+            this.FullD.Text = "00";
+            this.FullD.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
             // overwatchBar2
             // 
             this.overwatchBar2.BarMargin = 0;
@@ -86,6 +119,7 @@
             this.overwatchBar2.Size = new System.Drawing.Size(311, 75);
             this.overwatchBar2.TabIndex = 12;
             this.overwatchBar2.TabStop = false;
+            this.overwatchBar2.TrackSecondaryTimer = false;
             this.overwatchBar2.Value = 0F;
             // 
             // FullS
@@ -220,27 +254,12 @@
             this.FullTotalS.Text = "0000000";
             this.FullTotalS.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
-            // FullD
-            // 
-            this.FullD.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.FullD.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(221)))), ((int)(((byte)(221)))), ((int)(((byte)(221)))));
-            this.FullD.HighlightColor = System.Drawing.Color.Empty;
-            this.FullD.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.FullD.LeadingZerosColor = System.Drawing.Color.Gray;
-            this.FullD.Location = new System.Drawing.Point(8, 87);
-            this.FullD.Name = "FullD";
-            this.FullD.Progress = 0F;
-            this.FullD.RenderLeadingZeros = false;
-            this.FullD.Size = new System.Drawing.Size(29, 35);
-            this.FullD.TabIndex = 24;
-            this.FullD.Text = "00";
-            this.FullD.TextAlign = System.Drawing.ContentAlignment.TopRight;
-            // 
             // FullContents
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Transparent;
+            this.Controls.Add(this.timerBar1);
             this.Controls.Add(this.FullD);
             this.Controls.Add(this.overwatchBar2);
             this.Controls.Add(this.FullS);
@@ -276,5 +295,6 @@
         private FormParts.LabelGrayedLeadingZeros FullH;
         private FormParts.LabelGrayedLeadingZeros FullS;
         private FormParts.LabelGrayedLeadingZeros FullD;
+        private FormParts.TimerBar timerBar1;
     }
 }

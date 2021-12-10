@@ -734,7 +734,7 @@ namespace NewTimer.FormParts
         /// </summary>
         /// <param name="span"></param>
         /// <param name="isOvertime"></param>
-        public void OnCountdownTick(TimeSpan span, bool isOvertime)
+        public void OnCountdownTick(TimeSpan span, TimeSpan secondSpan, bool isOvertime)
         {
             Invalidate();
         }

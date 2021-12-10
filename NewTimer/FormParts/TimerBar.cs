@@ -19,7 +19,16 @@ namespace NewTimer.FormParts
         /// <summary>
         /// Gets the timer that the bar is rendering for
         /// </summary>
-        private TimerConfig Timer => Globals.PrimaryTimer; //TODO: Make this configurable
+        private TimerConfig Timer
+        {
+            get
+            {
+                if (TrackSecondaryTimer)
+                    return Globals.SecondaryTimer;
+
+                return Globals.PrimaryTimer;
+            }
+        }
 
         /// <summary>
         /// Gets the "time left" that is displayed at the bar. This is exceptional in free mode
@@ -40,23 +49,40 @@ namespace NewTimer.FormParts
             }
         }
 
-        /// <summary>
-        /// Gets the margin level to use when StaticMargin is set true
-        /// </summary>
-        private const int STATIC_MARGIN = 2;
+        private bool _trackSecondaryTimer;
 
         /// <summary>
-        /// Gets or sets whether the margin of this bar will change depending on its resolution
+        /// Gets or sets whether this timer bar will show the secondary timer
         /// </summary>
-        public bool StaticMargin { get; set; }
+        public bool TrackSecondaryTimer
+        {
+            get => _trackSecondaryTimer;
+            set
+            {
+                _trackSecondaryTimer = value;
+            }
+        }
 
         /// <summary>
         /// <inheritdoc />
         /// </summary>
         /// <param name="span"></param>
         /// <param name="isOvertime"></param>
-        public void OnCountdownTick(TimeSpan span, bool isOvertime)
+        public void OnCountdownTick(TimeSpan span, TimeSpan secondSpan, bool isOvertime)
         {
+            if (Timer == Globals.SecondaryTimer)
+                span = secondSpan;
+
+            if (TrackSecondaryTimer && Globals.SecondaryTimer.InFreeMode)
+            {
+                Visible = false;
+                return;
+            }
+            else
+            {
+                Visible = true;
+            }
+
             //Sorry about this but
             if (Timer.InFreeMode)
                 span = DisplayedTimeLeft;
@@ -69,20 +95,6 @@ namespace NewTimer.FormParts
 
             //Apply the correct bar settings for the current time left
             ApplySettings(Timer.BarSettings.First(i => i.Key <= span).Value);
-
-            if (Timer.InFreeMode)
-            {
-                float brightness;
-
-                brightness = FillColor.GetBrightness();
-                FillColor = Color.FromArgb((int)(brightness * 0xFF), (int)(brightness * 0xFF), (int)(brightness * 0xFF));
-
-                brightness = OverflowColor.GetBrightness();
-                OverflowColor = Color.FromArgb((int)(brightness * 0xFF), (int)(brightness * 0xFF), (int)(brightness * 0xFF));
-            }    
-
-            if (StaticMargin)
-                BarMargin = STATIC_MARGIN;
         }
 
         public static float GetNewValue(TimeSpan span)
@@ -168,6 +180,16 @@ namespace NewTimer.FormParts
         {
             //Draws the actual bar
             base.OnPaint(e);
+
+            //Let's try to not create a recursive Refresh call, mmmk
+            if ((Timer.InFreeMode || TrackSecondaryTimer) && !DrawHatched)
+            {
+                DrawHatchedOverflow = DrawHatched = true;
+            }
+            else if (!(Timer.InFreeMode || TrackSecondaryTimer) && DrawHatched)
+            {
+                DrawHatchedOverflow = DrawHatched = false;
+            }
 
             Rectangle bounds = new Rectangle(BarMargin, BarMargin, Width - (2 * BarMargin), Height - (2 * BarMargin));
 

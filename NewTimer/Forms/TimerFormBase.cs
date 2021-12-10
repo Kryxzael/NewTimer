@@ -93,9 +93,10 @@ namespace NewTimer.Forms
         {
             setControlDefaults(new Bar.FullContents(), tabFull);
             setControlDefaults(new ClockControl(), analogSplitContainer.Panel1);
-            setControlDefaults(new TimerBar() { StaticMargin = true }, analogSplitContainer.Panel2);
+            setControlDefaults(new TimerBar(), analogSplitContainer.Panel2);
             setControlDefaults(new Circle.FullContents(simpleMode: false), tabCircle);
             setControlDefaults(new Circle.FullContents(simpleMode: true), tabCircleSimple);
+            setControlDefaults(new TimerBar() { Height = 50, TrackSecondaryTimer = true }, tabBarOnly).Dock = DockStyle.Bottom;
             setControlDefaults(new TimerBar(), tabBarOnly);
 
             //Designer doesn't allow the panel to be this small, so setting it here
@@ -171,7 +172,7 @@ namespace NewTimer.Forms
             {
                 if (c is ICountdown ic)
                 {
-                    ic.OnCountdownTick(Globals.PrimaryTimer.TimeLeft, Globals.PrimaryTimer.Overtime);
+                    ic.OnCountdownTick(Globals.PrimaryTimer.TimeLeft, Globals.SecondaryTimer.TimeLeft, Globals.PrimaryTimer.Overtime);
                 }
 
                 foreach (Control i in c.Controls)

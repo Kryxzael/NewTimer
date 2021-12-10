@@ -15,6 +15,6 @@ namespace NewTimer.FormParts
         /// Called to update display of countdown item
         /// </summary>
         /// <param name="span"></param>
-        void OnCountdownTick(TimeSpan span, bool isOvertime);
+        void OnCountdownTick(TimeSpan span, TimeSpan secondarySpan, bool isOvertime);
     }
 }

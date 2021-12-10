@@ -97,7 +97,7 @@ namespace NewTimer.FormParts
 
         }
 
-        public void OnCountdownTick(TimeSpan span, bool isOvertime)
+        public void OnCountdownTick(TimeSpan span, TimeSpan secondSpan, bool isOvertime)
         {
             Refresh();
         }

@@ -20,7 +20,7 @@ namespace NewTimer.Forms.Circle
             overwatchCircle2.ProgressMode = simpleMode;
         }
 
-        public void OnCountdownTick(TimeSpan span, bool isOvertime)
+        public void OnCountdownTick(TimeSpan span, TimeSpan secondSpan, bool isOvertime)
         {
             overwatchCircle2.BackColor = Globals.GlobalBackColor;
 

@@ -49,6 +49,11 @@ namespace NewTimer.Forms
         private bool translucencyEnabled;
 
         /// <summary>
+        /// Allows holding a modifier to temporarily override the translucency the window
+        /// </summary>
+        private bool? translucencyOverride;
+
+        /// <summary>
         /// Gets or sets the text the user is currently typing when the window is selected
         /// </summary>
         private string InvisibleInputText { get; set; } = "";
@@ -162,7 +167,13 @@ namespace NewTimer.Forms
                 InvisibleInputText                = "";
                 LastInvisibileInputTextUpdateTime = default;
             }
-                
+
+            if (ModifierKeys != Keys.None)
+                TempOverrideTranslucencyMode();
+
+            else
+                StopTempOverrideTranslucencyMode();
+
 
             //Update ICountdowns
             recursiveUpdate(this);
@@ -183,13 +194,47 @@ namespace NewTimer.Forms
         }
 
         /// <summary>
+        /// Overrides the translucency mode of the window without updating the internal flag
+        /// </summary>
+        private void TempOverrideTranslucencyMode()
+        {
+            if (translucencyOverride != null)
+                return;
+
+            translucencyOverride = !translucencyEnabled;
+            ToggleWindowTranslucencyMode();
+        }
+
+        /// <summary>
+        /// Stops the current temp override of the translucency mode
+        /// </summary>
+        private void StopTempOverrideTranslucencyMode()
+        {
+            if (translucencyOverride == null)
+                return;
+
+            translucencyOverride = null;
+            translucencyEnabled = !translucencyEnabled; //This should counteract the toggle part of the toggle function
+            ToggleWindowTranslucencyMode();
+        }
+
+        /// <summary>
         /// Toggles whether the window is translucent and non-corporeal
         /// </summary>
         public void ToggleWindowTranslucencyMode()
         {
-            translucencyEnabled = !translucencyEnabled;
-            Opacity = translucencyEnabled ? Globals.OPACITY_TRANSLUCENT : Globals.OPACITY_NORMAL;
-            ClickThroughHelper.SetClickThrough(this, translucencyEnabled);
+            if (translucencyOverride != null)
+            {
+                Opacity = translucencyOverride.Value ? Globals.OPACITY_TRANSLUCENT : Globals.OPACITY_NORMAL;
+                ClickThroughHelper.SetClickThrough(this, translucencyOverride.Value);
+            }
+            else
+            {
+                translucencyEnabled = !translucencyEnabled;
+                Opacity = translucencyEnabled ? Globals.OPACITY_TRANSLUCENT : Globals.OPACITY_NORMAL;
+                ClickThroughHelper.SetClickThrough(this, translucencyEnabled);
+            }
+            
         }
 
         /// <summary>

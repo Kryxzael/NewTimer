@@ -42,9 +42,9 @@
             this.tabFull = new System.Windows.Forms.TabPage();
             this.tabs = new System.Windows.Forms.TabControl();
             this.tabAnalog = new System.Windows.Forms.TabPage();
+            this.analogSplitContainer = new System.Windows.Forms.SplitContainer();
             this.tabCircle = new System.Windows.Forms.TabPage();
             this.tabCircleSimple = new System.Windows.Forms.TabPage();
-            this.analogSplitContainer = new System.Windows.Forms.SplitContainer();
             this.TimeOnlyTime = new NewTimer.FormParts.AutoLabel();
             this.HoursOnlyHour = new NewTimer.FormParts.AutoLabel();
             this.HoursOnlyFraction = new NewTimer.FormParts.AutoLabel();
@@ -275,6 +275,17 @@
             this.tabAnalog.Text = "Ana";
             this.tabAnalog.UseVisualStyleBackColor = true;
             // 
+            // analogSplitContainer
+            // 
+            this.analogSplitContainer.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.analogSplitContainer.Location = new System.Drawing.Point(0, 0);
+            this.analogSplitContainer.Name = "analogSplitContainer";
+            this.analogSplitContainer.Orientation = System.Windows.Forms.Orientation.Horizontal;
+            this.analogSplitContainer.Panel2MinSize = 2;
+            this.analogSplitContainer.Size = new System.Drawing.Size(362, 245);
+            this.analogSplitContainer.SplitterDistance = 216;
+            this.analogSplitContainer.TabIndex = 0;
+            // 
             // tabCircle
             // 
             this.tabCircle.Location = new System.Drawing.Point(4, 22);
@@ -292,17 +303,6 @@
             this.tabCircleSimple.TabIndex = 9;
             this.tabCircleSimple.Text = "Cdn";
             this.tabCircleSimple.UseVisualStyleBackColor = true;
-            // 
-            // analogSplitContainer
-            // 
-            this.analogSplitContainer.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.analogSplitContainer.Location = new System.Drawing.Point(0, 0);
-            this.analogSplitContainer.Name = "analogSplitContainer";
-            this.analogSplitContainer.Orientation = System.Windows.Forms.Orientation.Horizontal;
-            this.analogSplitContainer.Panel2MinSize = 2;
-            this.analogSplitContainer.Size = new System.Drawing.Size(362, 245);
-            this.analogSplitContainer.SplitterDistance = 239;
-            this.analogSplitContainer.TabIndex = 0;
             // 
             // TimeOnlyTime
             // 

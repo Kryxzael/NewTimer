@@ -115,10 +115,32 @@ namespace NewTimer.FormParts
 
             //Only draw this when not in free mode
             if (!Globals.PrimaryTimer.InFreeMode)
-                OnDrawBackCircle(e, Globals.PrimaryTimer, _primaryBrushGenerators, true);
+            {
+                DateTime startTime;
+
+                if (Globals.PrimaryTimer.Target < Globals.SecondaryTimer.Target || !Globals.SecondaryTimer.InFreeMode)
+                    startTime = DateTime.Now;
+
+                else
+                    startTime = Globals.SecondaryTimer.Target;
+
+                OnDrawBackCircle(e, Globals.PrimaryTimer, _primaryBrushGenerators, true, startTime);
+            }
+                
 
             if (!Globals.SecondaryTimer.InFreeMode)
-                OnDrawBackCircle(e, Globals.SecondaryTimer, _secondaryBrushGenerators, false);
+            {
+                DateTime startTime;
+
+                if (Globals.PrimaryTimer.Target < Globals.SecondaryTimer.Target && !Globals.PrimaryTimer.InFreeMode)
+                    startTime = Globals.PrimaryTimer.Target;
+
+                else
+                    startTime = DateTime.Now;
+
+                OnDrawBackCircle(e, Globals.SecondaryTimer, _secondaryBrushGenerators, false, startTime);
+            }
+                
 
             //Same for numbers
             if (!Globals.PrimaryTimer.InFreeMode)
@@ -359,8 +381,11 @@ namespace NewTimer.FormParts
         /// Draws the background pie
         /// </summary>
         /// <param name="e"></param>
-        protected virtual void OnDrawBackCircle(PaintEventArgs e, TimerConfig timer, Func<Color, Brush>[] createBrush, bool createLastCountdownEffects)
+        protected virtual void OnDrawBackCircle(PaintEventArgs e, TimerConfig timer, Func<Color, Brush>[] createBrush, bool createLastCountdownEffects, DateTime currentTime)
         {
+            TimeSpan realTimeLeft = timer.Target - currentTime;
+            TimeSpan timeLeft = realTimeLeft < default(TimeSpan) ? -realTimeLeft : realTimeLeft;
+
             /*
              * Creates a filled pie
              */
@@ -419,12 +444,12 @@ namespace NewTimer.FormParts
             Color[] colors = _colors[timer];
 
             //Create the final-minute color shift
-            if (createLastCountdownEffects && timer.TimeLeft.TotalMinutes < 1f && !timer.Overtime)
+            if (createLastCountdownEffects && timeLeft.TotalMinutes < 1f && !timer.Overtime)
             {
                 fillPie(
                     color: BG_BRUSH,
-                    startAngle: (DateTime.Now.Second + DateTime.Now.Millisecond / 1000f) / 60f * 360f,
-                    angle: (float)timer.RealTimeLeft.TotalSeconds / 60f * 360f,
+                    startAngle: (currentTime.Second + currentTime.Millisecond / 1000f) / 60f * 360f,
+                    angle: (float)realTimeLeft.TotalSeconds / 60f * 360f,
                     scale: 1 - BG_FRAME_SCALE,
                     centerOffset: 0f
                 );
@@ -435,20 +460,20 @@ namespace NewTimer.FormParts
              */
 
             //Draw for days (more than 1 day)
-            if (timer.TimeLeft.TotalDays >= 1)
+            if (timeLeft.TotalDays >= 1)
             {
                 float dividend = 1f;
-                for (int i = 0; i < Math.Ceiling(timer.TimeLeft.TotalDays / 12); i++)
+                for (int i = 0; i < Math.Ceiling(timeLeft.TotalDays / 12); i++)
                 {
                     //Create a colored pen based on what days we are drawing
                     using (Brush b = createBrush[i % createBrush.Length](colors[(i + 6) % colors.Length]))
                     {
-                        if (i == Math.Floor(timer.TimeLeft.TotalDays / 12))
+                        if (i == Math.Floor(timeLeft.TotalDays / 12))
                         {
                             fillPie(
                                 color: b,
                                 startAngle: 0f,
-                                angle: (float)timer.TimeLeft.TotalDays % 12f * 360f / 12f,
+                                angle: (float)timeLeft.TotalDays % 12f * 360f / 12f,
                                 scale: DISC_INITAL_SCALE / dividend,
                                 centerOffset: DISC_INITAL_SCALE_HOURS
                             );
@@ -471,7 +496,7 @@ namespace NewTimer.FormParts
                 //Draw lines segmenting the bar
                 using (Pen p = new Pen(Color.FromArgb(0x7F, Color.Silver), 1.5f) { DashStyle = DashStyle.Dash })
                 {
-                    for (int a = 0; a < Math.Min(12, timer.TimeLeft.TotalDays); a++)
+                    for (int a = 0; a < Math.Min(12, timeLeft.TotalDays); a++)
                     {
                         Point center = new Point(squareArea.X + squareArea.Width / 2, squareArea.Y + squareArea.Height / 2);
                         PointF startPoint = GetPointAtAngle(center, (int)(DISC_INITAL_SCALE_HOURS * squareArea.Width / 2), CalculateAngle(a * (timer.Overtime ? -1 : 1), 12));
@@ -484,30 +509,28 @@ namespace NewTimer.FormParts
                 //Draw week indicators
                 fillPie(Brushes.Gray, 7 / 12f * 360f, 1f, DISC_INITAL_SCALE, DISC_INITAL_SCALE_HOURS);
 
-                if (timer.TimeLeft.TotalDays >= 7f)
+                if (timeLeft.TotalDays >= 7f)
                     fillPie(Brushes.Gray, 2 / 12f * 360f, 1f, DISC_INITAL_SCALE, DISC_INITAL_SCALE_HOURS);
 
-                if (timer.TimeLeft.TotalDays >= 14f)
+                if (timeLeft.TotalDays >= 14f)
                     fillPie(Brushes.Gray, 9 / 12f * 360f, 1f, DISC_INITAL_SCALE, DISC_INITAL_SCALE_HOURS);
-
-                //fillPie(BG_BRUSH, 0f, 360f, DISC_INITAL_SCALE_HOURS);
             }
 
             //Draw for hours (more than 3 hours)
-            else if (timer.TimeLeft.TotalHours >= 3)
+            else if (timeLeft.TotalHours >= 3)
             {
                 float dividend = 1f;
-                for (int i = 0; i < Math.Ceiling(timer.TimeLeft.TotalDays * 2); i++)
+                for (int i = 0; i < Math.Ceiling(timeLeft.TotalDays * 2); i++)
                 {
                     //Create a colored pen based on what hours we are drawing
                     using (Brush b = createBrush[i % createBrush.Length](colors[(i + 4) % colors.Length]))
                     {
-                        if (i == Math.Floor(timer.TimeLeft.TotalDays * 2))
+                        if (i == Math.Floor(timeLeft.TotalDays * 2))
                         {
                             fillPie(
                                 color: b,
-                                startAngle: ((DateTime.Now.Hour % 12) + DateTime.Now.Minute / 60f) / 12f * 360f,
-                                angle: (float)(timer.RealTimeLeft.TotalHours % 12) / 12f * 360f,
+                                startAngle: ((currentTime.Hour % 12) + currentTime.Minute / 60f) / 12f * 360f,
+                                angle: (float)(realTimeLeft.TotalHours % 12) / 12f * 360f,
                                 scale: DISC_INITAL_SCALE_HOURS / dividend,
                                 centerOffset: 0f
                             );
@@ -532,17 +555,17 @@ namespace NewTimer.FormParts
             else
             {
                 float dividend = 1f;
-                for (int i = 0; i < Math.Ceiling(timer.TimeLeft.TotalHours); i++)
+                for (int i = 0; i < Math.Ceiling(timeLeft.TotalHours); i++)
                 {
                     //Create a colored pen based on what hour we are drawing
                     using (Brush b = createBrush[i % createBrush.Length](colors[i % colors.Length]))
                     {
-                        if (i == Math.Floor(timer.TimeLeft.TotalHours))
+                        if (i == Math.Floor(timeLeft.TotalHours))
                         {
                             fillPie(
                                 color: b,
-                                startAngle: (DateTime.Now.Minute + DateTime.Now.Second / 60f) / 60f * 360f,
-                                angle: (float)(timer.RealTimeLeft.TotalMinutes % 60) / 60f * 360f,
+                                startAngle: (currentTime.Minute + currentTime.Second / 60f) / 60f * 360f,
+                                angle: (float)(realTimeLeft.TotalMinutes % 60) / 60f * 360f,
                                 scale: DISC_INITAL_SCALE / dividend,
                                 centerOffset: 0f
                             );
@@ -564,14 +587,14 @@ namespace NewTimer.FormParts
             }
 
             //Draw for seconds (less than 12 minutes)
-            if (createLastCountdownEffects && timer.TimeLeft.TotalMinutes < 12)
+            if (createLastCountdownEffects && timeLeft.TotalMinutes < 12)
             {
                 using (Pen p = new Pen(colors[10 % colors.Length], 2f) { DashStyle = DashStyle.Dash })
                 {
                     drawPie(
                         color: p,
                         startAngle: 0f,
-                        angle: (float)timer.RealTimeLeft.TotalMinutes / 12f * 360f,
+                        angle: (float)realTimeLeft.TotalMinutes / 12f * 360f,
                         scale: DISC_INITAL_SCALE
                     );
                 }

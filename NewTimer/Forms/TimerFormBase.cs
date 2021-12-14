@@ -169,7 +169,22 @@ namespace NewTimer.Forms
             }
 
             if (ModifierKeys != Keys.None)
-                TempOverrideTranslucencyMode();
+            {
+                if (translucencyEnabled)
+                {
+                    if (Bounds.Contains(MousePosition))
+                        TempOverrideTranslucencyMode();
+
+                    else
+                        StopTempOverrideTranslucencyMode();
+                }
+                else
+                {
+                    TempOverrideTranslucencyMode();
+                }
+                
+            }
+                
 
             else
                 StopTempOverrideTranslucencyMode();

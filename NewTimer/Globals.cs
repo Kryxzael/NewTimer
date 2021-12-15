@@ -181,8 +181,8 @@ namespace NewTimer
 
             SecondaryTimer.Target = target;
             SecondaryTimer.StartTime = DateTime.Now;
-            SecondaryTimer.ColorScheme = colorScheme;
-            SecondaryTimer.StopAtZero = stopAtZero;
+            SecondaryTimer.ColorScheme = ColorSchemes[0];
+            SecondaryTimer.StopAtZero = false;
             SecondaryTimer.InFreeMode = true;
 
             //Close the closing form with a result of OK so that the application doesn't exit

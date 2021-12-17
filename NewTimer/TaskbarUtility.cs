@@ -30,7 +30,7 @@ namespace NewTimer
             //Less than one minute, show amount of seconds left
             else if (tl.TotalMinutes < 1)
             {
-                title = NumberToWord(tl.Seconds, true) + (tl.Seconds == 1 ? " sec" : " seconds");
+                title = NumberToWord(tl.Seconds, true) + (tl.Seconds == 1 ? " second" : " seconds");
             }
 
             //Less than one hour, show amount of minutes left

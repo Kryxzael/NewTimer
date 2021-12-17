@@ -30,34 +30,34 @@ namespace NewTimer
             //Less than one minute, show amount of seconds left
             else if (tl.TotalMinutes < 1)
             {
-                title = tl.Seconds.ToString() + (tl.Seconds == 1 ? " sec" : " seconds");
+                title = NumberToWord(tl.Seconds, true) + (tl.Seconds == 1 ? " sec" : " seconds");
             }
 
             //Less than one hour, show amount of minutes left
             else if (tl.TotalHours < 1)
             {
-                title = tl.Minutes.ToString() + (tl.Minutes == 1 ? " minute" : " minutes");
+                title = NumberToWord(tl.Minutes, true) + (tl.Minutes == 1 ? " minute" : " minutes");
 
                 if (tl.Seconds != 0)
-                    title += " and " + tl.Seconds.ToString() + " sec";
+                    title += ", " + tl.Seconds.ToString() + " sec";
             }
 
             //Less than one day, show amount of hours left
             else if (tl.TotalDays < 1)
             {
-                title = tl.Hours.ToString() + (tl.Hours == 1 ? " hour" : " hours");
+                title = NumberToWord(tl.Hours, true) + (tl.Hours == 1 ? " hour" : " hours");
 
                 if (tl.Minutes != 0)
-                    title += " and " + tl.Minutes.ToString() + " min";
+                    title += ", " + tl.Minutes.ToString() + " min";
             }
 
             //Less than one year, show amount of days left
             else if (tl.TotalDays < 360)
             {
-                title = tl.Days + (tl.Days == 1 ? " day" : " days");
+                title = NumberToWord(tl.Days, true) + (tl.Days == 1 ? " day" : " days");
 
                 if (tl.Hours != 0)
-                    title += " and " + tl.Hours.ToString() + (tl.Hours == 1 ? " hr" : " hrs");
+                    title += ", " + tl.Hours.ToString() + (tl.Hours == 1 ? " hr" : " hrs");
             }
 
             //More than a year, show a fallback string
@@ -158,6 +158,58 @@ namespace NewTimer
                 TaskbarHelper.SetValue(handle, value, maxValue);
             }
 
+        }
+
+        /// <summary>
+        /// Gets the English name for the provided number if it is less than ten
+        /// </summary>
+        private static string NumberToWord(int a, bool capitalize)
+        {
+            string output;
+            switch (a)
+            {
+                case 0:
+                    output = "Zero";
+                    break;
+                case 1:
+                    output = "One";
+                    break;
+                case 2:
+                    output = "Two";
+                    break;
+                case 3:
+                    output = "Three";
+                    break;
+                case 4:
+                    output = "Four";
+                    break;
+                case 5:
+                    output = "Five";
+                    break;
+                case 6:
+                    output = "Six";
+                    break;
+                case 7:
+                    output = "Seven";
+                    break;
+                case 8:
+                    output = "Eight";
+                    break;
+                case 9:
+                    output = "Nine";
+                    break;
+                case 10:
+                    output = "Ten";
+                    break;
+                default:
+                    output = a.ToString();
+                    break;
+            }
+
+            if (capitalize)
+                return output;
+
+            return output.ToLower();
         }
     }
 }

@@ -540,6 +540,7 @@ namespace NewTimer.Forms
 
                     TimeSpan newTarget = new TimeSpan(hour, minute, second);
                     Globals.PrimaryTimer.Target = DateTime.Now + newTarget;
+                    Globals.PrimaryTimer.InFreeMode = false;
                 }
 
                 //Target
@@ -549,7 +550,11 @@ namespace NewTimer.Forms
                     int minute = b;
 
                     if (hour < 24 && minute < 60)
+                    {
                         Globals.PrimaryTimer.Target = DateTime.Today.AddHours(hour).AddMinutes(minute);
+                        Globals.PrimaryTimer.InFreeMode = false;
+                    }
+                        
                 }
 
                 LastInvisibileInputTextUpdateTime = default;

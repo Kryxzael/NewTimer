@@ -56,6 +56,7 @@ namespace NewTimer.Commands
                         Globals.PrimaryTimer.Target = DateTime.Now + TimeSpan.Parse(args.JoinEnd(0));
                     }
 
+                    Globals.PrimaryTimer.InFreeMode = false;
                     target.WriteLine("Target time has been updated to " + Globals.PrimaryTimer.Target);
                 }
                 catch (Exception)

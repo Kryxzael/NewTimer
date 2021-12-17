@@ -28,6 +28,8 @@ namespace NewTimer.Commands
                 try
                 {
                     Globals.PrimaryTimer.Target = DateTime.Parse(args.JoinEnd(0));
+                    Globals.PrimaryTimer.InFreeMode = false;
+
                     target.WriteLine("Target time has been updated");
                 }
                 catch (Exception)

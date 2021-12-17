@@ -18,9 +18,6 @@ namespace NewTimer
         /// <param name="f">Form to set title of</param>
         public static void SetTitle(Form f)
         {
-            
-                
-
             TimeSpan tl = Globals.PrimaryTimer.TimeLeft;
             string title;
 
@@ -33,25 +30,34 @@ namespace NewTimer
             //Less than one minute, show amount of seconds left
             else if (tl.TotalMinutes < 1)
             {
-                title = tl.Seconds.ToString() + (tl.Seconds == 1 ? " second" : " seconds");
+                title = tl.Seconds.ToString() + (tl.Seconds == 1 ? " sec" : " seconds");
             }
 
             //Less than one hour, show amount of minutes left
             else if (tl.TotalHours < 1)
             {
                 title = tl.Minutes.ToString() + (tl.Minutes == 1 ? " minute" : " minutes");
+
+                if (tl.Seconds != 0)
+                    title += " and " + tl.Seconds.ToString() + " sec";
             }
 
             //Less than one day, show amount of hours left
             else if (tl.TotalDays < 1)
             {
                 title = tl.Hours.ToString() + (tl.Hours == 1 ? " hour" : " hours");
+
+                if (tl.Minutes != 0)
+                    title += " and " + tl.Minutes.ToString() + " min";
             }
 
             //Less than one year, show amount of days left
             else if (tl.TotalDays < 360)
             {
                 title = tl.Days + (tl.Days == 1 ? " day" : " days");
+
+                if (tl.Hours != 0)
+                    title += " and " + tl.Hours.ToString() + (tl.Hours == 1 ? " hr" : " hrs");
             }
 
             //More than a year, show a fallback string

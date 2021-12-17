@@ -36,7 +36,22 @@ namespace NewTimer
             //Less than one hour, show amount of minutes left
             else if (tl.TotalHours < 1)
             {
-                title = NumberToWord(tl.Minutes, true) + (tl.Minutes == 1 ? " minute" : " minutes");
+                if (tl.Minutes == 15)
+                {
+                    title = "A quarter hour";
+                }
+                else if (tl.Minutes == 30)
+                {
+                    title = "Half an hour";
+                }    
+                else if (tl.Minutes == 45)
+                {
+                    title = "Three quarter hour";
+                }
+                else
+                {
+                    title = NumberToWord(tl.Minutes, true) + (tl.Minutes == 1 ? " minute" : " minutes");
+                }
 
                 if (tl.Seconds != 0)
                     title += ", " + tl.Seconds.ToString() + " sec";
@@ -45,19 +60,38 @@ namespace NewTimer
             //Less than one day, show amount of hours left
             else if (tl.TotalDays < 1)
             {
-                title = NumberToWord(tl.Hours, true) + (tl.Hours == 1 ? " hour" : " hours");
+                if (tl.Hours == 12)
+                {
+                    title = "Half a day";
+                }
+                else
+                {
+                    title = NumberToWord(tl.Hours, true) + (tl.Hours == 1 ? " hour" : " hours");
+                }
 
                 if (tl.Minutes != 0)
                     title += ", " + tl.Minutes.ToString() + " min";
             }
 
-            //Less than one year, show amount of days left
-            else if (tl.TotalDays < 360)
+            //Less than one week, show amount of days left
+            else if (tl.TotalDays < 7)
             {
                 title = NumberToWord(tl.Days, true) + (tl.Days == 1 ? " day" : " days");
 
                 if (tl.Hours != 0)
                     title += ", " + tl.Hours.ToString() + (tl.Hours == 1 ? " hr" : " hrs");
+            }
+
+            //Less than one year, show amount in weeks
+            else if (tl.TotalDays < 360)
+            {
+                int weeks = tl.Days / 7;
+                int excessDays = tl.Days % 7;
+
+                title = NumberToWord(weeks, true) + (weeks == 1 ? " week" : " weeks");
+
+                if (excessDays != 0)
+                    title += ", " + excessDays.ToString() + (excessDays == 1 ? " day" : " days");
             }
 
             //More than a year, show a fallback string

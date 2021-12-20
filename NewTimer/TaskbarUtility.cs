@@ -121,6 +121,13 @@ namespace NewTimer
             //Get handle of form
             IntPtr handle = f.Handle;
 
+            //Free mode -> No progress state
+            if (Globals.PrimaryTimer.InFreeMode)
+            {
+                TaskbarHelper.SetState(handle, TaskbarHelper.TaskbarStates.NoProgress);
+                return;
+            }
+
             //Overtime -> Indeterminate state (Value does not apply)
             if (Globals.PrimaryTimer.Overtime)
             {

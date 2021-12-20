@@ -564,7 +564,7 @@ namespace NewTimer.FormParts
             }
 
             //Draw for seconds (less than 12 minutes)
-            if (createLastCountdownEffects && timer.TimeLeft.TotalMinutes < 12)
+            if (createLastCountdownEffects && timer.TimeLeft.TotalMinutes < 12 && !(timer.Overtime && timer.StopAtZero))
             {
                 using (Pen p = new Pen(colors[10 % colors.Length], 2f) { DashStyle = DashStyle.Dash })
                 {

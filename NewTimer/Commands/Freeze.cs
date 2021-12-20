@@ -15,31 +15,16 @@ namespace NewTimer.Commands
         public override string Name => "freeze";
         public override string HelpDescription => "Freezes or unfreezes the timer";
 
-        // Used to keep timer frozen
-        //TODO: Update this
-        private System.Windows.Forms.Timer _timer = new System.Windows.Forms.Timer() { Interval = 10 };
-        private System.Diagnostics.Stopwatch _deltaTime = new System.Diagnostics.Stopwatch();
-
         public override Syntax GetSyntax(Params args)
         {
             return Syntax.Begin();
         }
 
-        public Freeze()
-        {
-            _timer.Tick += OnTimerTick;
-        }
-
         protected override void Executed(Params args, IConsoleOutput target)
         {
-            _deltaTime.Restart();
-            target.WriteLine((_timer.Enabled = !_timer.Enabled) ? "Frozen" : "Unfrozen");
-        }
+            Globals.PrimaryTimer.Paused = !Globals.PrimaryTimer.Paused;
 
-        private void OnTimerTick(object sender, EventArgs e)
-        {
-            Globals.PrimaryTimer.Target += _deltaTime.Elapsed;
-            _deltaTime.Restart();
+            target.WriteLine(Globals.PrimaryTimer.Paused ? "Frozen" : "Unfrozen");
         }
     }
 }

@@ -14,6 +14,14 @@ namespace NewTimer
     /// </summary>
     public class TimerConfig
     {
+        private bool _paused;
+        private DateTime _target = new DateTime(2017, 4, 7, 15, 05, 0); //Keeping this lol
+
+        /// <summary>
+        /// Gets or sets the time-left value the timer had the last time it was paused. If the timer is unpaused, this value is irrelevant
+        /// </summary>
+        private TimeSpan LastPauseRealTimeLeft { get; set; }
+
         /// <summary>
         /// Gets or sets whether the timer is not currently tracking a target time. Also referred to as 'idle'
         /// </summary>
@@ -27,12 +35,47 @@ namespace NewTimer
         /// <summary>
         /// Gets or sets the time the timer targets
         /// </summary>
-        public DateTime Target { get; set; } = new DateTime(2017, 4, 7, 15, 05, 0); //Keeping this lol
+        public DateTime Target
+        {
+            get
+            {
+                if (Paused)
+                    return DateTime.Now.Add(LastPauseRealTimeLeft);
+
+                return _target;
+            }
+            set
+            {
+                _target = value;
+                LastPauseRealTimeLeft = _target - DateTime.Now;
+            }
+        }
 
         /// <summary>
         /// The color scheme that is selected. This value is set when the timer starts
         /// </summary>
         public ColorScheme ColorScheme { get; set; }
+
+        /// <summary>
+        /// Gets whether the timer is currently frozen
+        /// </summary>
+        public bool Paused 
+        {
+            get => _paused;
+            set
+            {
+                if (value && !Paused)
+                    LastPauseRealTimeLeft = RealTimeLeft;
+
+                else if (!value && Paused)
+                    Target = DateTime.Now.Add(LastPauseRealTimeLeft);
+
+
+                _paused = value;
+            }
+        }
+
+
 
         /// <summary>
         /// Gets or sets whether the timer should stop when it reaches zero

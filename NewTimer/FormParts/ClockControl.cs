@@ -689,12 +689,20 @@ namespace NewTimer.FormParts
         protected override void OnClick(EventArgs e)
         {
             base.OnClick(e);
-            _colors[Globals.PrimaryTimer] = Globals.PrimaryTimer.ColorScheme.GenerateMany(12, Globals.MasterRandom).ToArray();
-            Invalidate();
+
+            Point localMousePos = PointToClient(MousePosition);
+            Point center = new Point(Width / 2, Height / 2);
+
+            //Only change palette if the user clicks the actual clock
+            if (GetDistance(localMousePos, center) < squareArea.Width / 2) //Height would work here as well
+            {
+                _colors[Globals.PrimaryTimer] = Globals.PrimaryTimer.ColorScheme.GenerateMany(12, Globals.MasterRandom).ToArray();
+                Invalidate();
+            }
         }
 
         /// <summary>
-        /// Gets the point at a particular distance away from an orgin in a particular direction (using angle)
+        /// Gets the point at a particular distance away from an origin in a particular direction (using angle)
         /// </summary>
         /// <param name="origin"></param>
         /// <param name="length"></param>
@@ -727,6 +735,17 @@ namespace NewTimer.FormParts
         protected static float CalculateAngle(float value, float maxValue)
         {
             return (value / maxValue * 360) - 90;
+        }
+
+        /// <summary>
+        /// Gets the distance between a and b
+        /// </summary>
+        /// <param name="a"></param>
+        /// <param name="b"></param>
+        /// <returns></returns>
+        protected static double GetDistance(Point a, Point b) 
+        {
+            return Math.Sqrt((Math.Pow(a.X - b.X, 2) + Math.Pow(a.Y - b.Y, 2)));
         }
 
         /// <summary>

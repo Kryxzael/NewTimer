@@ -137,6 +137,11 @@ namespace NewTimer
         }
 
         /// <summary>
+        /// Keeps the colors to use for the analog clocks
+        /// </summary>
+        public Color[] AnalogColors { get; private set; }
+
+        /// <summary>
         /// Gets the configuration settings that the time bar will use. The key is the minimum unit time that will be used to apply the settings
         /// </summary>
         public Dictionary<TimeSpan, BarSettings> BarSettings = new Dictionary<TimeSpan, BarSettings>()
@@ -166,6 +171,7 @@ namespace NewTimer
         {
             //Get colors
             Color[] color = ColorScheme.GenerateMany(BarSettings.Count, Globals.MasterRandom).ToArray();
+            AnalogColors = color;
 
             //Apply colors to bar settings
             for (int i = 0; i < BarSettings.Count - 1; i++)

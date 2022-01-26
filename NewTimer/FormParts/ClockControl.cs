@@ -12,7 +12,7 @@ namespace NewTimer.FormParts
 {
     public class ClockControl : UserControl, ICountdown
     {
-        private Dictionary<TimerConfig, Color[]> _colors = new Dictionary<TimerConfig, Color[]>();
+        //private Dictionary<TimerConfig, Color[]> _colors = new Dictionary<TimerConfig, Color[]>();
 
         private static readonly Func<Color, Brush>[] _primaryBrushGenerators = new Func<Color, Brush>[] 
         { 
@@ -87,8 +87,6 @@ namespace NewTimer.FormParts
         {
             DoubleBuffered = true;
             SetStyle(ControlStyles.OptimizedDoubleBuffer | ControlStyles.AllPaintingInWmPaint, true);
-            _colors[Globals.PrimaryTimer]   = Globals.PrimaryTimer  .ColorScheme.GenerateMany(24, Globals.MasterRandom).ToArray();
-            _colors[Globals.SecondaryTimer] = Globals.SecondaryTimer.ColorScheme.GenerateMany(24, Globals.MasterRandom).ToArray();
 
             Font = new Font(DefaultFont.FontFamily, FONT_SIZE);
         }
@@ -205,15 +203,15 @@ namespace NewTimer.FormParts
 
                     //Uses a big pen for intervals of 15 minutes
                     if (i % 15 == 0)
-                        pen = new Pen(_colors[Globals.PrimaryTimer][0], FRAME_MARK_BIG_PEN.Width) { EndCap = LineCap.Round };
+                        pen = new Pen(Globals.PrimaryTimer.AnalogColors[0], FRAME_MARK_BIG_PEN.Width) { EndCap = LineCap.Round };
 
                     //Uses a medium pen for intervals of 5 minutes
                     else if (i % 5 == 0)
-                        pen = new Pen(_colors[Globals.PrimaryTimer][0], FRAME_MARK_PEN.Width) { EndCap = LineCap.Round };
+                        pen = new Pen(Globals.PrimaryTimer.AnalogColors[0], FRAME_MARK_PEN.Width) { EndCap = LineCap.Round };
 
                     //Uses a small pen for intervals of 1 minutes
                     else
-                        pen = new Pen(_colors[Globals.PrimaryTimer][0], FRAME_MARK_SMALL_PEN.Width) { EndCap = LineCap.Round };
+                        pen = new Pen(Globals.PrimaryTimer.AnalogColors[0], FRAME_MARK_SMALL_PEN.Width) { EndCap = LineCap.Round };
 
                     //Draws colored tick
                     e.Graphics.DrawLine(
@@ -416,7 +414,7 @@ namespace NewTimer.FormParts
             }
 
             //Color scheme to use
-            Color[] colors = _colors[timer];
+            Color[] colors = timer.AnalogColors;
 
             //Create the final-minute color shift
             if (createLastCountdownEffects && timer.TimeLeft.TotalMinutes < 1f && !timer.Overtime)
@@ -696,7 +694,7 @@ namespace NewTimer.FormParts
             //Only change palette if the user clicks the actual clock
             if (GetDistance(localMousePos, center) < squareArea.Width / 2) //Height would work here as well
             {
-                _colors[Globals.PrimaryTimer] = Globals.PrimaryTimer.ColorScheme.GenerateMany(12, Globals.MasterRandom).ToArray();
+                Globals.PrimaryTimer.ColorizeTimerBar();
                 Invalidate();
             }
         }

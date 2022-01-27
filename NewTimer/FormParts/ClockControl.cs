@@ -599,7 +599,7 @@ namespace NewTimer.FormParts
                 using (Brush brush = new SolidBrush(Color.FromArgb(s, Color.White)))
                 {
                     e.Graphics.DrawString(
-                        s: Globals.PrimaryTimer.TimeLeft.Hours.ToString(),
+                        s: Math.Floor(Globals.PrimaryTimer.TimeLeft.TotalHours).ToString(),
                         font: Font,
                         brush: brush,
                         point: p,

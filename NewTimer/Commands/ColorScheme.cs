@@ -19,7 +19,8 @@ namespace NewTimer.Commands
         {
             return Syntax.Begin().Or()
                 .Add("Index", Range.From(0).To(Globals.ColorSchemes.GetUpperBound(0)), true).Or()
-                .Add("R", Range.From(0).To(255), true).Add("G", Range.From(0).To(255), true).Add("B", Range.From(0).To(255), true);
+                .Add("R", Range.From(0).To(255), true).Add("G", Range.From(0).To(255), true).Add("B", Range.From(0).To(255), true).Or()
+                .Add("sync", "sync");
         }
 
         protected override void Executed(Params args, IConsoleOutput target)
@@ -34,7 +35,23 @@ namespace NewTimer.Commands
             //Write the color scheme
             else if (args.Count == 1)
             {
-                Globals.PrimaryTimer.ColorScheme = Globals.ColorSchemes[args.ToInt(0)];
+                if (args[0] == "sync")
+                {
+                    foreach (TimeSpan i in Globals.PrimaryTimer.BarSettings.Keys)
+                    {
+                        Globals.PrimaryTimer.BarSettings[i].FillColor     = Globals.SecondaryTimer.BarSettings[i].FillColor;
+                        Globals.PrimaryTimer.BarSettings[i].OverflowColor = Globals.SecondaryTimer.BarSettings[i].OverflowColor;
+                    }
+
+                    Array.Copy(Globals.SecondaryTimer.AnalogColors, Globals.PrimaryTimer.AnalogColors, Globals.PrimaryTimer.AnalogColors.Length);
+
+                    target.WriteLine("Synchronized color schemes");
+                    return;
+                }
+                else
+                {
+                    Globals.PrimaryTimer.ColorScheme = Globals.ColorSchemes[args.ToInt(0)];
+                }
             }
 
             //Write color directly

@@ -168,11 +168,24 @@ namespace NewTimer.Forms
                 LastInvisibileInputTextUpdateTime = default;
             }
 
-            if (ModifierKeys != Keys.None)
+            int modifierCount = 0;
+
+            if (ModifierKeys.HasFlag(Keys.Control))
+                modifierCount++;
+
+            if (ModifierKeys.HasFlag(Keys.Shift))
+                modifierCount++;
+
+            if (ModifierKeys.HasFlag(Keys.Alt))
+                modifierCount++;
+
+            if (modifierCount > 0)
             {
                 if (translucencyEnabled)
                 {
-                    if (Bounds.Contains(MousePosition))
+                    
+
+                    if (Bounds.Contains(MousePosition) || modifierCount >= 2)
                         TempOverrideTranslucencyMode();
 
                     else
@@ -205,7 +218,7 @@ namespace NewTimer.Forms
                 {
                     recursiveUpdate(i);
                 }
-            }            
+            }     
         }
 
         /// <summary>

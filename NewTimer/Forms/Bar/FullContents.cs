@@ -98,16 +98,19 @@ namespace NewTimer.Forms.Bar
 
             //Total hours
             FullTotalH.Text = Math.Floor(span.TotalHours) >= 100 ? "BIG" : Math.Floor(span.TotalHours).ToString("00");
+            FullTotalH.RenderLeadingZeros = false;
             FullFracH.Text = Globals.GetDecimals(span.TotalHours, 3).ToString("000");
             FullFracH.RenderLeadingZeros = span.TotalHours >= 1;
 
             //Total minutes
             FullTotalM.Text = Math.Floor(span.TotalMinutes) >= 1000 ? "BIG" : Math.Floor(span.TotalMinutes).ToString("000");
+            FullTotalM.RenderLeadingZeros = false;
             FullFracM.Text = Globals.GetDecimals(span.TotalMinutes, 2).ToString("00");
             FullFracM.RenderLeadingZeros = span.TotalMinutes >= 1;
 
             //Total seconds
             FullTotalS.Text = Math.Floor(span.TotalSeconds).ToString("0000000");
+            FullTotalS.RenderLeadingZeros = false;
 
             /*
              * Set fill effects
@@ -136,6 +139,36 @@ namespace NewTimer.Forms.Bar
             //Total seconds
             FullTotalS.Progress = FullS.Progress;
 
+            /*
+             * Set Leading Zero values
+             */
+            const int BLINK_FREQ = 50;
+            const int BLINK_FREQ_STOPPED = 1000;
+
+            if (Globals.PrimaryTimer.TimeLeft.TotalSeconds < 1.0 && Globals.PrimaryTimer.Overtime)
+            {
+                if (Globals.PrimaryTimer.StopAtZero && DateTime.Now.Millisecond % BLINK_FREQ_STOPPED < BLINK_FREQ_STOPPED / 2)
+                    blink();
+
+                else if (!Globals.PrimaryTimer.StopAtZero && DateTime.Now.Millisecond % BLINK_FREQ < BLINK_FREQ / 2)
+                    blink();
+                
+
+                void blink()
+                {
+                    FullH.RenderLeadingZeros
+                        = FullM.RenderLeadingZeros
+                        = FullS.RenderLeadingZeros
+                        = FullTotalH.RenderLeadingZeros
+                        = FullTotalM.RenderLeadingZeros
+                        = FullTotalS.RenderLeadingZeros
+                        = FullFracH.RenderLeadingZeros
+                        = FullFracM.RenderLeadingZeros
+                        = true;
+                    }
+            }
+
+            
         }
 
         private TimeSpan ReversedTimeLeft()

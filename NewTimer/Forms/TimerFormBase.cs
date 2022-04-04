@@ -183,8 +183,6 @@ namespace NewTimer.Forms
             {
                 if (translucencyEnabled)
                 {
-                    
-
                     if (Bounds.Contains(MousePosition) || modifierCount >= 2)
                         TempOverrideTranslucencyMode();
 
@@ -196,8 +194,7 @@ namespace NewTimer.Forms
                     TempOverrideTranslucencyMode();
                 }
                 
-            }
-                
+            }  
 
             else
                 StopTempOverrideTranslucencyMode();

@@ -449,11 +449,47 @@ namespace NewTimer.Forms
                     return;
 
                 case Keys.PageUp:
-                    Globals.PrimaryTimer.Target = Globals.PrimaryTimer.Target.AddDays(1.0);
+                    if (e.Shift)
+                    {
+                        int currentIndex = Globals.ColorSchemes
+                            .TakeWhile(i => i != Globals.PrimaryTimer.ColorScheme)
+                            .Count();
+
+                        if (currentIndex >= Globals.ColorSchemes.Length)
+                            currentIndex = -1;
+
+                        Globals.PrimaryTimer.ColorScheme = Globals.ColorSchemes[(currentIndex + 1) % Globals.ColorSchemes.Length];
+                        Globals.PrimaryTimer.ColorizeTimerBar();
+                    }    
+                        
+                    else
+                    {
+                        Globals.PrimaryTimer.Target = Globals.PrimaryTimer.Target.AddDays(1.0);
+                    }
+                        
                     return;
 
                 case Keys.PageDown:
-                    Globals.PrimaryTimer.Target = Globals.PrimaryTimer.Target.AddDays(-1.0);
+                    if (e.Shift)
+                    {
+                        int currentIndex = Globals.ColorSchemes
+                            .TakeWhile(i => i != Globals.PrimaryTimer.ColorScheme)
+                            .Count();
+
+                        if (currentIndex >= Globals.ColorSchemes.Length)
+                            currentIndex = 1;
+
+                        if (currentIndex - 1 < 0)
+                            currentIndex = Globals.ColorSchemes.Length;
+
+                        Globals.PrimaryTimer.ColorScheme = Globals.ColorSchemes[currentIndex - 1];
+                        Globals.PrimaryTimer.ColorizeTimerBar();
+                    }
+                    else
+                    {
+                        Globals.PrimaryTimer.Target = Globals.PrimaryTimer.Target.AddDays(-1.0);
+                    }
+                    
                     return;
 
                 case Keys.Insert:
@@ -468,18 +504,36 @@ namespace NewTimer.Forms
                 case Keys.F1:
                     MessageBox.Show(string.Join(Environment.NewLine, 
                         "F1: Help",
+                        "--------",
+                        "F2: Swap analog clock hand emphasis",
+                        "F3: Generate new colors",
+                        "Shift + F3: Sync primary and secondary timers' colors",
+                        "Shift + Page Up: Next color scheme",
+                        "Shift + Page Dn: Previous color scheme",
+                        "--------",
                         "F10: Collapse/Uncollapse",
                         "F11: Translucency Mode",
                         "F12: Console",
-                        "Del: Reset to zero",
+                        "--------",
                         "Shift + Del: Idle Mode",
                         "Enter: Swap Primary/Secondary Timer",
                         "Ins: Change end mode",
                         "Pause: Freeze/Unfreeze",
+                        "--------",
+                        "Del: Reset to zero",
                         "0930: Set target to 09:30 (Must be in 24h format)",
                         "Shift + 0930: Set countdown to 9 minutes and 30 seconds",
                         "Alt + 0930: Set countdown to 9 hours and 30 minutes",
+                        "--------",
+                        "Up: Add 1 minute to target",
+                        "Shift + Up: Add 5 minutes to target",
+                        "Alt + Up: Add 15 minutes to target",
+                        "Ctrl + Up: Add 1 hour to target",
                         "Page Up: Add 1 day to target",
+                        "Dn: Subtract 1 minute to target",
+                        "Shift + Dn: Subtract 5 minutes to target",
+                        "Alt + Dn: Subtract 15 minutes to target",
+                        "Ctrl + Dn: Subtract 1 hour to target",
                         "Page Dn: Subtract 1 day from to target"
                     ), "Keyboard Shortcuts");
                     return;
@@ -521,6 +575,51 @@ namespace NewTimer.Forms
                     _console.Show();
                     _console.BringToFront();
                     return;
+
+                case Keys.F2:
+                    Globals.SwapHandPriorities = !Globals.SwapHandPriorities;
+                    return;
+
+                case Keys.F3:
+                    if (e.Shift)
+                    {
+                        Command.GetByType<Commands.ColorScheme>().Execute(new string[] { "sync" }, nullOutput);
+                    }
+                    else
+                    {
+                        Globals.PrimaryTimer.ColorizeTimerBar();
+                    }
+                    
+
+                    return;
+
+                case Keys.Up:
+                    if (e.Shift)
+                        Globals.PrimaryTimer.Target = Globals.PrimaryTimer.Target.AddMinutes(5);
+
+                    if (e.Alt)
+                        Globals.PrimaryTimer.Target = Globals.PrimaryTimer.Target.AddMinutes(15);
+
+                    if (e.Control)
+                        Globals.PrimaryTimer.Target = Globals.PrimaryTimer.Target.AddHours(1);
+
+                    else
+                        Globals.PrimaryTimer.Target = Globals.PrimaryTimer.Target.AddMinutes(1);
+                    break;
+
+                case Keys.Down:
+                    if (e.Shift)
+                        Globals.PrimaryTimer.Target = Globals.PrimaryTimer.Target.AddMinutes(-5);
+
+                    if (e.Alt)
+                        Globals.PrimaryTimer.Target = Globals.PrimaryTimer.Target.AddMinutes(-15);
+
+                    if (e.Control)
+                        Globals.PrimaryTimer.Target = Globals.PrimaryTimer.Target.AddHours(-1);
+
+                    else
+                        Globals.PrimaryTimer.Target = Globals.PrimaryTimer.Target.AddMinutes(-1);
+                    break;
             }
 
             if (InvisibleInputText.Length == 4)

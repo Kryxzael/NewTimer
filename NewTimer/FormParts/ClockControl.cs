@@ -67,11 +67,20 @@ namespace NewTimer.FormParts
         private static readonly Pen PEN_BORDER_NORMAL = new Pen(COLOR_HAND_BORDER, 7) { EndCap = LineCap.ArrowAnchor, StartCap = LineCap.Round };
         private static readonly Pen PEN_FILL_NORMAL = new Pen(COLOR_HAND, 5) { EndCap = LineCap.ArrowAnchor, StartCap = LineCap.Round };
 
+        private static readonly Pen PEN_BORDER_ROUND = new Pen(COLOR_HAND_BORDER, 7) { EndCap = LineCap.RoundAnchor, StartCap = LineCap.Round };
+        private static readonly Pen PEN_FILL_ROUND = new Pen(COLOR_HAND, 5) { EndCap = LineCap.RoundAnchor, StartCap = LineCap.Round };
+
         private static readonly Pen PEN_BORDER_THIN = new Pen(COLOR_HAND_BORDER, 4) { EndCap = LineCap.Round, StartCap = LineCap.Round };
         private static readonly Pen PEN_FILL_THIN = new Pen(COLOR_HAND, 2) { EndCap = LineCap.Round, StartCap = LineCap.Round };
 
+        private static readonly Pen PEN_BORDER_THIN_ROUND = new Pen(COLOR_HAND_BORDER, 4) { EndCap = LineCap.RoundAnchor, StartCap = LineCap.Round };
+        private static readonly Pen PEN_FILL_THIN_ROUND = new Pen(COLOR_HAND, 2) { EndCap = LineCap.RoundAnchor, StartCap = LineCap.Round };
+
         private static readonly Pen PEN_DOTTED = new Pen(COLOR_HAND_WEAK, 4) { EndCap = LineCap.Round, StartCap = LineCap.Round, DashCap = DashCap.Round, DashStyle = DashStyle.Dot };
         private static readonly Pen PEN_DOTTED_THIN = new Pen(COLOR_HAND_WEAK, 2) { EndCap = LineCap.Round, StartCap = LineCap.Round, DashCap = DashCap.Round, DashStyle = DashStyle.Dot };
+
+        private static readonly Pen PEN_DOTTED_ARROW = new Pen(COLOR_HAND_WEAK, 4) { EndCap = LineCap.Round, StartCap = LineCap.ArrowAnchor, DashCap = DashCap.Round, DashStyle = DashStyle.Dot };
+        private static readonly Pen PEN_DOTTED_ARROW_THIN = new Pen(COLOR_HAND_WEAK, 2) { EndCap = LineCap.Round, StartCap = LineCap.ArrowAnchor, DashCap = DashCap.Round, DashStyle = DashStyle.Dot };
 
         //Disc settings
         private const float DISC_INITAL_SCALE = (1 - BG_FRAME_SCALE) * 0.95f;
@@ -250,12 +259,25 @@ namespace NewTimer.FormParts
         /// <param name="e"></param>
         protected virtual void OnDrawHourHand(PaintEventArgs e)
         {
+            Pen fillPen, borderPen;
+
+            if (Globals.SwapHandPriorities)
+            {
+                fillPen = PEN_DOTTED_ARROW;
+                borderPen = null;
+            }
+            else
+            {
+                fillPen = PEN_FILL_NORMAL;
+                borderPen = PEN_BORDER_NORMAL;
+            }
+
             OnDrawHand(
                 e: e,
                 scale: HOUR_HAND_SCALE, 
                 angle: CalculateAngle(DateTime.Now.Hour % 12 + DateTime.Now.Minute / 60f, 12), 
-                fillPen: PEN_FILL_NORMAL, 
-                borderPen: PEN_BORDER_NORMAL
+                fillPen: fillPen, 
+                borderPen: borderPen
             );
         }
 
@@ -265,12 +287,25 @@ namespace NewTimer.FormParts
         /// <param name="e"></param>
         protected virtual void OnDrawMinuteHand(PaintEventArgs e)
         {
+            Pen fillPen, borderPen;
+
+            if (Globals.SwapHandPriorities)
+            {
+                fillPen = PEN_DOTTED_ARROW;
+                borderPen = null;
+            }
+            else
+            {
+                fillPen = PEN_FILL_NORMAL;
+                borderPen = PEN_BORDER_NORMAL;
+            }
+
             OnDrawHand(
                 e: e,
                 scale: MINUTE_HAND_SCALE, 
                 angle: CalculateAngle(DateTime.Now.Minute + DateTime.Now.Second / 60f, 60), 
-                fillPen: PEN_FILL_NORMAL, 
-                borderPen: PEN_BORDER_NORMAL
+                fillPen: fillPen, 
+                borderPen: borderPen
             );
         }
 
@@ -280,12 +315,25 @@ namespace NewTimer.FormParts
         /// <param name="e"></param>
         protected virtual void OnDrawSecondHand(PaintEventArgs e)
         {
+            Pen fillPen, borderPen;
+
+            if (Globals.SwapHandPriorities)
+            {
+                fillPen = PEN_DOTTED_ARROW_THIN;
+                borderPen = null;
+            }
+            else
+            {
+                fillPen = PEN_FILL_THIN;
+                borderPen = PEN_BORDER_THIN;
+            }
+
             OnDrawHand(
                 e: e, 
                 scale: SECOND_HAND_SCALE, 
                 angle: CalculateAngle(DateTime.Now.Second + DateTime.Now.Millisecond / 1000f, 60), 
-                fillPen: PEN_FILL_THIN, 
-                borderPen: PEN_BORDER_THIN
+                fillPen: fillPen, 
+                borderPen: borderPen
             );
         }
 
@@ -308,13 +356,26 @@ namespace NewTimer.FormParts
 
             }
 
+            Pen fillPen, borderPen;
+
+            if (Globals.SwapHandPriorities)
+            {
+                fillPen = PEN_FILL_ROUND;
+                borderPen = PEN_BORDER_ROUND;
+            }
+            else
+            {
+                fillPen = PEN_DOTTED;
+                borderPen = null;
+            }
+
             //Draw hand
             OnDrawHand(
                 e: e,
                 scale: HOUR_HAND_SCALE, 
                 angle: CalculateAngle((float)Globals.PrimaryTimer.TimeLeft.TotalHours % 12, 12), 
-                fillPen: PEN_DOTTED, 
-                borderPen: null
+                fillPen: fillPen, 
+                borderPen: borderPen
             );
         }
 
@@ -324,12 +385,25 @@ namespace NewTimer.FormParts
         /// <param name="e"></param>
         protected virtual void OnDrawMinutesLeftHand(PaintEventArgs e)
         {
+            Pen fillPen, borderPen;
+
+            if (Globals.SwapHandPriorities)
+            {
+                fillPen = PEN_FILL_ROUND;
+                borderPen = PEN_BORDER_ROUND;
+            }
+            else
+            {
+                fillPen = PEN_DOTTED;
+                borderPen = null;
+            }
+
             OnDrawHand(
                 e: e,
                 scale: MINUTE_HAND_SCALE, 
                 angle: CalculateAngle((float)Globals.PrimaryTimer.TimeLeft.TotalMinutes, 60), 
-                fillPen: PEN_DOTTED, 
-                borderPen: null
+                fillPen: fillPen, 
+                borderPen: borderPen
             );
         }
 
@@ -343,13 +417,26 @@ namespace NewTimer.FormParts
             if (Globals.PrimaryTimer.Target.Second == 0)
                 return;
 
+            Pen fillPen, borderPen;
+
+            if (Globals.SwapHandPriorities)
+            {
+                fillPen = PEN_FILL_THIN_ROUND;
+                borderPen = PEN_BORDER_THIN_ROUND;
+            }
+            else
+            {
+                fillPen = PEN_DOTTED_THIN;
+                borderPen = null;
+            }
+
             //Draw hand
             OnDrawHand(
                 e: e, 
                 scale: SECOND_HAND_SCALE, 
                 angle: CalculateAngle((float)Globals.PrimaryTimer.TimeLeft.TotalSeconds, 60), 
-                fillPen: PEN_DOTTED_THIN, 
-                borderPen: null
+                fillPen: fillPen, 
+                borderPen: borderPen
             );
         }
 
@@ -675,7 +762,7 @@ namespace NewTimer.FormParts
             //Draws the border
             if (borderPen != null)
                 e.Graphics.DrawLine(borderPen, center, anglePoint);
-
+            
             //Draws the fill
             e.Graphics.DrawLine(fillPen, center, anglePoint);
         }

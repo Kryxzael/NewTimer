@@ -30,8 +30,12 @@ namespace NewTimer
         /// <summary>
         /// Gets the current secondary timer. The primary and secondary timers can be swaped with SwapTimers()
         /// </summary>
-
         public static TimerConfig SecondaryTimer { get; private set; } = new TimerConfig();
+
+        /// <summary>
+        /// Gets whether the time-left hands should be emphasized instead of the normal time hands
+        /// </summary>
+        public static bool SwapHandPriorities { get; set; }
 
         /*
          * Constants

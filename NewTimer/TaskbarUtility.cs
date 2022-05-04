@@ -27,6 +27,12 @@ namespace NewTimer
                 title = DateTime.Now.ToString();
             }
 
+            //Stop at zero is enabled and timer is done
+            else if (Globals.PrimaryTimer.StopAtZero && Globals.PrimaryTimer.Overtime)
+            {
+                title = "Timer Elapsed";
+            }
+
             //Less than one minute, show amount of seconds left
             else if (tl.TotalMinutes < 1)
             {
@@ -102,7 +108,7 @@ namespace NewTimer
 
 
             //We are in overtime, add "ago" to the end of the title
-            if (Globals.PrimaryTimer.Overtime)
+            if (Globals.PrimaryTimer.Overtime && !Globals.PrimaryTimer.StopAtZero)
             {
                 title += " ago";
             }

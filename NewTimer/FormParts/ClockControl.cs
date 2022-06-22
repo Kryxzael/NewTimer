@@ -119,6 +119,7 @@ namespace NewTimer.FormParts
 
             //Set smoothing mode to anti-alias for smoothness
             e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
+            e.Graphics.TextRenderingHint = System.Drawing.Text.TextRenderingHint.AntiAlias;
 
             //Only draw this when not in free mode
             if (!Globals.PrimaryTimer.InFreeMode)
@@ -678,7 +679,7 @@ namespace NewTimer.FormParts
             {
                 PointF p = GetPointAtAngle(
                     origin: center,
-                    length: (int)(NUMBER_HOUR_DISTANCE_SCALE * squareArea.Width / 2),
+                    length: NUMBER_HOUR_DISTANCE_SCALE * squareArea.Width / 2,
                     angle: CalculateAngle(DateTime.Now.Hour % 12 + DateTime.Now.Minute / 60f, 12) + NUMBER_HOUR_DEGREE_OFFSET
                 );
 
@@ -700,7 +701,7 @@ namespace NewTimer.FormParts
             {
                 PointF p = GetPointAtAngle(
                     origin: center,
-                    length: (int)(NUMBER_MINUTE_DISTANCE_SCALE * squareArea.Width / 2),
+                    length: NUMBER_MINUTE_DISTANCE_SCALE * squareArea.Width / 2,
                     angle: CalculateAngle(DateTime.Now.Minute + DateTime.Now.Second / 60f, 60) + NUMBER_MINUTE_DEGREE_OFFSET
                 );
 
@@ -723,8 +724,8 @@ namespace NewTimer.FormParts
             {
                 PointF p = GetPointAtAngle(
                     origin: center,
-                    length: (int)(NUMBER_SECOND_DISTANCE_SCALE * squareArea.Width / 2),
-                    angle: CalculateAngle(DateTime.Now.Second + DateTime.Now.Millisecond / 1000f, 60) + NUMBER_SECOND_DEGREE_OFFSET
+                    length: NUMBER_SECOND_DISTANCE_SCALE * squareArea.Width / 2,
+                    angle: CalculateAngle(DateTime.Now.Second + DateTime.Now.Millisecond / 1000f, 60f) + NUMBER_SECOND_DEGREE_OFFSET
                 );
 
                 //Calculates transparency
@@ -793,7 +794,7 @@ namespace NewTimer.FormParts
         /// <param name="length"></param>
         /// <param name="angle"></param>
         /// <returns></returns>
-        protected static PointF GetPointAtAngle(Point origin, int length, float angle)
+        protected static PointF GetPointAtAngle(Point origin, float length, float angle)
         {
             return new PointF(
                 x: origin.X + (float)Math.Cos(ToRadiants(angle)) * length,

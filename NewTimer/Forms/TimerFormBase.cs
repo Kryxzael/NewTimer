@@ -59,6 +59,11 @@ namespace NewTimer.Forms
         private string InvisibleInputText { get; set; } = "";
         private DateTime LastInvisibileInputTextUpdateTime { get; set; }
 
+        /// <summary>
+        /// Used to control the visibility of the secondary timer bar when the window is in compact mode
+        /// </summary>
+        private TimerBar _secondaryFullscreenBar;
+
         protected override bool DoubleBuffered { get => true; }
 
         public TimerFormBase()
@@ -101,8 +106,10 @@ namespace NewTimer.Forms
             setControlDefaults(new TimerBar(), analogSplitContainer.Panel2);
             setControlDefaults(new Circle.FullContents(simpleMode: false), tabCircle);
             setControlDefaults(new Circle.FullContents(simpleMode: true), tabCircleSimple);
-            setControlDefaults(new TimerBar() { Height = 50, TrackSecondaryTimer = true }, tabBarOnly).Dock = DockStyle.Bottom;
+
             setControlDefaults(new TimerBar(), tabBarOnly);
+            _secondaryFullscreenBar = (TimerBar)setControlDefaults(new TimerBar() { Height = 50, TrackSecondaryTimer = true }, tabBarOnly);
+            _secondaryFullscreenBar.Dock = DockStyle.Bottom;
 
             //Designer doesn't allow the panel to be this small, so setting it here
             analogSplitContainer.SplitterDistance = 222;
@@ -554,6 +561,7 @@ namespace NewTimer.Forms
                         //Found this solution on stack
                         tabs.Appearance = TabAppearance.Normal;
                         tabs.ItemSize = new Size(30, 18);
+                        _secondaryFullscreenBar.Height = 50;
                     }
                     else
                     {
@@ -563,6 +571,7 @@ namespace NewTimer.Forms
 
                         tabs.Appearance = TabAppearance.FlatButtons;
                         tabs.ItemSize = new Size(0, 1);
+                        _secondaryFullscreenBar.Height = 0;
                     }
 
                     

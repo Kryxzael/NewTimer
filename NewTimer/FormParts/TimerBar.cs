@@ -146,6 +146,39 @@ namespace NewTimer.FormParts
         }
 
         /// <summary>
+        /// Gets the text that will be displayed on a given segment on the bar
+        /// </summary>
+        /// <param name="segmentValue"></param>
+        /// <returns></returns>
+        protected override string GetLongStringForBarSegment(int segmentValue)
+        {
+            //Text is rendered Right-to-left. But that fucks up the order of words.
+            //Strings with spaces become a problem unless we counteract the RTL with a LTR marker
+            const char LTR_MARK = '\x200E'; 
+            string output = segmentValue + (LTR_MARK + " ");
+
+            if (DisplayedTimeLeft.TotalMinutes < 1) 
+                output += "second";
+
+            else if (DisplayedTimeLeft.TotalHours < 1) 
+                output += "minute";
+
+            else if (DisplayedTimeLeft.TotalDays < 1) 
+                output += "hour";
+
+            else if (DisplayedTimeLeft.TotalDays < 365) 
+                output += "day";
+
+            else 
+                output += "year";
+
+            if (Math.Abs(segmentValue) != 1)
+                output += "s";
+
+            return output;
+        }
+
+        /// <summary>
         /// Gets the amount of subsegments that will be drawn given a timespan
         /// </summary>
         /// <param name="span"></param>

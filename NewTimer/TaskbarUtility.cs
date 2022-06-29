@@ -219,6 +219,12 @@ namespace NewTimer
         {
             string output = "";
 
+            if (a < 0 && a > -1000)
+            {
+                output = "Negative ";
+                a = -a;
+            }
+
             if (cap != 0 && a > cap)
             {
                 //Fall out
@@ -229,64 +235,64 @@ namespace NewTimer
                 switch (a)
                 {
                     case 0:
-                        output = "Zero";
+                        output += "Zero";
                         break;
                     case 1:
-                        output = "One";
+                        output += "One";
                         break;
                     case 2:
-                        output = "Two";
+                        output += "Two";
                         break;
                     case 3:
-                        output = "Three";
+                        output += "Three";
                         break;
                     case 4:
-                        output = "Four";
+                        output += "Four";
                         break;
                     case 5:
-                        output = "Five";
+                        output += "Five";
                         break;
                     case 6:
-                        output = "Six";
+                        output += "Six";
                         break;
                     case 7:
-                        output = "Seven";
+                        output += "Seven";
                         break;
                     case 8:
-                        output = "Eight";
+                        output += "Eight";
                         break;
                     case 9:
-                        output = "Nine";
+                        output += "Nine";
                         break;
                     case 10:
-                        output = "Ten";
+                        output += "Ten";
                         break;
                     case 11:
-                        output = "Eleven";
+                        output += "Eleven";
                         break;
                     case 12:
-                        output = "Twelve";
+                        output += "Twelve";
                         break;
                     case 13:
-                        output = "Thirteen";
+                        output += "Thirteen";
                         break;
                     case 14:
-                        output = "Fourteen";
+                        output += "Fourteen";
                         break;
                     case 15:
-                        output = "Fifteen";
+                        output += "Fifteen";
                         break;
                     case 16:
-                        output = "Sixteen";
+                        output += "Sixteen";
                         break;
                     case 17:
-                        output = "Seventeen";
+                        output += "Seventeen";
                         break;
                     case 18:
-                        output = "Eighteen";
+                        output += "Eighteen";
                         break;
                     case 19:
-                        output = "Nineteen";
+                        output += "Nineteen";
                         break;
                 }
             }

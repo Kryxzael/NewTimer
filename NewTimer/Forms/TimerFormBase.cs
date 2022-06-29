@@ -148,6 +148,10 @@ namespace NewTimer.Forms
             //'Seconds' panel
             SecondsOnlySecond.GetText = () => Math.Floor(Globals.PrimaryTimer.RealTimeLeft.TotalSeconds).ToString();
             SecondsOnlyTitle.GetText = () => Math.Abs(Math.Floor(Globals.PrimaryTimer.RealTimeLeft.TotalSeconds)) == 1 ? "second" : "seconds";
+
+            //'Text' panel
+            TextOnlyMinute.GetText = () => TaskbarUtility.NumberToWord((int)Math.Floor(Globals.PrimaryTimer.RealTimeLeft.TotalMinutes), true);
+            TextOnlySecond.GetText = () => TaskbarUtility.NumberToWord(Globals.PrimaryTimer.TimeLeft.Seconds, true);
         }
 
         /// <summary>

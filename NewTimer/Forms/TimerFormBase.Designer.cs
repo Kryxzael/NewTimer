@@ -45,6 +45,8 @@
             this.analogSplitContainer = new System.Windows.Forms.SplitContainer();
             this.tabCircle = new System.Windows.Forms.TabPage();
             this.tabCircleSimple = new System.Windows.Forms.TabPage();
+            this.tabTextOnly = new System.Windows.Forms.TabPage();
+            this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.TimeOnlyTime = new NewTimer.FormParts.AutoLabel();
             this.HoursOnlyHour = new NewTimer.FormParts.AutoLabel();
             this.HoursOnlyFraction = new NewTimer.FormParts.AutoLabel();
@@ -54,6 +56,8 @@
             this.MinutesOnlyTitle = new NewTimer.FormParts.AutoLabel();
             this.SecondsOnlySecond = new NewTimer.FormParts.AutoLabel();
             this.SecondsOnlyTitle = new NewTimer.FormParts.AutoLabel();
+            this.TextOnlyMinute = new NewTimer.FormParts.AutoLabel();
+            this.TextOnlySecond = new NewTimer.FormParts.AutoLabel();
             this.tabSecondsOnly.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer7)).BeginInit();
             this.splitContainer7.Panel1.SuspendLayout();
@@ -82,6 +86,11 @@
             this.tabAnalog.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.analogSplitContainer)).BeginInit();
             this.analogSplitContainer.SuspendLayout();
+            this.tabTextOnly.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
+            this.splitContainer1.Panel1.SuspendLayout();
+            this.splitContainer1.Panel2.SuspendLayout();
+            this.splitContainer1.SuspendLayout();
             this.SuspendLayout();
             // 
             // tabSecondsOnly
@@ -253,6 +262,7 @@
             this.tabs.Controls.Add(this.tabHoursOnly);
             this.tabs.Controls.Add(this.tabMinutesOnly);
             this.tabs.Controls.Add(this.tabSecondsOnly);
+            this.tabs.Controls.Add(this.tabTextOnly);
             this.tabs.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tabs.ItemSize = new System.Drawing.Size(30, 18);
             this.tabs.Location = new System.Drawing.Point(0, 0);
@@ -303,6 +313,37 @@
             this.tabCircleSimple.TabIndex = 9;
             this.tabCircleSimple.Text = "Cdn";
             this.tabCircleSimple.UseVisualStyleBackColor = true;
+            // 
+            // tabTextOnly
+            // 
+            this.tabTextOnly.Controls.Add(this.splitContainer1);
+            this.tabTextOnly.Location = new System.Drawing.Point(4, 22);
+            this.tabTextOnly.Name = "tabTextOnly";
+            this.tabTextOnly.Padding = new System.Windows.Forms.Padding(3);
+            this.tabTextOnly.Size = new System.Drawing.Size(362, 245);
+            this.tabTextOnly.TabIndex = 10;
+            this.tabTextOnly.Text = "Txt";
+            this.tabTextOnly.UseVisualStyleBackColor = true;
+            // 
+            // splitContainer1
+            // 
+            this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.splitContainer1.Location = new System.Drawing.Point(3, 3);
+            this.splitContainer1.Name = "splitContainer1";
+            this.splitContainer1.Orientation = System.Windows.Forms.Orientation.Horizontal;
+            // 
+            // splitContainer1.Panel1
+            // 
+            this.splitContainer1.Panel1.Controls.Add(this.TextOnlyMinute);
+            this.splitContainer1.Panel1.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            // 
+            // splitContainer1.Panel2
+            // 
+            this.splitContainer1.Panel2.Controls.Add(this.TextOnlySecond);
+            this.splitContainer1.Panel2.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.splitContainer1.Size = new System.Drawing.Size(356, 239);
+            this.splitContainer1.SplitterDistance = 174;
+            this.splitContainer1.TabIndex = 1;
             // 
             // TimeOnlyTime
             // 
@@ -398,7 +439,7 @@
             // SecondsOnlySecond
             // 
             this.SecondsOnlySecond.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.SecondsOnlySecond.Font = new System.Drawing.Font("Microsoft Sans Serif", 94.42892F);
+            this.SecondsOnlySecond.Font = new System.Drawing.Font("Microsoft Sans Serif", 93.83218F);
             this.SecondsOnlySecond.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(136)))), ((int)(((byte)(136)))), ((int)(((byte)(0)))));
             this.SecondsOnlySecond.GetText = null;
             this.SecondsOnlySecond.Location = new System.Drawing.Point(0, 0);
@@ -411,7 +452,7 @@
             // SecondsOnlyTitle
             // 
             this.SecondsOnlyTitle.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.SecondsOnlyTitle.Font = new System.Drawing.Font("Microsoft Sans Serif", 25.8042F);
+            this.SecondsOnlyTitle.Font = new System.Drawing.Font("Microsoft Sans Serif", 26.40094F);
             this.SecondsOnlyTitle.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(68)))), ((int)(((byte)(68)))), ((int)(((byte)(0)))));
             this.SecondsOnlyTitle.GetText = null;
             this.SecondsOnlyTitle.Location = new System.Drawing.Point(0, 0);
@@ -420,6 +461,32 @@
             this.SecondsOnlyTitle.TabIndex = 0;
             this.SecondsOnlyTitle.Text = "0?";
             this.SecondsOnlyTitle.TextAlign = System.Drawing.ContentAlignment.BottomRight;
+            // 
+            // TextOnlyMinute
+            // 
+            this.TextOnlyMinute.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.TextOnlyMinute.Font = new System.Drawing.Font("Microsoft Sans Serif", 93.83218F);
+            this.TextOnlyMinute.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(143)))), ((int)(((byte)(43)))), ((int)(((byte)(189)))));
+            this.TextOnlyMinute.GetText = null;
+            this.TextOnlyMinute.Location = new System.Drawing.Point(0, 0);
+            this.TextOnlyMinute.Name = "TextOnlyMinute";
+            this.TextOnlyMinute.Size = new System.Drawing.Size(356, 174);
+            this.TextOnlyMinute.TabIndex = 1;
+            this.TextOnlyMinute.Text = "0?";
+            this.TextOnlyMinute.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // TextOnlySecond
+            // 
+            this.TextOnlySecond.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.TextOnlySecond.Font = new System.Drawing.Font("Microsoft Sans Serif", 26.40094F);
+            this.TextOnlySecond.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(75)))), ((int)(((byte)(33)))), ((int)(((byte)(79)))));
+            this.TextOnlySecond.GetText = null;
+            this.TextOnlySecond.Location = new System.Drawing.Point(0, 0);
+            this.TextOnlySecond.Name = "TextOnlySecond";
+            this.TextOnlySecond.Size = new System.Drawing.Size(356, 61);
+            this.TextOnlySecond.TabIndex = 0;
+            this.TextOnlySecond.Text = "0?";
+            this.TextOnlySecond.TextAlign = System.Drawing.ContentAlignment.BottomRight;
             // 
             // TimerFormBase
             // 
@@ -459,6 +526,11 @@
             this.tabAnalog.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.analogSplitContainer)).EndInit();
             this.analogSplitContainer.ResumeLayout(false);
+            this.tabTextOnly.ResumeLayout(false);
+            this.splitContainer1.Panel1.ResumeLayout(false);
+            this.splitContainer1.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
+            this.splitContainer1.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -490,5 +562,9 @@
         private System.Windows.Forms.TabPage tabCircle;
         private System.Windows.Forms.TabPage tabCircleSimple;
         private System.Windows.Forms.SplitContainer analogSplitContainer;
+        private System.Windows.Forms.TabPage tabTextOnly;
+        private System.Windows.Forms.SplitContainer splitContainer1;
+        private FormParts.AutoLabel TextOnlyMinute;
+        private FormParts.AutoLabel TextOnlySecond;
     }
 }

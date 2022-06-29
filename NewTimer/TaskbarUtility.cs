@@ -36,7 +36,12 @@ namespace NewTimer
             //Less than one minute, show amount of seconds left
             else if (tl.TotalMinutes < 1)
             {
-                title = NumberToWord(tl.Seconds, true) + (tl.Seconds == 1 ? " second" : " seconds");
+                if (Globals.PrimaryTimer.Overtime)
+                    title = tl.Seconds.ToString();
+                else
+                    title = NumberToWord(tl.Seconds, true);
+
+                title += (tl.Seconds == 1 ? " second" : " seconds");
             }
 
             //Less than one hour, show amount of minutes left
@@ -56,7 +61,7 @@ namespace NewTimer
                 }
                 else
                 {
-                    title = NumberToWord(tl.Minutes, true) + (tl.Minutes == 1 ? " minute" : " minutes");
+                    title = NumberToWord(tl.Minutes, true, 10) + (tl.Minutes == 1 ? " minute" : " minutes");
                 }
 
                 if (tl.Seconds != 0)
@@ -72,7 +77,7 @@ namespace NewTimer
                 }
                 else
                 {
-                    title = NumberToWord(tl.Hours, true) + (tl.Hours == 1 ? " hour" : " hours");
+                    title = NumberToWord(tl.Hours, true, 10) + (tl.Hours == 1 ? " hour" : " hours");
                 }
 
                 if (tl.Minutes != 0)
@@ -82,7 +87,7 @@ namespace NewTimer
             //Less than one week, show amount of days left
             else if (tl.TotalDays < 7)
             {
-                title = NumberToWord(tl.Days, true) + (tl.Days == 1 ? " day" : " days");
+                title = NumberToWord(tl.Days, true, 10) + (tl.Days == 1 ? " day" : " days");
 
                 if (tl.Hours != 0)
                     title += ", " + tl.Hours.ToString() + (tl.Hours == 1 ? " hr" : " hrs");
@@ -94,7 +99,7 @@ namespace NewTimer
                 int weeks = tl.Days / 7;
                 int excessDays = tl.Days % 7;
 
-                title = NumberToWord(weeks, true) + (weeks == 1 ? " week" : " weeks");
+                title = NumberToWord(weeks, true, 10) + (weeks == 1 ? " week" : " weeks");
 
                 if (excessDays != 0)
                     title += ", " + excessDays.ToString() + (excessDays == 1 ? " day" : " days");
@@ -210,48 +215,179 @@ namespace NewTimer
         /// <summary>
         /// Gets the English name for the provided number if it is less than ten
         /// </summary>
-        private static string NumberToWord(int a, bool capitalize)
+        public static string NumberToWord(int a, bool capitalize, int cap = 0)
         {
-            string output;
-            switch (a)
+            string output = "";
+
+            if (cap != 0 && a > cap)
             {
-                case 0:
-                    output = "Zero";
-                    break;
-                case 1:
-                    output = "One";
-                    break;
-                case 2:
-                    output = "Two";
-                    break;
-                case 3:
-                    output = "Three";
-                    break;
-                case 4:
-                    output = "Four";
-                    break;
-                case 5:
-                    output = "Five";
-                    break;
-                case 6:
-                    output = "Six";
-                    break;
-                case 7:
-                    output = "Seven";
-                    break;
-                case 8:
-                    output = "Eight";
-                    break;
-                case 9:
-                    output = "Nine";
-                    break;
-                case 10:
-                    output = "Ten";
-                    break;
-                default:
-                    output = a.ToString();
-                    break;
+                //Fall out
             }
+
+            else if (a < 20)
+            {
+                switch (a)
+                {
+                    case 0:
+                        output = "Zero";
+                        break;
+                    case 1:
+                        output = "One";
+                        break;
+                    case 2:
+                        output = "Two";
+                        break;
+                    case 3:
+                        output = "Three";
+                        break;
+                    case 4:
+                        output = "Four";
+                        break;
+                    case 5:
+                        output = "Five";
+                        break;
+                    case 6:
+                        output = "Six";
+                        break;
+                    case 7:
+                        output = "Seven";
+                        break;
+                    case 8:
+                        output = "Eight";
+                        break;
+                    case 9:
+                        output = "Nine";
+                        break;
+                    case 10:
+                        output = "Ten";
+                        break;
+                    case 11:
+                        output = "Eleven";
+                        break;
+                    case 12:
+                        output = "Twelve";
+                        break;
+                    case 13:
+                        output = "Thirteen";
+                        break;
+                    case 14:
+                        output = "Fourteen";
+                        break;
+                    case 15:
+                        output = "Fifteen";
+                        break;
+                    case 16:
+                        output = "Sixteen";
+                        break;
+                    case 17:
+                        output = "Seventeen";
+                        break;
+                    case 18:
+                        output = "Eighteen";
+                        break;
+                    case 19:
+                        output = "Nineteen";
+                        break;
+                }
+            }
+            else
+            {
+                switch ((a / 100) % 100)
+                {
+                    case 1:
+                        output += "One hundred and";
+                        break;
+                    case 2:
+                        output += "Two hundred and";
+                        break;
+                    case 3:
+                        output += "Three hundred and";
+                        break;
+                    case 4:
+                        output += "Four hundred and";
+                        break;
+                    case 5:
+                        output += "Five hundred and";
+                        break;
+                    case 6:
+                        output += "Six hundred and";
+                        break;
+                    case 7:
+                        output += "Seven hundred and";
+                        break;
+                    case 8:
+                        output += "Eight hundred and";
+                        break;
+                    case 9:
+                        output += "Nine hundred and";
+                        break;
+                }
+
+                switch ((a / 10) % 10)
+                {
+                    case 0:
+                        output = output.TrimEnd(' ', 'a', 'n', 'd');
+                        break;
+                    case 2:
+                        output += "Twenty";
+                        break;
+                    case 3:
+                        output += "Thirty";
+                        break;
+                    case 4:
+                        output += "Forty";
+                        break;
+                    case 5:
+                        output += "Fifty";
+                        break;
+                    case 6:
+                        output += "Sixty";
+                        break;
+                    case 7:
+                        output += "Seventy";
+                        break;
+                    case 8:
+                        output += "Eighty";
+                        break;
+                    case 9:
+                        output += "Ninety";
+                        break;
+                }
+
+                switch (a % 10)
+                {
+                    case 1:
+                        output += "-one";
+                        break;
+                    case 2:
+                        output += "-two";
+                        break;
+                    case 3:
+                        output += "-three";
+                        break;
+                    case 4:
+                        output += "-four";
+                        break;
+                    case 5:
+                        output += "-five";
+                        break;
+                    case 6:
+                        output += "-six";
+                        break;
+                    case 7:
+                        output += "-seven";
+                        break;
+                    case 8:
+                        output += "-eight";
+                        break;
+                    case 9:
+                        output += "-nine";
+                        break;
+                }
+            }
+
+            if (string.IsNullOrEmpty(output))
+                output = a.ToString();
 
             if (capitalize)
                 return output;

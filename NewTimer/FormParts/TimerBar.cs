@@ -136,46 +136,94 @@ namespace NewTimer.FormParts
         /// </summary>
         /// <param name="segmentValue"></param>
         /// <returns></returns>
-        protected override string GetStringForBarSegment(int segmentValue)
+        protected override string[] GetStringsForBarSegment(int segmentValue)
         {
-            if (DisplayedTimeLeft.TotalMinutes < 1) return segmentValue + "sec";
-            else if (DisplayedTimeLeft.TotalHours < 1) return segmentValue + "min";
-            else if (DisplayedTimeLeft.TotalDays < 1) return segmentValue + "hr";
-            else if (DisplayedTimeLeft.TotalDays < 365) return segmentValue + "d";
-            else return segmentValue + "y";
-        }
+            if (DisplayedTimeLeft.TotalMinutes < 1)
+            {
+                return new[]
+                {
+                    createString(" second", " seconds"),
+                    createString("second", "seconds"),
+                    createString(" sec"),
+                    createString("sec"),
+                    createString(" s"),
+                    createString("s"), 
+                    createString("")
+                };
+            }
 
-        /// <summary>
-        /// Gets the text that will be displayed on a given segment on the bar
-        /// </summary>
-        /// <param name="segmentValue"></param>
-        /// <returns></returns>
-        protected override string GetLongStringForBarSegment(int segmentValue)
-        {
-            //Text is rendered Right-to-left. But that fucks up the order of words.
-            //Strings with spaces become a problem unless we counteract the RTL with a LTR marker
-            const char LTR_MARK = '\x200E'; 
-            string output = segmentValue + (LTR_MARK + " ");
+            else if (DisplayedTimeLeft.TotalHours < 1)
+            {
+                return new[] 
+                { 
+                    createString(" minute", " minutes"), 
+                    createString("minute", "minutes"), 
+                    createString(" min"), 
+                    createString("min"),
+                    createString(" m"), 
+                    createString("m"), 
+                    createString("") 
+                };
+            }
 
-            if (DisplayedTimeLeft.TotalMinutes < 1) 
-                output += "second";
+            else if (DisplayedTimeLeft.TotalDays < 1)
+            {
+                return new[] 
+                { 
+                    createString(" hour", " hours"), 
+                    createString("hour", "hours"), 
+                    createString(" hr"), 
+                    createString("hr"),
+                    createString(" h"), 
+                    createString("h"), 
+                    createString("") 
+                };
+            }
+                
+            else if (DisplayedTimeLeft.TotalDays < 365)
+            {
+                return new[] 
+                { 
+                    createString(" day", " days"), 
+                    createString("day", "days"), 
+                    createString(" d"), 
+                    createString("d"),
+                    createString("") 
+                };
+            }
+                
+            else
+            {
+                return new[] 
+                { 
+                    createString(" year", " years"), 
+                    createString("year", "years"), 
+                    createString(" yr"), 
+                    createString("yr"), 
+                    createString(" y"), 
+                    createString("y"),
+                    createString("") 
+                };
+            }
 
-            else if (DisplayedTimeLeft.TotalHours < 1) 
-                output += "minute";
+            string createString(string suffixSingular, string suffixPlural = "", bool useWrittenNumbers = false)
+            {
+                if (string.IsNullOrEmpty(suffixPlural))
+                    suffixPlural = suffixSingular;
 
-            else if (DisplayedTimeLeft.TotalDays < 1) 
-                output += "hour";
+                //Text is rendered Right-to-left. But that fucks up the order of words.
+                //Strings with spaces become a problem unless we counteract the RTL with a LTR marker
+                const char LTR_MARK = '\x200E';
+                string number = segmentValue.ToString();
 
-            else if (DisplayedTimeLeft.TotalDays < 365) 
-                output += "day";
+                if (useWrittenNumbers)
+                    number = TaskbarUtility.NumberToWord(segmentValue, true);
 
-            else 
-                output += "year";
+                if (Math.Abs(segmentValue) != 1)
+                    return number + (LTR_MARK + suffixPlural);
 
-            if (Math.Abs(segmentValue) != 1)
-                output += "s";
-
-            return output;
+                return number + (LTR_MARK + suffixSingular);
+            }
         }
 
         /// <summary>

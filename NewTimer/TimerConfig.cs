@@ -90,6 +90,8 @@ namespace NewTimer
         {
             get
             {
+                TimeSpan output;
+
                 if (InFreeMode)
                     return default;
 
@@ -98,11 +100,20 @@ namespace NewTimer
                     if (StopAtZero)
                         return default;
 
-                    return DateTime.Now - Target;
+                    output = DateTime.Now - Target;
+                }
+                else
+                {
+                    output = Target - DateTime.Now;
                 }
 
+                //Have had occurrences surrounding near-zero TimeLeft values returning values less than zero
+                //Probably a rounding imprecision. Trying to mitigate this here
+                if (output < default(TimeSpan))
+                    return default;
 
-                return Target - DateTime.Now;
+                return output;
+                
             }
         }
 

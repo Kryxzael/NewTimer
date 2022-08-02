@@ -112,7 +112,7 @@ namespace NewTimer.Forms
             _secondaryFullscreenBar.Dock = DockStyle.Bottom;
 
             //Designer doesn't allow the panel to be this small, so setting it here
-            analogSplitContainer.SplitterDistance = 222;
+            analogSplitContainer.SplitterDistance = 221;
 
             //Normalizes settings for the given control. This function returns its input
             /* local */ Control setControlDefaults(Control ctrl, Control parent)

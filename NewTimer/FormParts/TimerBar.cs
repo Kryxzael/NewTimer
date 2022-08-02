@@ -138,6 +138,8 @@ namespace NewTimer.FormParts
         /// <returns></returns>
         protected override string[] GetStringsForBarSegment(int segmentValue)
         {
+            string splitAsLines = string.Join(Environment.NewLine, (IEnumerable<char>)segmentValue.ToString());
+
             if (DisplayedTimeLeft.TotalMinutes < 1)
             {
                 return new[]
@@ -148,7 +150,8 @@ namespace NewTimer.FormParts
                     createString("sec"),
                     createString(" s"),
                     createString("s"), 
-                    createString("")
+                    createString(""),
+                    splitAsLines
                 };
             }
 
@@ -162,7 +165,8 @@ namespace NewTimer.FormParts
                     createString("min"),
                     createString(" m"), 
                     createString("m"), 
-                    createString("") 
+                    createString(""),
+                    splitAsLines
                 };
             }
 
@@ -176,7 +180,8 @@ namespace NewTimer.FormParts
                     createString("hr"),
                     createString(" h"), 
                     createString("h"), 
-                    createString("") 
+                    createString(""),
+                    splitAsLines
                 };
             }
                 
@@ -188,7 +193,8 @@ namespace NewTimer.FormParts
                     createString("day", "days"), 
                     createString(" d"), 
                     createString("d"),
-                    createString("") 
+                    createString(""),
+                    splitAsLines
                 };
             }
                 
@@ -202,7 +208,8 @@ namespace NewTimer.FormParts
                     createString("yr"), 
                     createString(" y"), 
                     createString("y"),
-                    createString("") 
+                    createString(""),
+                    splitAsLines
                 };
             }
 

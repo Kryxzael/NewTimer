@@ -554,13 +554,18 @@ namespace NewTimer.Forms
                     break;
 
                 case Keys.F10:
-                    const int COLLAPSE_HEIGHT = 90;
+                    const int COLLAPSE_HEIGHT = 70;
+
+                    Rectangle initialBounds = DesktopBounds;
 
                     if (tabs.SelectedIndex == 4)
                     {
+
+                        //Abusing the fact that tab 0 forces a certain size
                         int lastHeigh = Height;
                         tabs.SelectedIndex = 0;
                         Top -= (Height - lastHeigh);
+                        FormBorderStyle = FormBorderStyle.Sizable;
 
                         //Found this solution on stack
                         tabs.Appearance = TabAppearance.Normal;
@@ -570,15 +575,20 @@ namespace NewTimer.Forms
                     else
                     {
                         tabs.SelectedIndex = 4;
-                        Top += (Height - COLLAPSE_HEIGHT);
-                        Height = COLLAPSE_HEIGHT;
+                        FormBorderStyle = FormBorderStyle.None;
+                        DesktopBounds = Rectangle.FromLTRB(
+                            initialBounds.Left, 
+                            initialBounds.Bottom - COLLAPSE_HEIGHT, 
+                            initialBounds.Right, 
+                            initialBounds.Bottom
+                        );
 
                         tabs.Appearance = TabAppearance.FlatButtons;
                         tabs.ItemSize = new Size(0, 1);
                         _secondaryFullscreenBar.Height = 0;
                     }
 
-                    
+
                     break;
 
                 case Keys.F12:

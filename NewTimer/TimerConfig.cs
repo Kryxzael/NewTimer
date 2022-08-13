@@ -163,8 +163,6 @@ namespace NewTimer
             /*  7d */ { new TimeSpan(7, 0, 0, 0), CreateBarSettings(7, 7) },
             /*  1d */ { new TimeSpan(1, 0, 0, 0), CreateBarSettings(1, 1) },
 
-            /*  3h */ { new TimeSpan(12, 0, 0), CreateBarSettings(12, 3) },
-            /*  2h */ { new TimeSpan(6, 0, 0), CreateBarSettings(6, 2) },
             /*  1h */ { new TimeSpan(1, 0, 0), CreateBarSettings(1, 1) },
 
             /* 15m */ { new TimeSpan(0, 30, 0), CreateBarSettings(30, 15) },

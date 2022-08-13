@@ -244,8 +244,6 @@ namespace NewTimer.FormParts
             else if (span > new TimeSpan(30, 0, 0, 0)) return 4;
             else if (span > new TimeSpan(7, 0, 0, 0)) return 7;
             else if (span > new TimeSpan(1, 0, 0, 0)) return 8;
-            else if (span > new TimeSpan(12, 0, 0)) return 6;
-            else if (span > new TimeSpan(6, 0, 0)) return 6;
             else if (span > new TimeSpan(1, 0, 0)) return 4;
             else if (span > new TimeSpan(0, 30, 0)) return 6;
             else if (span > new TimeSpan(0, 10, 0)) return 10;

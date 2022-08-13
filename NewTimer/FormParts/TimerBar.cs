@@ -99,9 +99,9 @@ namespace NewTimer.FormParts
 
         public static float GetNewValue(TimeSpan span)
         {
-            if (span >= new TimeSpan(360, 0, 0, 0)) //Sets base to 1 year
+            if (span >= new TimeSpan(365, 0, 0, 0)) //Sets base to 1 year
             {
-                return (float)span.TotalDays / 360f;
+                return (float)span.TotalDays / 365f;
             }
             else if (span >= new TimeSpan(1, 0, 0, 0)) //Sets base to 1 day
             {

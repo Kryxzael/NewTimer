@@ -179,11 +179,11 @@ namespace NewTimer
         public void ColorizeTimerBar()
         {
             //Get colors
-            Color[] color = ColorScheme.GenerateMany(BarSettings.Count, Globals.MasterRandom).ToArray();
+            Color[] color = ColorScheme.GenerateMany(BarSettings.Count + 1, Globals.MasterRandom).ToArray();
             AnalogColors = color;
 
             //Apply colors to bar settings
-            for (int i = 0; i < BarSettings.Count - 1; i++)
+            for (int i = 0; i < BarSettings.Count; i++)
             {
                 //Apply fill color
                 BarSettings.Values.ElementAt(BarSettings.Count - (i + 1)).FillColor = color[i];

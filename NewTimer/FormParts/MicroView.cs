@@ -145,20 +145,41 @@ namespace NewTimer.FormParts
 
         public void OnCountdownTick(TimeSpan span, TimeSpan secondarySpan, bool isOvertime)
         {
-            if (span.TotalSeconds < 100)
-                CurrentCommand = new MicroViewCommand(span.TotalSeconds, ' ');
+            if (Globals.PrimaryTimer.InFreeMode)
+            {
+                char amPm = DateTime.Now.Hour < 12 ? 'A' : 'P';
+                int hour = DateTime.Now.Hour;
 
-            else if (span.TotalMinutes < 100)
-                CurrentCommand = new MicroViewCommand(span.TotalMinutes, 'M');
+                if (DateTime.Now.Second % 10 > 5)
+                {
+                    hour %= 12;
 
-            else if (span.TotalHours < 100)
-                CurrentCommand = new MicroViewCommand(span.TotalHours, 'H');
+                    if (hour == 0)
+                        hour = 12;
+                }
 
+                //                                                        v Cheat to make offset display work
+                CurrentCommand = new MicroViewCommand(hour + DateTime.Now.Second / 60f, amPm);
+                SecondaryCommand = new MicroViewCommand(DateTime.Now.Minute, amPm);
+            }
             else
-                CurrentCommand = new MicroViewCommand(span.TotalDays, 'D');
+            {
+                if (span.TotalSeconds < 100)
+                    CurrentCommand = new MicroViewCommand(span.TotalSeconds, ' ');
+
+                else if (span.TotalMinutes < 100)
+                    CurrentCommand = new MicroViewCommand(span.TotalMinutes, 'M');
+
+                else if (span.TotalHours < 100)
+                    CurrentCommand = new MicroViewCommand(span.TotalHours, 'H');
+
+                else
+                    CurrentCommand = new MicroViewCommand(span.TotalDays, 'D');
+            }
+            
 
 
-            if (!Globals.SecondaryTimer.InFreeMode)
+            if (!Globals.SecondaryTimer.InFreeMode && !Globals.PrimaryTimer.InFreeMode)
             {
                 if (Globals.SecondaryTimer.TimeLeft.TotalSeconds < 100)
                     SecondaryCommand = new MicroViewCommand(Globals.SecondaryTimer.TimeLeft.TotalSeconds, ' ');
@@ -172,7 +193,7 @@ namespace NewTimer.FormParts
                 else
                     SecondaryCommand = new MicroViewCommand(Globals.SecondaryTimer.TimeLeft.TotalDays, 'D');
             }
-            else
+            else if (!Globals.PrimaryTimer.InFreeMode)
             {
                 SecondaryCommand = new MicroViewCommand(100, ' '); //100 just to make sure it isn't displayed
             }

@@ -142,6 +142,14 @@ namespace NewTimer.FormParts
 
             else
                 CurrentCommand = new MicroViewCommand(span.TotalDays, 'D');
+
+
+
+            if (isOvertime)
+                BackColor = Globals.GlobalOvertimeColor;
+
+            else
+                BackColor = Globals.GlobalBackColor;
         }
 
         public struct MicroViewCommand

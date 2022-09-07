@@ -23,21 +23,15 @@ namespace NewTimer.FormParts
         private const float FONT_SIZE          =  40f;
         private const float SMALL_FONT_SIZE    =  14f;
 
-        private MicroViewCommand _currentCommand;
-
         /// <summary>
         /// Gets or sets the information that is currently being rendered
         /// </summary>
-        public MicroViewCommand CurrentCommand
-        {
-            get => _currentCommand;
-            set
-            {
-                _currentCommand = value;
-                Invalidate();
-            }
-        }
+        public MicroViewCommand CurrentCommand { get; set; }
 
+        /// <summary>
+        /// Gets or sets the information that is currently being rendered as a secondary command
+        /// </summary>
+        public MicroViewCommand SecondaryCommand { get; set; }
         public override Size MinimumSize
         {
             get => new Size(PANEL_WIDTH, PANEL_HEIGHT);
@@ -83,6 +77,7 @@ namespace NewTimer.FormParts
             string numDisplay;
             bool displayDot;
             char offset;
+            char unit = CurrentCommand.Unit;
 
             if (CurrentCommand.Number >= 100)
             {
@@ -107,13 +102,25 @@ namespace NewTimer.FormParts
 
             }
 
+            if (DateTime.Now.Second % 10 <= 5 && SecondaryCommand.Number < 100)
+            {
+                offset = ' ';
+
+                if (SecondaryCommand.Number >= 10)
+                {
+                    offset = SecondaryCommand.Number.ToString("00", CultureInfo.InvariantCulture)[0];
+                }
+
+                unit = SecondaryCommand.Number.ToString("00", CultureInfo.InvariantCulture)[1];
+            }
+
             e.Graphics.DrawString("88", DEFAULT_FONT, bgBrush, new Point(0, 0));
             e.Graphics.DrawString("8", SMALL_FONT, bgBrush, new Point(PANEL_WIDTH - 20, PANEL_HEIGHT - 20));
             e.Graphics.DrawString(".",  DEFAULT_FONT, bgBrush, new Point(19, 0));
 
             e.Graphics.DrawString(numDisplay, DEFAULT_FONT, fgBrush, new Point(0, 0));
             e.Graphics.DrawString(offset.ToString(),  SMALL_FONT,   fgBrush, new Point(PANEL_WIDTH - 20, 10));
-            e.Graphics.DrawString(CurrentCommand.Unit.ToString(),  SMALL_FONT,   fgBrush, new Point(PANEL_WIDTH - 20, PANEL_HEIGHT - 20));
+            e.Graphics.DrawString(unit.ToString(),  SMALL_FONT,   fgBrush, new Point(PANEL_WIDTH - 20, PANEL_HEIGHT - 20));
 
 
             if (displayDot)
@@ -151,12 +158,33 @@ namespace NewTimer.FormParts
                 CurrentCommand = new MicroViewCommand(span.TotalDays, 'D');
 
 
+            if (!Globals.SecondaryTimer.InFreeMode)
+            {
+                if (Globals.SecondaryTimer.TimeLeft.TotalSeconds < 100)
+                    SecondaryCommand = new MicroViewCommand(Globals.SecondaryTimer.TimeLeft.TotalSeconds, ' ');
+
+                else if (Globals.SecondaryTimer.TimeLeft.TotalMinutes < 100)
+                    SecondaryCommand = new MicroViewCommand(Globals.SecondaryTimer.TimeLeft.TotalMinutes, 'M');
+
+                else if (Globals.SecondaryTimer.TimeLeft.TotalHours < 100)
+                    SecondaryCommand = new MicroViewCommand(Globals.SecondaryTimer.TimeLeft.TotalHours, 'H');
+
+                else
+                    SecondaryCommand = new MicroViewCommand(Globals.SecondaryTimer.TimeLeft.TotalDays, 'D');
+            }
+            else
+            {
+                SecondaryCommand = new MicroViewCommand(100, ' '); //100 just to make sure it isn't displayed
+            }
+
 
             if (isOvertime)
                 BackColor = Globals.GlobalOvertimeColor;
 
             else
                 BackColor = Globals.GlobalBackColor;
+
+            Invalidate();
         }
 
         public struct MicroViewCommand

@@ -78,6 +78,7 @@ namespace NewTimer.FormParts
             base.OnPaint(e);
 
             Brush fgBrush = new SolidBrush(ForeColor);
+            Brush bgBrush = new SolidBrush(Color.FromArgb(0x5F, Color.Black));
 
             string numDisplay;
             bool displayDot;
@@ -106,14 +107,20 @@ namespace NewTimer.FormParts
 
             }
 
+            e.Graphics.DrawString("88", DEFAULT_FONT, bgBrush, new Point(0, 0));
+            e.Graphics.DrawString("8", SMALL_FONT, bgBrush, new Point(PANEL_WIDTH - 20, PANEL_HEIGHT - 20));
+            e.Graphics.DrawString(".",  DEFAULT_FONT, bgBrush, new Point(19, 0));
+
             e.Graphics.DrawString(numDisplay, DEFAULT_FONT, fgBrush, new Point(0, 0));
             e.Graphics.DrawString(offset.ToString(),  SMALL_FONT,   fgBrush, new Point(PANEL_WIDTH - 20, 10));
             e.Graphics.DrawString(CurrentCommand.Unit.ToString(),  SMALL_FONT,   fgBrush, new Point(PANEL_WIDTH - 20, PANEL_HEIGHT - 20));
 
+
             if (displayDot)
-                e.Graphics.DrawString(".",  DEFAULT_FONT, fgBrush, new Point(19, 0));
+                e.Graphics.DrawString(".", DEFAULT_FONT, fgBrush, new Point(19, 0));
 
             fgBrush.Dispose();
+            bgBrush.Dispose();
 
             char getOffsetMarker(double d)
             {

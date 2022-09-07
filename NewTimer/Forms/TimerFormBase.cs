@@ -28,6 +28,16 @@ namespace NewTimer.Forms
         private Timer _updateTimer = new Timer();
 
         /// <summary>
+        /// The micro view control
+        /// </summary>
+        private MicroView _microView;
+
+        /// <summary>
+        /// Gets or sets the location the window will restore to when micro mode is disabled
+        /// </summary>
+        private Point _macroViewPosition;
+
+        /// <summary>
         /// The last minute a taskbar/statusbar icon was created. Used to prevent creating a new taskbar icon every frame
         /// </summary>
         private int _lastMinuteIconWasCreated = 61;
@@ -69,6 +79,11 @@ namespace NewTimer.Forms
         public TimerFormBase()
         {
             InitializeComponent();
+
+            //Create micro view in the background
+            _microView = new MicroView();
+            Controls.Add(_microView);
+
 
             //Normalize the colors of the form to comply with global settings
             BackColor = Globals.GlobalBackColor;
@@ -522,6 +537,7 @@ namespace NewTimer.Forms
                         "Shift + Page Up: Next color scheme",
                         "Shift + Page Dn: Previous color scheme",
                         "--------",
+                        "F9: Toggle Micro Mode",
                         "F10: Collapse/Uncollapse",
                         "F11: Translucency Mode",
                         "F12: Console",
@@ -549,6 +565,74 @@ namespace NewTimer.Forms
                     ), "Keyboard Shortcuts");
                     return;
 
+                case Keys.F9:
+                    //Enable micro mode
+                    if (tabs.Visible)
+                    {
+                        tabs.SelectedIndex = 1; //Just to make sure the size isn't overridden by the Digi tab
+                        tabs.Visible = false;
+                        FormBorderStyle = FormBorderStyle.None;
+                        Size = _microView.Size;
+                        _macroViewPosition = Location;
+
+                        //Figure out where to pin the control based on how close it is to the different corners of the screen
+                        Screen containingScreen = Screen.FromControl(this);
+
+                        int distanceFromLeft  = Math.Abs(Bounds.Left - containingScreen.WorkingArea.Left);
+                        int distanceFromRight = Math.Abs(Bounds.Right - containingScreen.WorkingArea.Right);
+                        int distanceFromTop = Math.Abs(Bounds.Top - containingScreen.WorkingArea.Top);
+                        int distanceFromBottom = Math.Abs(Bounds.Bottom - containingScreen.WorkingArea.Bottom);
+
+                        if (distanceFromLeft < distanceFromRight)
+                        {
+                            //Closest to top left
+                            if (distanceFromTop < distanceFromBottom)
+                            {
+                                Location = containingScreen.WorkingArea.Location;
+                            }
+
+                            //Closest to bottom left
+                            else
+                            {
+                                Location = new Point(
+                                    x: containingScreen.WorkingArea.Left,
+                                    y: containingScreen.WorkingArea.Bottom - Height
+                                );
+                            }
+                        }
+                        else
+                        {
+                            //Closest to top right
+                            if (distanceFromTop < distanceFromBottom)
+                            {
+                                Location = new Point(
+                                    x: containingScreen.WorkingArea.Right - Width,
+                                    y: containingScreen.WorkingArea.Top
+                                );
+                            }
+
+                            //Closest to bottom right
+                            else
+                            {
+                                Location = new Point(
+                                    x: containingScreen.WorkingArea.Right - Width,
+                                    y: containingScreen.WorkingArea.Bottom - Height
+                                );
+                            }
+                        }
+                    }
+
+                    //Disable micro mode
+                    else
+                    {
+                        tabs.Visible = true;
+                        FormBorderStyle = FormBorderStyle.Sizable;
+                        tabs.SelectedIndex = 0;
+                        Location = _macroViewPosition;
+                    }
+
+                    break;
+
                 case Keys.F11:
                     ToggleWindowTranslucencyMode();
                     break;
@@ -560,7 +644,6 @@ namespace NewTimer.Forms
 
                     if (tabs.SelectedIndex == 4)
                     {
-
                         //Abusing the fact that tab 0 forces a certain size
                         int lastHeigh = Height;
                         tabs.SelectedIndex = 0;

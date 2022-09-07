@@ -65,6 +65,9 @@
     <Compile Include="FormParts\ClockControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
+    <Compile Include="FormParts\MicroView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="FormParts\Setup\KnobDual.cs">
       <SubType>UserControl</SubType>
     </Compile>

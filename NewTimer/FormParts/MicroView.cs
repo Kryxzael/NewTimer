@@ -64,6 +64,13 @@ namespace NewTimer.FormParts
         {
             Size = new Size(PANEL_WIDTH, PANEL_HEIGHT);
             DoubleBuffered = true;
+            ForeColor = Globals.PrimaryTimer.ColorScheme.GenerateOne(Globals.MasterRandom);
+        }
+
+        protected override void OnClick(EventArgs e)
+        {
+            base.OnClick(e);
+            ForeColor = Globals.PrimaryTimer.ColorScheme.GenerateOne(Globals.MasterRandom);
         }
 
         protected override void OnPaint(PaintEventArgs e)

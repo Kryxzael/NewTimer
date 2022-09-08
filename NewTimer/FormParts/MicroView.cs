@@ -76,47 +76,26 @@ namespace NewTimer.FormParts
 
             string numDisplay;
             bool displayDot;
+            bool displaySecondaryDot = false;
             char offset;
             char unit = CurrentCommand.Unit;
 
-            if (CurrentCommand.Number >= 100)
-            {
-                numDisplay = "--";
-                displayDot = false;
-                offset = ' ';
-            }
-            else if (CurrentCommand.Number > 10)
-            {
-                numDisplay = Math.Floor(CurrentCommand.Number).ToString("00", CultureInfo.InvariantCulture);
-                displayDot = false;
-                offset = getOffsetMarker(CurrentCommand.Number);
-            }
-            else
-            {
-                //ToString was annoying with rounding instead of flooring, so doing this instead
-                int num = (int)(CurrentCommand.Number * 10);
-
-                numDisplay = num.ToString("00", CultureInfo.InvariantCulture);
-                displayDot = true;
-                offset = getOffsetMarker(CurrentCommand.Number * 10);
-
-            }
+            getDisplaySettings(CurrentCommand.Number, out numDisplay, out displayDot, out offset);
 
             if (DateTime.Now.Second % 10 <= 5 && SecondaryCommand.Number < 100)
             {
-                offset = ' ';
+                string secondaryTimerDisplay;
+                getDisplaySettings(SecondaryCommand.Number, out secondaryTimerDisplay, out displaySecondaryDot, out _);
 
-                if (SecondaryCommand.Number >= 10)
-                {
-                    offset = Math.Floor(SecondaryCommand.Number).ToString("00", CultureInfo.InvariantCulture)[0];
-                }
-
-                unit = Math.Floor(SecondaryCommand.Number).ToString("00", CultureInfo.InvariantCulture)[1];
+                offset = secondaryTimerDisplay[0];
+                unit = secondaryTimerDisplay[1];
             }
 
             e.Graphics.DrawString("88", DEFAULT_FONT, bgBrush, new Point(0, 0));
             e.Graphics.DrawString("8", SMALL_FONT, bgBrush, new Point(PANEL_WIDTH - 20, PANEL_HEIGHT - 20));
             e.Graphics.DrawString(".",  DEFAULT_FONT, bgBrush, new Point(19, 0));
+            e.Graphics.DrawString(".", SMALL_FONT, bgBrush, new Point(PANEL_WIDTH - 20, 15));
+
 
             e.Graphics.DrawString(numDisplay, DEFAULT_FONT, fgBrush, new Point(0, 0));
             e.Graphics.DrawString(offset.ToString(),  SMALL_FONT,   fgBrush, new Point(PANEL_WIDTH - 20, 10));
@@ -125,6 +104,9 @@ namespace NewTimer.FormParts
 
             if (displayDot)
                 e.Graphics.DrawString(".", DEFAULT_FONT, fgBrush, new Point(19, 0));
+
+            if (displaySecondaryDot)
+                e.Graphics.DrawString(".", SMALL_FONT, fgBrush, new Point(PANEL_WIDTH - 20, 15));
 
             fgBrush.Dispose();
             bgBrush.Dispose();
@@ -140,6 +122,31 @@ namespace NewTimer.FormParts
                     return '-';
 
                 return '^';
+            }
+
+            void getDisplaySettings(double input, out string output, out bool showDot, out char offsetOutput)
+            {
+                if (input >= 100)
+                {
+                    output = "--";
+                    showDot = false;
+                    offsetOutput = ' ';
+                }
+                else if (input > 10)
+                {
+                    output = Math.Floor(input).ToString("00", CultureInfo.InvariantCulture);
+                    showDot = false;
+                    offsetOutput = getOffsetMarker(input);
+                }
+                else
+                {
+                    //ToString was annoying with rounding instead of flooring, so doing this instead
+                    int num = (int)(input * 10);
+
+                    output = num.ToString("00", CultureInfo.InvariantCulture);
+                    showDot = true;
+                    offsetOutput = getOffsetMarker(input * 10);
+                }
             }
         }
 

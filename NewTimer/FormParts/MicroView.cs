@@ -80,12 +80,12 @@ namespace NewTimer.FormParts
             char offset;
             char unit = CurrentCommand.Unit;
 
-            getDisplaySettings(CurrentCommand.Number, out numDisplay, out displayDot, out offset);
+            getDisplaySettings(CurrentCommand.Number, CurrentCommand.AllowDecimals, out numDisplay, out displayDot, out offset);
 
             if (DateTime.Now.Second % 10 <= 5 && SecondaryCommand.Number < 100)
             {
                 string secondaryTimerDisplay;
-                getDisplaySettings(SecondaryCommand.Number, out secondaryTimerDisplay, out displaySecondaryDot, out _);
+                getDisplaySettings(SecondaryCommand.Number, CurrentCommand.AllowDecimals, out secondaryTimerDisplay, out displaySecondaryDot, out _);
 
                 offset = secondaryTimerDisplay[0];
                 unit = secondaryTimerDisplay[1];
@@ -124,7 +124,7 @@ namespace NewTimer.FormParts
                 return '^';
             }
 
-            void getDisplaySettings(double input, out string output, out bool showDot, out char offsetOutput)
+            void getDisplaySettings(double input, bool allowDecimals, out string output, out bool showDot, out char offsetOutput)
             {
                 if (input >= 100)
                 {
@@ -138,7 +138,7 @@ namespace NewTimer.FormParts
                     showDot = false;
                     offsetOutput = getOffsetMarker(input);
                 }
-                else
+                else if (allowDecimals)
                 {
                     //ToString was annoying with rounding instead of flooring, so doing this instead
                     int num = (int)(input * 10);
@@ -146,6 +146,12 @@ namespace NewTimer.FormParts
                     output = num.ToString("00", CultureInfo.InvariantCulture);
                     showDot = true;
                     offsetOutput = getOffsetMarker(input * 10);
+                }
+                else
+                {
+                    output = " " + Math.Floor(input).ToString("0", CultureInfo.InvariantCulture);
+                    showDot = false;
+                    offsetOutput = getOffsetMarker(input);
                 }
             }
         }
@@ -168,29 +174,29 @@ namespace NewTimer.FormParts
                 if (hour >= 10)
                 {
                     //                                                        v Cheat to make offset display work
-                    CurrentCommand = new MicroViewCommand(hour + DateTime.Now.Second / 60f, amPm);
+                    CurrentCommand = new MicroViewCommand(hour + DateTime.Now.Second / 60f, amPm, false);
                 }
                 else
                 {
-                    CurrentCommand = new MicroViewCommand(hour + DateTime.Now.Second / 600f, amPm);
+                    CurrentCommand = new MicroViewCommand(hour + DateTime.Now.Second / 600f, amPm, false);
                 }
 
                 
-                SecondaryCommand = new MicroViewCommand(DateTime.Now.Minute, amPm);
+                SecondaryCommand = new MicroViewCommand(DateTime.Now.Minute, amPm, false);
             }
             else
             {
                 if (span.TotalSeconds < 100)
-                    CurrentCommand = new MicroViewCommand(span.TotalSeconds, ' ');
+                    CurrentCommand = new MicroViewCommand(span.TotalSeconds, ' ', false);
 
                 else if (span.TotalMinutes < 100)
-                    CurrentCommand = new MicroViewCommand(span.TotalMinutes, 'M');
+                    CurrentCommand = new MicroViewCommand(span.TotalMinutes, 'M', true);
 
                 else if (span.TotalHours < 100)
-                    CurrentCommand = new MicroViewCommand(span.TotalHours, 'H');
+                    CurrentCommand = new MicroViewCommand(span.TotalHours, 'H', true);
 
                 else
-                    CurrentCommand = new MicroViewCommand(span.TotalDays, 'D');
+                    CurrentCommand = new MicroViewCommand(span.TotalDays, 'D', true);
             }
             
 
@@ -198,20 +204,20 @@ namespace NewTimer.FormParts
             if (!Globals.SecondaryTimer.InFreeMode && !Globals.PrimaryTimer.InFreeMode)
             {
                 if (Globals.SecondaryTimer.TimeLeft.TotalSeconds < 100)
-                    SecondaryCommand = new MicroViewCommand(Globals.SecondaryTimer.TimeLeft.TotalSeconds, ' ');
+                    SecondaryCommand = new MicroViewCommand(Globals.SecondaryTimer.TimeLeft.TotalSeconds, ' ', false);
 
                 else if (Globals.SecondaryTimer.TimeLeft.TotalMinutes < 100)
-                    SecondaryCommand = new MicroViewCommand(Globals.SecondaryTimer.TimeLeft.TotalMinutes, 'M');
+                    SecondaryCommand = new MicroViewCommand(Globals.SecondaryTimer.TimeLeft.TotalMinutes, 'M', true);
 
                 else if (Globals.SecondaryTimer.TimeLeft.TotalHours < 100)
-                    SecondaryCommand = new MicroViewCommand(Globals.SecondaryTimer.TimeLeft.TotalHours, 'H');
+                    SecondaryCommand = new MicroViewCommand(Globals.SecondaryTimer.TimeLeft.TotalHours, 'H', true);
 
                 else
-                    SecondaryCommand = new MicroViewCommand(Globals.SecondaryTimer.TimeLeft.TotalDays, 'D');
+                    SecondaryCommand = new MicroViewCommand(Globals.SecondaryTimer.TimeLeft.TotalDays, 'D', true);
             }
             else if (!Globals.PrimaryTimer.InFreeMode)
             {
-                SecondaryCommand = new MicroViewCommand(100, ' '); //100 just to make sure it isn't displayed
+                SecondaryCommand = new MicroViewCommand(100, ' ', false); //100 just to make sure it isn't displayed
             }
 
 
@@ -228,11 +234,13 @@ namespace NewTimer.FormParts
         {
             public double Number { get; }
             public char Unit { get; }
+            public bool AllowDecimals { get; }
 
-            public MicroViewCommand(double number, char unit)
+            public MicroViewCommand(double number, char unit, bool allowDecimals)
             {
                 Number = Math.Abs(number);
                 Unit = unit;
+                AllowDecimals = allowDecimals;
             }
         }
     }

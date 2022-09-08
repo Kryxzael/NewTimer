@@ -108,10 +108,10 @@ namespace NewTimer.FormParts
 
                 if (SecondaryCommand.Number >= 10)
                 {
-                    offset = SecondaryCommand.Number.ToString("00", CultureInfo.InvariantCulture)[0];
+                    offset = Math.Floor(SecondaryCommand.Number).ToString("00", CultureInfo.InvariantCulture)[0];
                 }
 
-                unit = SecondaryCommand.Number.ToString("00", CultureInfo.InvariantCulture)[1];
+                unit = Math.Floor(SecondaryCommand.Number).ToString("00", CultureInfo.InvariantCulture)[1];
             }
 
             e.Graphics.DrawString("88", DEFAULT_FONT, bgBrush, new Point(0, 0));

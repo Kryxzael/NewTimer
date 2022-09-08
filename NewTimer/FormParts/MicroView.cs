@@ -85,14 +85,14 @@ namespace NewTimer.FormParts
             if (DateTime.Now.Second % 10 <= 5 && SecondaryCommand.Number < 100)
             {
                 string secondaryTimerDisplay;
-                getDisplaySettings(SecondaryCommand.Number, CurrentCommand.AllowDecimals, out secondaryTimerDisplay, out displaySecondaryDot, out _);
+                getDisplaySettings(SecondaryCommand.Number, SecondaryCommand.AllowDecimals, out secondaryTimerDisplay, out displaySecondaryDot, out _);
 
                 offset = secondaryTimerDisplay[0];
                 unit = secondaryTimerDisplay[1];
             }
 
-            e.Graphics.DrawString("88", DEFAULT_FONT, bgBrush, new Point(0, 0));
-            e.Graphics.DrawString("8", SMALL_FONT, bgBrush, new Point(PANEL_WIDTH - 20, PANEL_HEIGHT - 20));
+            e.Graphics.DrawString("@@", DEFAULT_FONT, bgBrush, new Point(0, 0));
+            e.Graphics.DrawString("@", SMALL_FONT, bgBrush, new Point(PANEL_WIDTH - 20, PANEL_HEIGHT - 20));
             e.Graphics.DrawString(".",  DEFAULT_FONT, bgBrush, new Point(19, 0));
             e.Graphics.DrawString(".", SMALL_FONT, bgBrush, new Point(PANEL_WIDTH - 20, 15));
 

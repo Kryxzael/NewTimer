@@ -172,7 +172,7 @@ namespace NewTimer.FormParts
                     showDot = false;
                     offsetOutput = ' ';
                 }
-                else if (input > 10)
+                else if (input >= 10)
                 {
                     output = Math.Floor(input).ToString("00", CultureInfo.InvariantCulture);
                     showDot = false;

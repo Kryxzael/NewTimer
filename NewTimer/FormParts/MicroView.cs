@@ -217,17 +217,8 @@ namespace NewTimer.FormParts
                         hour = 12;
                 }
 
-                if (hour >= 10)
-                {
-                    //                                                        v Cheat to make offset display work
-                    CurrentCommand = new MicroViewCommand(hour + DateTime.Now.Second / 60f, amPm, false);
-                }
-                else
-                {
-                    CurrentCommand = new MicroViewCommand(hour + DateTime.Now.Second / 600f, amPm, false);
-                }
-
-                
+                //                                                        v Cheat to make offset display work
+                CurrentCommand   = new MicroViewCommand(hour + DateTime.Now.Second / 60f, amPm, false);
                 SecondaryCommand = new MicroViewCommand(DateTime.Now.Minute, amPm, false);
             }
             else

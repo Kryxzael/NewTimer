@@ -1,4 +1,7 @@
 ﻿using CleanNodeTree;
+
+using NewTimer.ThemedColors;
+
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -22,6 +25,36 @@ namespace NewTimer.Forms
 
             //Set the hour knob to target the next hour
             knbHour.Value = (DateTime.Now.Hour + 1) % 24;
+
+            /*
+             * Load color schemes
+             */
+            BackColor = Globals.GlobalBackColor;
+            ForeColor = Globals.GlobalForeColor;
+
+            tabTime.BackColor = Globals.GlobalBackColor;
+            tabTime.ForeColor = Globals.GlobalForeColor;
+
+            tabDuration.BackColor = Globals.GlobalBackColor;
+            tabDuration.ForeColor = Globals.GlobalForeColor;
+
+            knbHour.CircleTrackColor = new ThemedColor(Color.White, Color.Black);
+            knbMin.CircleTrackColor = new ThemedColor(Color.White, Color.Black);
+            knbSec.CircleTrackColor = new ThemedColor(Color.White, Color.Black);
+            knbDay.CircleTrackColor = new ThemedColor(Color.White, Color.Black);
+            knbMonth.CircleTrackColor = new ThemedColor(Color.White, Color.Black);
+            knbDurHour.CircleTrackColor = new ThemedColor(Color.White, Color.Black);
+            knbDurMin.CircleTrackColor = new ThemedColor(Color.White, Color.Black);
+            knbDurSec.CircleTrackColor = new ThemedColor(Color.White, Color.Black);
+
+            knbHour.ForeColor = Globals.HoursColor;
+            knbMin.ForeColor = Globals.MinutesColor;
+            knbSec.ForeColor = Globals.SecondsColor;
+            knbDay.ForeColor = Globals.DaysColor;
+            knbMonth.ForeColor = Globals.TextOnlyColor;
+            knbDurHour.ForeColor = Globals.HoursColor;
+            knbDurMin.ForeColor = Globals.MinutesColor;
+            knbDurSec.ForeColor = Globals.SecondsColor;
 
             /*
              * Set up event handlers

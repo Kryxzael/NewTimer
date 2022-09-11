@@ -29,16 +29,47 @@ namespace NewTimer.Forms.Bar
 
             FullFracM.ForeColor = Globals.GlobalForeColor;
             FullFracM.ForeColor = Globals.GlobalForeColor;
+        }
+
+        /// <summary>
+        /// Handler: Updates contents
+        /// </summary>
+        /// <param name="span"></param>
+        /// <param name="isOvertime"></param>
+        public void OnCountdownTick(TimeSpan span, TimeSpan secondSpan, bool isOvertime)
+        {
+            /*
+             * Set fore colors
+             */
+            //Main display
+            FullD.ForeColor = Globals.GlobalForeColor;
+            FullH.ForeColor = Globals.GlobalForeColor;
+            FullM.ForeColor = Globals.GlobalForeColor;
+            FullS.ForeColor = Globals.GlobalForeColor;
+
+            //Integer portions of total hours, minutes and seconds
+            FullTotalH.ForeColor = Globals.GlobalForeColor;
+            FullTotalM.ForeColor = Globals.GlobalForeColor;
+            FullTotalS.ForeColor = Globals.GlobalForeColor;
+
+            //Fraction portions of total hours and minutes
+            FullFracH.ForeColor = Globals.GlobalForeColor;
+            FullFracM.ForeColor = Globals.GlobalForeColor;
+
+            //Headers
+            lblTotalHours.ForeColor = Globals.GlobalForeColor;
+            lblTotalMinutes.ForeColor = Globals.GlobalForeColor;
+            lblTotalSeconds.ForeColor = Globals.GlobalForeColor;
 
             /*
-             * Initialize dynamic fill colors
+             * Set dynamic fill colors
              */
 
             //Main display
-            FullD.HighlightColor = ColorTranslator.FromHtml("#18A32A");
-            FullH.HighlightColor = ColorTranslator.FromHtml("#ff8888");
-            FullM.HighlightColor = ColorTranslator.FromHtml("#88ccff");
-            FullS.HighlightColor = ColorTranslator.FromHtml("#ffdd88");
+            FullD.HighlightColor = Globals.DaysColor;
+            FullH.HighlightColor = Globals.HoursColor;
+            FullM.HighlightColor = Globals.MinutesColor;
+            FullS.HighlightColor = Globals.SecondsColor;
 
             //Integer portions of total hours, minutes and seconds
             FullTotalH.HighlightColor = FullH.HighlightColor;
@@ -67,15 +98,7 @@ namespace NewTimer.Forms.Bar
             //Fraction portions of total hours and minutes
             FullFracH.LeadingZerosColor = Globals.GlobalGrayedColor;
             FullFracM.LeadingZerosColor = Globals.GlobalGrayedColor;
-        }
 
-        /// <summary>
-        /// Handler: Updates contents
-        /// </summary>
-        /// <param name="span"></param>
-        /// <param name="isOvertime"></param>
-        public void OnCountdownTick(TimeSpan span, TimeSpan secondSpan, bool isOvertime)
-        {
             /*
              * Sets the text
              */

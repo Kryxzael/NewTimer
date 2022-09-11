@@ -28,9 +28,9 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.label11 = new System.Windows.Forms.Label();
-            this.label10 = new System.Windows.Forms.Label();
-            this.label9 = new System.Windows.Forms.Label();
+            this.lblTotalMinutes = new System.Windows.Forms.Label();
+            this.lblTotalHours = new System.Windows.Forms.Label();
+            this.lblTotalSeconds = new System.Windows.Forms.Label();
             this.timerBar1 = new NewTimer.FormParts.TimerBar();
             this.FullD = new NewTimer.FormParts.LabelGrayedLeadingZeros();
             this.overwatchBar2 = new NewTimer.FormParts.TimerBar();
@@ -44,39 +44,41 @@
             this.FullTotalS = new NewTimer.FormParts.LabelGrayedLeadingZeros();
             this.SuspendLayout();
             // 
-            // label11
+            // lblTotalMinutes
             // 
-            this.label11.AutoSize = true;
-            this.label11.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(221)))), ((int)(((byte)(221)))), ((int)(((byte)(221)))));
-            this.label11.Location = new System.Drawing.Point(269, 57);
-            this.label11.Name = "label11";
-            this.label11.Size = new System.Drawing.Size(44, 13);
-            this.label11.TabIndex = 21;
-            this.label11.Text = "Minutes";
+            this.lblTotalMinutes.AutoSize = true;
+            this.lblTotalMinutes.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(221)))), ((int)(((byte)(221)))), ((int)(((byte)(221)))));
+            this.lblTotalMinutes.Location = new System.Drawing.Point(269, 57);
+            this.lblTotalMinutes.Name = "lblTotalMinutes";
+            this.lblTotalMinutes.Size = new System.Drawing.Size(44, 13);
+            this.lblTotalMinutes.TabIndex = 21;
+            this.lblTotalMinutes.Text = "Minutes";
             // 
-            // label10
+            // lblTotalHours
             // 
-            this.label10.AutoSize = true;
-            this.label10.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(221)))), ((int)(((byte)(221)))), ((int)(((byte)(221)))));
-            this.label10.Location = new System.Drawing.Point(-1, 56);
-            this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(35, 13);
-            this.label10.TabIndex = 20;
-            this.label10.Text = "Hours";
+            this.lblTotalHours.AutoSize = true;
+            this.lblTotalHours.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(221)))), ((int)(((byte)(221)))), ((int)(((byte)(221)))));
+            this.lblTotalHours.Location = new System.Drawing.Point(-1, 56);
+            this.lblTotalHours.Name = "lblTotalHours";
+            this.lblTotalHours.Size = new System.Drawing.Size(35, 13);
+            this.lblTotalHours.TabIndex = 20;
+            this.lblTotalHours.Text = "Hours";
             // 
-            // label9
+            // lblTotalSeconds
             // 
-            this.label9.AutoSize = true;
-            this.label9.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(221)))), ((int)(((byte)(221)))), ((int)(((byte)(221)))));
-            this.label9.Location = new System.Drawing.Point(131, 27);
-            this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(49, 13);
-            this.label9.TabIndex = 19;
-            this.label9.Text = "Seconds";
+            this.lblTotalSeconds.AutoSize = true;
+            this.lblTotalSeconds.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(221)))), ((int)(((byte)(221)))), ((int)(((byte)(221)))));
+            this.lblTotalSeconds.Location = new System.Drawing.Point(131, 27);
+            this.lblTotalSeconds.Name = "lblTotalSeconds";
+            this.lblTotalSeconds.Size = new System.Drawing.Size(49, 13);
+            this.lblTotalSeconds.TabIndex = 19;
+            this.lblTotalSeconds.Text = "Seconds";
             // 
             // timerBar1
             // 
             this.timerBar1.BarMargin = 0;
+            this.timerBar1.DrawHatched = true;
+            this.timerBar1.DrawHatchedOverflow = true;
             this.timerBar1.FillColor = System.Drawing.Color.Empty;
             this.timerBar1.Interval = 1;
             this.timerBar1.Location = new System.Drawing.Point(0, 221);
@@ -109,6 +111,8 @@
             // overwatchBar2
             // 
             this.overwatchBar2.BarMargin = 0;
+            this.overwatchBar2.DrawHatched = true;
+            this.overwatchBar2.DrawHatchedOverflow = true;
             this.overwatchBar2.FillColor = System.Drawing.Color.Empty;
             this.overwatchBar2.Interval = 1;
             this.overwatchBar2.Location = new System.Drawing.Point(0, 170);
@@ -264,9 +268,9 @@
             this.Controls.Add(this.overwatchBar2);
             this.Controls.Add(this.FullS);
             this.Controls.Add(this.FullH);
-            this.Controls.Add(this.label11);
-            this.Controls.Add(this.label10);
-            this.Controls.Add(this.label9);
+            this.Controls.Add(this.lblTotalMinutes);
+            this.Controls.Add(this.lblTotalHours);
+            this.Controls.Add(this.lblTotalSeconds);
             this.Controls.Add(this.FullFracM);
             this.Controls.Add(this.FullFracH);
             this.Controls.Add(this.FullTotalM);
@@ -282,9 +286,9 @@
 
         #endregion
 
-        private System.Windows.Forms.Label label11;
-        private System.Windows.Forms.Label label10;
-        private System.Windows.Forms.Label label9;
+        private System.Windows.Forms.Label lblTotalMinutes;
+        private System.Windows.Forms.Label lblTotalHours;
+        private System.Windows.Forms.Label lblTotalSeconds;
         private FormParts.LabelGrayedLeadingZeros FullFracM;
         private FormParts.LabelGrayedLeadingZeros FullFracH;
         private FormParts.LabelGrayedLeadingZeros FullTotalS;

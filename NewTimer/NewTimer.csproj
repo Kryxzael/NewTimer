@@ -162,6 +162,10 @@
     <Compile Include="Schemes\SchemeSingle.cs" />
     <Compile Include="TaskbarIconHelper.cs" />
     <Compile Include="TaskbarUtility.cs" />
+    <Compile Include="ThemedColors\ThemedColor.cs" />
+    <Compile Include="ThemedColors\ThemedColorContainer.cs" />
+    <Compile Include="ThemedColors\ThemedPen.cs" />
+    <Compile Include="ThemedColors\ThemedSolidBrush.cs" />
     <Compile Include="TimerConfig.cs" />
     <EmbeddedResource Include="FormParts\Setup\Knob.resx">
       <DependentUpon>Knob.cs</DependentUpon>

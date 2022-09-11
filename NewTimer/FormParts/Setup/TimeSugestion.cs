@@ -40,6 +40,7 @@ namespace NewTimer.FormParts.Setup
         {
             Text = text;
             GetTarget = getTarget;
+            ForeColor = Globals.GlobalForeColor.Dark;
         }
 
         protected override void OnPaint(PaintEventArgs e)

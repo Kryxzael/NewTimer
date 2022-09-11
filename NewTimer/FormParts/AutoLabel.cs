@@ -1,4 +1,6 @@
-﻿using System;
+﻿using NewTimer.ThemedColors;
+
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
@@ -17,6 +19,11 @@ namespace NewTimer.FormParts
         /// Gets or sets the delegate that will get the text for this label
         /// </summary>
         public Func<string> GetText { get; set; }
+
+        /// <summary>
+        /// Gets or sets the themed color to use as a fore color
+        /// </summary>
+        public ThemedColor ForeThemedColor { get; set; }
 
         /// <summary>
         /// Gets the text of this autolabel
@@ -40,6 +47,7 @@ namespace NewTimer.FormParts
         /// <param name="e"></param>
         protected override void OnPaint(PaintEventArgs e)
         {
+            ForeColor = ForeThemedColor;
             base.OnPaint(e);
 
             if (_requestsResize)

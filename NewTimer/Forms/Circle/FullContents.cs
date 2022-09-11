@@ -24,6 +24,11 @@ namespace NewTimer.Forms.Circle
         {
             overwatchCircle2.BackColor = Globals.GlobalBackColor;
 
+            foreach (Control i in Controls)
+            {
+                i.ForeColor = Globals.GlobalForeColor;
+            }
+
             FullH.Text = Globals.PrimaryTimer.TimeLeft.Hours.ToString("00");
             FullM.Text = Globals.PrimaryTimer.TimeLeft.Minutes.ToString("00");
             FullS.Text = Globals.PrimaryTimer.TimeLeft.Seconds.ToString("00");

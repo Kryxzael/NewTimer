@@ -7,8 +7,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+
 using Bars;
+
 using NewTimer.Forms;
+using NewTimer.ThemedColors;
 
 namespace NewTimer
 {
@@ -23,12 +26,12 @@ namespace NewTimer
         public static bool Use24HourSelector { get; set; } = false;
 
         /// <summary>
-        /// Gets the current primary timer. The primary and secondary timers can be swaped with SwapTimers()
+        /// Gets the current primary timer. The primary and secondary timers can be swapped with SwapTimers()
         /// </summary>
         public static TimerConfig PrimaryTimer { get; private set; } = new TimerConfig();
 
         /// <summary>
-        /// Gets the current secondary timer. The primary and secondary timers can be swaped with SwapTimers()
+        /// Gets the current secondary timer. The primary and secondary timers can be swapped with SwapTimers()
         /// </summary>
         public static TimerConfig SecondaryTimer { get; private set; } = new TimerConfig();
 
@@ -49,27 +52,52 @@ namespace NewTimer
         /// <summary>
         /// The color that will be used as the text color for the whole application
         /// </summary>
-        public static Color GlobalForeColor { get; } = ColorTranslator.FromHtml("#dddddd");
+        public static ThemedColor GlobalForeColor { get; } = new ThemedColor(ColorTranslator.FromHtml("#111"), ColorTranslator.FromHtml("#ddd"));
 
         /// <summary>
         /// The color that will be used as the background color for the whole application
         /// </summary>
-        public static Color GlobalBackColor { get; } = ColorTranslator.FromHtml("#111111");
+        public static ThemedColor GlobalBackColor { get; } = new ThemedColor(ColorTranslator.FromHtml("#ddd"), ColorTranslator.FromHtml("#111"));
 
         /// <summary>
         /// The color that will be used as the background color for the whole application
         /// </summary>
-        public static Color GlobalFreeModeBackColor { get; } = ColorTranslator.FromHtml("#222222");
+        public static ThemedColor GlobalFreeModeBackColor { get; } = new ThemedColor(ColorTranslator.FromHtml("#ada"), ColorTranslator.FromHtml("#112"));
 
         /// <summary>
         /// The color that will be used as the background color for the whole application
         /// </summary>
-        public static Color GlobalOvertimeColor { get; } = ColorTranslator.FromHtml("#330000");
+        public static ThemedColor GlobalOvertimeColor { get; } = new ThemedColor(ColorTranslator.FromHtml("#faa"), ColorTranslator.FromHtml("#300"));
 
         /// <summary>
         /// The color that will be used to gray out text
         /// </summary>
-        public static Color GlobalGrayedColor { get; } = ColorTranslator.FromHtml("#333333");
+        public static ThemedColor GlobalGrayedColor { get; } = new ThemedColor(ColorTranslator.FromHtml("#aaa"), ColorTranslator.FromHtml("#333"));
+
+        /// <summary>
+        /// The color that will be used as fill for day counts
+        /// </summary>
+        public static ThemedColor DaysColor { get; } = new ThemedColor(ColorTranslator.FromHtml("#18A32A"), ColorTranslator.FromHtml("#18A32A"));
+
+        /// <summary>
+        /// The color that will be used as fill for day counts
+        /// </summary>
+        public static ThemedColor HoursColor { get; } = new ThemedColor(ColorTranslator.FromHtml("#c83e3e"), ColorTranslator.FromHtml("#ff8888"));
+
+        /// <summary>
+        /// The color that will be used as fill for hour counts
+        /// </summary>
+        public static ThemedColor MinutesColor { get; } = new ThemedColor(ColorTranslator.FromHtml("#466edd"), ColorTranslator.FromHtml("#88ccff"));
+
+        /// <summary>
+        /// The color that will be used as fill for minute counts
+        /// </summary>
+        public static ThemedColor SecondsColor { get; } = new ThemedColor(ColorTranslator.FromHtml("#6b4f33"), ColorTranslator.FromHtml("#ffdd88"));
+
+        /// <summary>
+        /// The color that will be used as fill for second counts
+        /// </summary>
+        public static ThemedColor TextOnlyColor { get; } = new ThemedColor(ColorTranslator.FromHtml("#8f2bbd"), ColorTranslator.FromHtml("#8f2bbd"));
 
         /*
          * Translucencies

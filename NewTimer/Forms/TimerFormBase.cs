@@ -43,12 +43,6 @@ namespace NewTimer.Forms
         private int _lastMinuteIconWasCreated = 61;
 
         /// <summary>
-        /// Has the overtime's dark red background color already been applied?
-        /// </summary>
-        private bool _overtimeBackColorSet = false;
-        private bool _freeModeBackColorSet = false;
-
-        /// <summary>
         /// The console associated with this window
         /// </summary>
         private UserConsole _console;
@@ -84,10 +78,7 @@ namespace NewTimer.Forms
             _microView = new MicroView();
             Controls.Add(_microView);
 
-
-            //Normalize the colors of the form to comply with global settings
-            BackColor = Globals.GlobalBackColor;
-            ForeColor = Globals.GlobalForeColor;
+            //Let background through
             tabs.BackColor = Color.Transparent;
 
             //Position window to the bottom right corner of the screen
@@ -102,7 +93,6 @@ namespace NewTimer.Forms
             //Various initializations
             InitializeCustomControls();
             InitializeAutoLabels();
-            SetColors();
             KeyPreview = true;
 
             //Initialize the timer
@@ -149,36 +139,35 @@ namespace NewTimer.Forms
         {
             //'Time' panel
             TimeOnlyTime.GetText = () => Globals.PrimaryTimer.InFreeMode ? DateTime.Now.ToLongTimeString() : Globals.PrimaryTimer.RealTimeLeft.ToString("h':'mm':'ss");
+            TimeOnlyTime.ForeThemedColor = Globals.DaysColor;
 
             //'Hours' panel
             HoursOnlyHour.GetText = () => Math.Floor(Globals.PrimaryTimer.TimeLeft.TotalHours).ToString();
             HoursOnlyFraction.GetText = () => "." + Globals.GetDecimals(Globals.PrimaryTimer.TimeLeft.TotalHours, 5).ToString("00000");
             HoursOnlyTitle.GetText = () => Math.Abs(Math.Floor(Globals.PrimaryTimer.TimeLeft.TotalHours)) == 1 ? "hour" : "hours";
+            HoursOnlyHour.ForeThemedColor = Globals.HoursColor;
+            HoursOnlyFraction.ForeThemedColor = Globals.HoursColor;
+            HoursOnlyTitle.ForeThemedColor = Globals.HoursColor;
 
             //'Minutes' panel
             MinutesOnlyMinutes.GetText = () => Math.Floor(Globals.PrimaryTimer.TimeLeft.TotalMinutes).ToString();
             MinutesOnlyFraction.GetText = () => "." + Globals.GetDecimals(Globals.PrimaryTimer.TimeLeft.TotalMinutes, 3).ToString("000");
             MinutesOnlyTitle.GetText = () => Math.Abs(Math.Floor(Globals.PrimaryTimer.TimeLeft.TotalMinutes)) == 1 ? "minute" : "minutes";
+            MinutesOnlyMinutes.ForeThemedColor = Globals.MinutesColor;
+            MinutesOnlyFraction.ForeThemedColor = Globals.MinutesColor;
+            MinutesOnlyTitle.ForeThemedColor = Globals.MinutesColor;
 
             //'Seconds' panel
             SecondsOnlySecond.GetText = () => Math.Floor(Globals.PrimaryTimer.RealTimeLeft.TotalSeconds).ToString();
             SecondsOnlyTitle.GetText = () => Math.Abs(Math.Floor(Globals.PrimaryTimer.RealTimeLeft.TotalSeconds)) == 1 ? "second" : "seconds";
+            SecondsOnlySecond.ForeThemedColor = Globals.SecondsColor;
+            SecondsOnlyTitle.ForeThemedColor = Globals.SecondsColor;
 
             //'Text' panel
             TextOnlyMinute.GetText = () => TaskbarUtility.NumberToWord((int)Math.Floor(Globals.PrimaryTimer.RealTimeLeft.TotalMinutes), true);
             TextOnlySecond.GetText = () => TaskbarUtility.NumberToWord(Globals.PrimaryTimer.TimeLeft.Seconds, true);
-        }
-
-        /// <summary>
-        /// Normalizes the colors of all controls
-        /// </summary>
-        private void SetColors()
-        {
-            foreach (Control i in tabs.Controls)
-            {
-                i.BackColor = Globals.GlobalBackColor;
-                i.ForeColor = Globals.GlobalForeColor;
-            }
+            TextOnlyMinute.ForeThemedColor = Globals.TextOnlyColor;
+            TextOnlySecond.ForeThemedColor = Globals.TextOnlyColor;
         }
 
         /// <summary>
@@ -188,6 +177,29 @@ namespace NewTimer.Forms
         /// <param name="e"></param>
         private void UpdateICountdowns(object sender, EventArgs e)
         {
+            ForeColor = Globals.GlobalForeColor;
+
+            Color newBackColor;
+
+            if (Globals.PrimaryTimer.InFreeMode)
+                newBackColor = Globals.GlobalFreeModeBackColor;
+
+            else if (Globals.PrimaryTimer.Overtime)
+                newBackColor = Globals.GlobalOvertimeColor;
+
+            else
+                newBackColor = Globals.GlobalBackColor;
+
+            if (BackColor != newBackColor)
+            {
+                BackColor = newBackColor;
+                foreach (Control i in tabs.Controls)
+                {
+                    i.BackColor = newBackColor;
+                    i.ForeColor = newBackColor;
+                }
+            }
+
             if (LastInvisibileInputTextUpdateTime != default && (DateTime.Now - LastInvisibileInputTextUpdateTime).TotalSeconds > 2.0)
             {
                 InvisibleInputText                = "";
@@ -321,38 +333,6 @@ namespace NewTimer.Forms
                 //Update icon
                 Icon = TaskbarHelper.CreateIconFromBitmap(pie);
                 pie.Dispose();
-            }
-
-            //Set background
-            if (Globals.PrimaryTimer.InFreeMode && !_freeModeBackColorSet)
-            {
-                foreach (Control i in tabs.Controls)
-                {
-                    i.BackColor = Globals.GlobalFreeModeBackColor;
-                }
-
-                _overtimeBackColorSet = false;
-                _freeModeBackColorSet = true;
-            }
-            else if (Globals.PrimaryTimer.Overtime && !_overtimeBackColorSet)
-            {
-                foreach (Control i in tabs.Controls)
-                {
-                    i.BackColor = Globals.GlobalOvertimeColor;
-                }
-
-                _overtimeBackColorSet = true;
-                _freeModeBackColorSet = false;
-            }
-            else if ((!Globals.PrimaryTimer.Overtime && !Globals.PrimaryTimer.InFreeMode) && (_overtimeBackColorSet || _freeModeBackColorSet))
-            {
-                foreach (Control i in tabs.Controls)
-                {
-                    i.BackColor = Globals.GlobalBackColor;
-                }
-
-                _overtimeBackColorSet = false;
-                _freeModeBackColorSet = false;
             }
         }
 

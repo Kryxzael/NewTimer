@@ -1,4 +1,6 @@
-﻿using System;
+﻿using NewTimer.ThemedColors;
+
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
@@ -20,14 +22,18 @@ namespace NewTimer.Schemes
         /// <returns></returns>
         public override Color GenerateOne(Random rng)
         {
+            ThemedColor dummy = new ThemedColor(Color.White, Color.Black);
+            bool isDarkMode = dummy.Current == Color.Black;
+
             while (true)
             {
+
                 //Generate a candidate and store it and its saturation
                 Color clr = Color.FromArgb(RandByte(rng), RandByte(rng), RandByte(rng));
                 float sat = clr.GetSaturation();
 
-                //If the saturation is too high or the color is too dark: Discard it
-                if (sat > 0.8f || clr.GetBrightness() < 0.2f)
+                //If the saturation is too high or the color is too light/dark: Discard it
+                if (sat > 0.8f || (clr.GetBrightness() < 0.2f && isDarkMode) || (clr.GetBrightness() >= 0.6f && !isDarkMode))
                 {
                     continue;
                 }

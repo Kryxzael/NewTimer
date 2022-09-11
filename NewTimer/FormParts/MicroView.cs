@@ -1,4 +1,6 @@
-﻿using System;
+﻿using NewTimer.ThemedColors;
+
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Text;
@@ -98,7 +100,7 @@ namespace NewTimer.FormParts
 
             Brush fgBrush = new SolidBrush(ForeColor);
             Brush fgFadeBrush = null;
-            Brush bgBrush = new SolidBrush(Color.FromArgb(0x5F, Color.Black));
+            Brush bgBrush = new SolidBrush(Color.FromArgb(0x5F, new ThemedColor(Color.Silver, Color.Black)));
 
             //Create brush that's used to fade between secondary timer and unit
             if (SecondaryCommand.IsValid)

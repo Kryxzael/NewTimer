@@ -1,4 +1,6 @@
 ﻿using NewTimer.FormParts;
+using NewTimer.ThemedColors;
+
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -33,9 +35,9 @@ namespace NewTimer.FormParts
          */
 
         //Background
-        private static readonly Brush FRAME_BRUSH = new SolidBrush(ColorTranslator.FromHtml("#333"));
-        private static readonly Brush BG_BRUSH = new SolidBrush(ColorTranslator.FromHtml("#222"));
-        private static readonly Brush BG_TRUE_BRUSH = new SolidBrush(Globals.GlobalBackColor);
+        private static readonly ThemedSolidBrush FRAME_BRUSH = new ThemedSolidBrush(ColorTranslator.FromHtml("#999"), ColorTranslator.FromHtml("#333"));
+        private static readonly ThemedSolidBrush BG_BRUSH = new ThemedSolidBrush(ColorTranslator.FromHtml("#ccc"), ColorTranslator.FromHtml("#222"));
+        private static readonly ThemedSolidBrush BG_TRUE_BRUSH = new ThemedSolidBrush(Globals.GlobalBackColor);
 
         private static readonly Pen FRAME_MARK_PEN = new Pen(ColorTranslator.FromHtml("#444"), 3) { EndCap = LineCap.Round };
         private static readonly Pen FRAME_MARK_SMALL_PEN = new Pen(ColorTranslator.FromHtml("#444"), 1.5f) { EndCap = LineCap.Round };
@@ -58,29 +60,29 @@ namespace NewTimer.FormParts
         private const float FONT_SIZE = 18f;
 
         //Hand and number colors
-        private static readonly Color COLOR_HAND = ColorTranslator.FromHtml("#BBB");
-        private static readonly Color COLOR_HAND_WEAK = ColorTranslator.FromHtml("#555");
-        private static readonly Color COLOR_HAND_BORDER = ColorTranslator.FromHtml("#222");
-        private static readonly Color COLOR_NUMBER = ColorTranslator.FromHtml("#444");
+        private static readonly ThemedColor COLOR_HAND = new ThemedColor(ColorTranslator.FromHtml("#333"), ColorTranslator.FromHtml("#BBB"));
+        private static readonly ThemedColor COLOR_HAND_WEAK = new ThemedColor(ColorTranslator.FromHtml("#555"), ColorTranslator.FromHtml("#555"));
+        private static readonly ThemedColor COLOR_HAND_BORDER = new ThemedColor(ColorTranslator.FromHtml("#222"), ColorTranslator.FromHtml("#222"));
+        private static readonly ThemedColor COLOR_NUMBER = new ThemedColor(Color.Black, Color.White);
 
         //Hand and number pens and brushes
-        private static readonly Pen PEN_BORDER_NORMAL = new Pen(COLOR_HAND_BORDER, 7) { EndCap = LineCap.ArrowAnchor, StartCap = LineCap.Round };
-        private static readonly Pen PEN_FILL_NORMAL = new Pen(COLOR_HAND, 5) { EndCap = LineCap.ArrowAnchor, StartCap = LineCap.Round };
+        private static readonly ThemedPen PEN_BORDER_NORMAL = new ThemedPen(COLOR_HAND_BORDER, 7f, LineCap.Round, LineCap.ArrowAnchor, DashStyle.Solid);
+        private static readonly ThemedPen PEN_FILL_NORMAL = new ThemedPen(COLOR_HAND, 5f, LineCap.Round, LineCap.ArrowAnchor, DashStyle.Solid);
 
-        private static readonly Pen PEN_BORDER_ROUND = new Pen(COLOR_HAND_BORDER, 7) { EndCap = LineCap.RoundAnchor, StartCap = LineCap.Round };
-        private static readonly Pen PEN_FILL_ROUND = new Pen(COLOR_HAND, 5) { EndCap = LineCap.RoundAnchor, StartCap = LineCap.Round };
+        private static readonly ThemedPen PEN_BORDER_ROUND = new ThemedPen(COLOR_HAND_BORDER, 7f, LineCap.Round, LineCap.RoundAnchor, DashStyle.Solid);
+        private static readonly ThemedPen PEN_FILL_ROUND = new ThemedPen(COLOR_HAND, 5f, LineCap.Round, LineCap.RoundAnchor, DashStyle.Solid);
 
-        private static readonly Pen PEN_BORDER_THIN = new Pen(COLOR_HAND_BORDER, 4) { EndCap = LineCap.Round, StartCap = LineCap.Round };
-        private static readonly Pen PEN_FILL_THIN = new Pen(COLOR_HAND, 2) { EndCap = LineCap.Round, StartCap = LineCap.Round };
+        private static readonly ThemedPen PEN_BORDER_THIN = new ThemedPen(COLOR_HAND_BORDER, 4f, LineCap.Round, LineCap.Round, DashStyle.Solid);
+        private static readonly ThemedPen PEN_FILL_THIN = new ThemedPen(COLOR_HAND, 2f, LineCap.Round, LineCap.Round, DashStyle.Solid);
 
-        private static readonly Pen PEN_BORDER_THIN_ROUND = new Pen(COLOR_HAND_BORDER, 4) { EndCap = LineCap.RoundAnchor, StartCap = LineCap.Round };
-        private static readonly Pen PEN_FILL_THIN_ROUND = new Pen(COLOR_HAND, 2) { EndCap = LineCap.RoundAnchor, StartCap = LineCap.Round };
+        private static readonly ThemedPen PEN_BORDER_THIN_ROUND = new ThemedPen(COLOR_HAND_BORDER, 4f, LineCap.Round, LineCap.RoundAnchor, DashStyle.Solid);
+        private static readonly ThemedPen PEN_FILL_THIN_ROUND = new ThemedPen(COLOR_HAND, 2f, LineCap.Round, LineCap.RoundAnchor, DashStyle.Solid);
 
-        private static readonly Pen PEN_DOTTED = new Pen(COLOR_HAND_WEAK, 4) { EndCap = LineCap.Round, StartCap = LineCap.Round, DashCap = DashCap.Round, DashStyle = DashStyle.Dot };
-        private static readonly Pen PEN_DOTTED_THIN = new Pen(COLOR_HAND_WEAK, 2) { EndCap = LineCap.Round, StartCap = LineCap.Round, DashCap = DashCap.Round, DashStyle = DashStyle.Dot };
+        private static readonly ThemedPen PEN_DOTTED = new ThemedPen(COLOR_HAND_WEAK, 4f, LineCap.Round, LineCap.Round, DashStyle.Dot);
+        private static readonly ThemedPen PEN_DOTTED_THIN = new ThemedPen(COLOR_HAND_WEAK, 2f, LineCap.Round, LineCap.Round, DashStyle.Dot);
 
-        private static readonly Pen PEN_DOTTED_ARROW = new Pen(COLOR_HAND_WEAK, 4) { EndCap = LineCap.Round, StartCap = LineCap.ArrowAnchor, DashCap = DashCap.Round, DashStyle = DashStyle.Dot };
-        private static readonly Pen PEN_DOTTED_ARROW_THIN = new Pen(COLOR_HAND_WEAK, 2) { EndCap = LineCap.Round, StartCap = LineCap.ArrowAnchor, DashCap = DashCap.Round, DashStyle = DashStyle.Dot };
+        private static readonly ThemedPen PEN_DOTTED_ARROW = new ThemedPen(COLOR_HAND_WEAK, 4f, LineCap.Round, LineCap.Round, DashStyle.Dot);
+        private static readonly ThemedPen PEN_DOTTED_ARROW_THIN = new ThemedPen(COLOR_HAND_WEAK, 2f, LineCap.Round, LineCap.Round, DashStyle.Dot);
 
         //Disc settings
         private const float DISC_INITAL_SCALE = (1 - BG_FRAME_SCALE) * 0.95f;
@@ -684,7 +686,7 @@ namespace NewTimer.FormParts
                 );
 
                 byte s = (byte)(Math.Min(byte.MaxValue, Math.Max((Globals.PrimaryTimer.TimeLeft.TotalHours - 1), 0) / (1 / 6f) * byte.MaxValue));
-                using (Brush brush = new SolidBrush(Color.FromArgb(s, Color.White)))
+                using (Brush brush = new SolidBrush(Color.FromArgb(s, COLOR_NUMBER)))
                 {
                     e.Graphics.DrawString(
                         s: Math.Floor(Globals.PrimaryTimer.TimeLeft.TotalHours).ToString(),
@@ -707,7 +709,7 @@ namespace NewTimer.FormParts
 
                 //Calculates transparency
                 byte s = (byte)(Math.Min(byte.MaxValue, Math.Max((Globals.PrimaryTimer.TimeLeft.TotalMinutes - 1), 0) / 5f * byte.MaxValue));
-                using (Brush brush = new SolidBrush(Color.FromArgb(s, Color.White)))
+                using (Brush brush = new SolidBrush(Color.FromArgb(s, COLOR_NUMBER)))
                 {
                     e.Graphics.DrawString(
                         s: Globals.PrimaryTimer.TimeLeft.Minutes.ToString("00"),
@@ -730,7 +732,7 @@ namespace NewTimer.FormParts
 
                 //Calculates transparency
                 byte s = (byte)(Globals.PrimaryTimer.RealTimeLeft.Milliseconds / 1000f * 255);
-                using (Brush brush = new SolidBrush(Color.FromArgb(s, Color.White)))
+                using (Brush brush = new SolidBrush(Color.FromArgb(s, COLOR_NUMBER)))
                 {
                     e.Graphics.DrawString(
                         s: Globals.PrimaryTimer.TimeLeft.Seconds.ToString("00"),

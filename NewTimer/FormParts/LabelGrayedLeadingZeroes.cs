@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using System.Management.Instrumentation;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -82,6 +83,9 @@ namespace NewTimer.FormParts
              * This is to make the effect go up and not down
              * It was done on purpose
              */
+            Brush fgBrush = new SolidBrush(ForeColor);
+            Brush hiBrush = new SolidBrush(HighlightColor);
+            Brush grayBrush = new SolidBrush(Globals.GlobalGrayedColor);
 
             //Draws the "background text"
             foreach (char i in Text)

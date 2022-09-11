@@ -76,6 +76,14 @@ namespace NewTimer.FormParts
         {
             Size = new Size(PANEL_WIDTH, PANEL_HEIGHT);
             DoubleBuffered = true;
+            Recolorize();
+        }
+
+        /// <summary>
+        /// Generates a new color for the control
+        /// </summary>
+        public void Recolorize()
+        {
             ForeColor = Globals.PrimaryTimer.ColorScheme.GenerateOne(Globals.MasterRandom);
         }
 
@@ -87,7 +95,7 @@ namespace NewTimer.FormParts
         protected override void OnClick(EventArgs e)
         {
             base.OnClick(e);
-            ForeColor = Globals.PrimaryTimer.ColorScheme.GenerateOne(Globals.MasterRandom);
+            Recolorize();
         }
 
         /// <summary>

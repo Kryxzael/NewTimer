@@ -466,6 +466,7 @@ namespace NewTimer.Forms
 
                         Globals.PrimaryTimer.ColorScheme = Globals.ColorSchemes[(currentIndex + 1) % Globals.ColorSchemes.Length];
                         Globals.PrimaryTimer.ColorizeTimerBar();
+                        _microView.Recolorize();
                     }    
                         
                     else
@@ -490,6 +491,7 @@ namespace NewTimer.Forms
 
                         Globals.PrimaryTimer.ColorScheme = Globals.ColorSchemes[currentIndex - 1];
                         Globals.PrimaryTimer.ColorizeTimerBar();
+                        _microView.Recolorize();
                     }
                     else
                     {
@@ -675,8 +677,8 @@ namespace NewTimer.Forms
                     {
                         Globals.PrimaryTimer.ColorizeTimerBar();
                     }
-                    
 
+                    _microView.Recolorize();
                     return;
 
                 case Keys.Up:

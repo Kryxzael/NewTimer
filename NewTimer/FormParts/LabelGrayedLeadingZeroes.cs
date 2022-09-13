@@ -128,7 +128,13 @@ namespace NewTimer.FormParts
                 Rectangle offsetClipRect = e.ClipRectangle;
                 offsetClipRect.X += offset;
                 offsetClipRect.Width -= offset;
-                offsetClipRect.Height = (int)(offsetClipRect.Height * (_progress));
+
+                //AdjustedProgress takes the visible height of the font into account.
+                //The font-height and the visible part of its characters are different
+                //The numbers below have been painstakingly picked and tweaked for the best result.
+                //They don't have any derivable meaning, so don't go looking for it
+                float adjustedProgress = (_progress * 0.725f) + 0.185f;
+                offsetClipRect.Height = (int)(offsetClipRect.Height * adjustedProgress);
 
                 if (i != '0')
                 {

@@ -512,12 +512,32 @@ namespace NewTimer.Forms
                         Globals.PrimaryTimer.Target = Globals.PrimaryTimer.Target.AddDays(1.0);
 
                         string microBroadcast = Globals.PrimaryTimer.Target.ToString("dd''MM");
+                        string broadcast = Globals.PrimaryTimer.Target.ToString("ddd MMM dd");
+
+                        //Use common names for days around today
+                        if (Globals.PrimaryTimer.Target.Date == DateTime.Today)
+                        {
+                            broadcast = "Today";
+                            microBroadcast = "TDAY";
+                        }
+
+                        else if (Globals.PrimaryTimer.Target.Date == DateTime.Today.AddDays(1))
+                        {
+                            broadcast = "Tomorrow";
+                            microBroadcast = "TMRW";
+                        }
+
+                        else if (Globals.PrimaryTimer.Target.Date == DateTime.Today.AddDays(-1))
+                        {
+                            broadcast = "Yesterday";
+                            microBroadcast = "YDAY";
+                        }
 
                         //Use day-of-the-week instead of month number if we are within one month of the target
-                        if (Math.Abs((Globals.PrimaryTimer.Target - DateTime.Now).TotalDays) < 30)
+                        else if (Math.Abs((Globals.PrimaryTimer.Target - DateTime.Now).TotalDays) < 30)
                             microBroadcast = microBroadcast.Substring(0, 2) + Globals.PrimaryTimer.Target.ToString("ddd").Substring(0, 2);
 
-                        Globals.Broadcast("Target Day: " + Globals.PrimaryTimer.Target.ToString("ddd MMM dd"), microBroadcast);
+                        Globals.Broadcast("Target Day: " + broadcast, microBroadcast);
                     }
 
                     return;
@@ -545,12 +565,32 @@ namespace NewTimer.Forms
                         Globals.PrimaryTimer.Target = Globals.PrimaryTimer.Target.AddDays(-1.0);
 
                         string microBroadcast = Globals.PrimaryTimer.Target.ToString("dd''MM");
+                        string broadcast = Globals.PrimaryTimer.Target.ToString("ddd MMM dd");
+
+                        //Use common names for days around today
+                        if (Globals.PrimaryTimer.Target.Date == DateTime.Today)
+                        {
+                            broadcast = "Today";
+                            microBroadcast = "TDAY";
+                        }
+
+                        else if (Globals.PrimaryTimer.Target.Date == DateTime.Today.AddDays(1))
+                        {
+                            broadcast = "Tomorrow";
+                            microBroadcast = "TMRW";
+                        }
+
+                        else if (Globals.PrimaryTimer.Target.Date == DateTime.Today.AddDays(-1))
+                        {
+                            broadcast = "Yesterday";
+                            microBroadcast = "YDAY";
+                        }
 
                         //Use day-of-the-week instead of month number if we are within one month of the target
-                        if (Math.Abs((Globals.PrimaryTimer.Target - DateTime.Now).TotalDays) < 30)
+                        else if (Math.Abs((Globals.PrimaryTimer.Target - DateTime.Now).TotalDays) < 30)
                             microBroadcast = microBroadcast.Substring(0, 2) + Globals.PrimaryTimer.Target.ToString("ddd").Substring(0, 2);
 
-                        Globals.Broadcast("Target Day: " + Globals.PrimaryTimer.Target.ToString("ddd MMM dd"), microBroadcast);
+                        Globals.Broadcast("Target Day: " + broadcast, microBroadcast);
                     }
                     
                     return;
@@ -567,6 +607,9 @@ namespace NewTimer.Forms
 
                 case Keys.Return:
                     Globals.SwapTimers();
+
+                    if (Globals.PrimaryTimer.InFreeMode)
+                        Globals.Broadcast("Second Timer New", "NEW");
                     return;
 
                 case Keys.F1:

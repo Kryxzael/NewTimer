@@ -40,9 +40,54 @@ namespace NewTimer
         /// </summary>
         public static bool SwapHandPriorities { get; set; }
 
+        /// <summary>
+        /// Gets the time the last broadcast was done
+        /// </summary>
+        private static DateTime _lastBroadcastStartTime;
+        private static string _currentBroadcastMessage;
+        private static string _currentMicroBroadcastMessage;
+
+        /// <summary>
+        /// Gets the temporary message to display on the title-bar
+        /// </summary>
+        public static string CurrentBroadcastMessage
+        {
+            get
+            {
+                if ((DateTime.Now - _lastBroadcastStartTime) < BroadcastTimeout)
+                    return _currentBroadcastMessage;
+
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// Gets the temporary message to display in the micro-view
+        /// </summary>
+        public static string CurrentMicroBroadcastMessage
+        {
+            get
+            {
+                if ((DateTime.Now - _lastBroadcastStartTime) < MicroBroadcastTimeout)
+                    return _currentMicroBroadcastMessage;
+
+                return null;
+            }
+        }
+
         /*
          * Constants
          */
+
+        /// <summary>
+        /// How long a broadcast will be displayed
+        /// </summary>
+        private static TimeSpan BroadcastTimeout = new TimeSpan(0, 0, 0, seconds: 2, milliseconds: 500);
+
+        /// <summary>
+        /// How long a broadcast will be displayed in micro view
+        /// </summary>
+        private static TimeSpan MicroBroadcastTimeout = new TimeSpan(0, 0, 0, seconds: 0, milliseconds: 750);
 
         /// <summary>
         /// The random number generator that is used for all randomness
@@ -240,6 +285,22 @@ namespace NewTimer
             TimerConfig swap = PrimaryTimer;
             PrimaryTimer = SecondaryTimer;
             SecondaryTimer = swap;
+        }
+
+        /// <summary>
+        /// Broadcasts the provided messages to the timer window's title-bar and micro-view. MicroMessage must be at most four characters
+        /// </summary>
+        /// <param name="titleMessage"></param>
+        /// <param name="microMessage"></param>
+        public static void Broadcast(string titleMessage, string microMessage)
+        {
+            if ((microMessage?.Length ?? 0) > 4)
+                throw new ArgumentException("MicroMessage must be <= 4 chars");
+
+            _currentBroadcastMessage = titleMessage;
+            _currentMicroBroadcastMessage = microMessage;
+            _lastBroadcastStartTime = DateTime.Now;
+
         }
 
         /// <summary>

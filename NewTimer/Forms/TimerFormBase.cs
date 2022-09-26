@@ -399,59 +399,96 @@ namespace NewTimer.Forms
 
             base.OnKeyDown(e);
 
+            //Used by the broadcaster when using invisible input numbers
+            Func<string, string, string> modifierDescription = (h, m) => "Set Target: " + h + ":" + m;
+
+            if (e.Shift)
+                modifierDescription = modifierDescription = (m, s) => "Set Duration: " + m + " mins, " + s + " secs";
+
+            else if (e.Alt)
+                modifierDescription = modifierDescription = (h, m) => "Set Duration: " + h + " hrs, " + m + " mins";
+
             switch (e.KeyCode)
             {
                 case Keys.D0:
                 case Keys.NumPad0:
                     InvisibleInputText += "0";
+                    Globals.Broadcast(modifierDescription(InvisibleInputText.PadRight(4, '?').Substring(0, 2), InvisibleInputText.PadRight(4, '?').Substring(2, 2)), InvisibleInputText);
                     break;
                 case Keys.D1:
                 case Keys.NumPad1:
                     InvisibleInputText += "1";
+                    Globals.Broadcast(modifierDescription(InvisibleInputText.PadRight(4, '?').Substring(0, 2), InvisibleInputText.PadRight(4, '?').Substring(2, 2)), InvisibleInputText);
                     break;
                 case Keys.D2:
                 case Keys.NumPad2:
                     InvisibleInputText += "2";
+                    Globals.Broadcast(modifierDescription(InvisibleInputText.PadRight(4, '?').Substring(0, 2), InvisibleInputText.PadRight(4, '?').Substring(2, 2)), InvisibleInputText);
                     break;
                 case Keys.D3:
                 case Keys.NumPad3:
                     InvisibleInputText += "3";
+                    Globals.Broadcast(modifierDescription(InvisibleInputText.PadRight(4, '?').Substring(0, 2), InvisibleInputText.PadRight(4, '?').Substring(2, 2)), InvisibleInputText);
                     break;
                 case Keys.D4:
                 case Keys.NumPad4:
                     InvisibleInputText += "4";
+                    Globals.Broadcast(modifierDescription(InvisibleInputText.PadRight(4, '?').Substring(0, 2), InvisibleInputText.PadRight(4, '?').Substring(2, 2)), InvisibleInputText);
                     break;
                 case Keys.D5:
                 case Keys.NumPad5:
                     InvisibleInputText += "5";
+                    Globals.Broadcast(modifierDescription(InvisibleInputText.PadRight(4, '?').Substring(0, 2), InvisibleInputText.PadRight(4, '?').Substring(2, 2)), InvisibleInputText);
                     break;
                 case Keys.D6:
                 case Keys.NumPad6:
                     InvisibleInputText += "6";
+                    Globals.Broadcast(modifierDescription(InvisibleInputText.PadRight(4, '?').Substring(0, 2), InvisibleInputText.PadRight(4, '?').Substring(2, 2)), InvisibleInputText);
                     break;
                 case Keys.D7:
                 case Keys.NumPad7:
                     InvisibleInputText += "7";
+                    Globals.Broadcast(modifierDescription(InvisibleInputText.PadRight(4, '?').Substring(0, 2), InvisibleInputText.PadRight(4, '?').Substring(2, 2)), InvisibleInputText);
                     break;
                 case Keys.D8:
                 case Keys.NumPad8:
                     InvisibleInputText += "8";
+                    Globals.Broadcast(modifierDescription(InvisibleInputText.PadRight(4, '?').Substring(0, 2), InvisibleInputText.PadRight(4, '?').Substring(2, 2)), InvisibleInputText);
                     break;
                 case Keys.D9:
                 case Keys.NumPad9:
                     InvisibleInputText += "9";
+                    Globals.Broadcast(modifierDescription(InvisibleInputText.PadRight(4, '?').Substring(0, 2), InvisibleInputText.PadRight(4, '?').Substring(2, 2)), InvisibleInputText);
                     break;
 
                 case Keys.Delete:
                     if (e.Shift)
+                    {
                         Globals.PrimaryTimer.InFreeMode = !Globals.PrimaryTimer.InFreeMode;
-                    else
-                        Globals.PrimaryTimer.Target = DateTime.Now;
 
+                        if (Globals.PrimaryTimer.InFreeMode)
+                            Globals.Broadcast("Idle Mode", "IDLE");
+
+                        else
+                            Globals.Broadcast("Timer Mode", "TMR");
+                    }
+
+                    else
+                    {
+                        Globals.PrimaryTimer.Target = DateTime.Now;
+                        Globals.Broadcast("Reset", "RSET");
+                    }
+                        
                     return;
 
                 case Keys.Pause:
                     Command.GetByType<Freeze>().Execute(new string[0], nullOutput);
+
+                    if (Globals.PrimaryTimer.Paused)
+                        Globals.Broadcast("Pause", "PAUS");
+                    else
+                        Globals.Broadcast("Resume", "RESU");
+
                     return;
 
                 case Keys.PageUp:
@@ -467,13 +504,22 @@ namespace NewTimer.Forms
                         Globals.PrimaryTimer.ColorScheme = Globals.ColorSchemes[(currentIndex + 1) % Globals.ColorSchemes.Length];
                         Globals.PrimaryTimer.ColorizeTimerBar();
                         _microView.Recolorize();
+                        Globals.Broadcast("Color Scheme: " + Globals.PrimaryTimer.ColorScheme.Name, "CL" + Globals.PrimaryTimer.ColorScheme.Name.Substring(0, 2));
                     }    
                         
                     else
                     {
                         Globals.PrimaryTimer.Target = Globals.PrimaryTimer.Target.AddDays(1.0);
+
+                        string microBroadcast = Globals.PrimaryTimer.Target.ToString("dd''MM");
+
+                        //Use day-of-the-week instead of month number if we are within one month of the target
+                        if (Math.Abs((Globals.PrimaryTimer.Target - DateTime.Now).TotalDays) < 30)
+                            microBroadcast = microBroadcast.Substring(0, 2) + Globals.PrimaryTimer.Target.ToString("ddd").Substring(0, 2);
+
+                        Globals.Broadcast("Target Day: " + Globals.PrimaryTimer.Target.ToString("ddd MMM dd"), microBroadcast);
                     }
-                        
+
                     return;
 
                 case Keys.PageDown:
@@ -492,17 +538,31 @@ namespace NewTimer.Forms
                         Globals.PrimaryTimer.ColorScheme = Globals.ColorSchemes[currentIndex - 1];
                         Globals.PrimaryTimer.ColorizeTimerBar();
                         _microView.Recolorize();
+                        Globals.Broadcast("Color Scheme: " + Globals.PrimaryTimer.ColorScheme.Name, "CL" + Globals.PrimaryTimer.ColorScheme.Name.Substring(0, 2));
                     }
                     else
                     {
                         Globals.PrimaryTimer.Target = Globals.PrimaryTimer.Target.AddDays(-1.0);
+
+                        string microBroadcast = Globals.PrimaryTimer.Target.ToString("dd''MM");
+
+                        //Use day-of-the-week instead of month number if we are within one month of the target
+                        if (Math.Abs((Globals.PrimaryTimer.Target - DateTime.Now).TotalDays) < 30)
+                            microBroadcast = microBroadcast.Substring(0, 2) + Globals.PrimaryTimer.Target.ToString("ddd").Substring(0, 2);
+
+                        Globals.Broadcast("Target Day: " + Globals.PrimaryTimer.Target.ToString("ddd MMM dd"), microBroadcast);
                     }
                     
                     return;
 
                 case Keys.Insert:
                     Globals.PrimaryTimer.StopAtZero = !Globals.PrimaryTimer.StopAtZero;
-                    MessageBox.Show(Globals.PrimaryTimer.StopAtZero ? "End Mode: Stop" : "End Mode: Continue");
+
+                    if (Globals.PrimaryTimer.StopAtZero)
+                        Globals.Broadcast("Stop At Zero", "STOP");
+                    else
+                        Globals.Broadcast("Continue After Zero", "CONT");
+
                     return;
 
                 case Keys.Return:
@@ -510,6 +570,7 @@ namespace NewTimer.Forms
                     return;
 
                 case Keys.F1:
+                    Globals.Broadcast("Help!", "HELP");
                     MessageBox.Show(string.Join(Environment.NewLine, 
                         "F1: Help",
                         "--------",
@@ -602,6 +663,8 @@ namespace NewTimer.Forms
                                 );
                             }
                         }
+
+                        Globals.Broadcast("Enable Micro View", "MICR");
                     }
 
                     //Disable micro mode
@@ -611,12 +674,15 @@ namespace NewTimer.Forms
                         FormBorderStyle = FormBorderStyle.Sizable;
                         tabs.SelectedIndex = 0;
                         Location = _macroViewPosition;
+
+                        Globals.Broadcast("Disable Micro View", null);
                     }
 
                     break;
 
                 case Keys.F11:
                     ToggleWindowTranslucencyMode();
+                    Globals.Broadcast("Toggle Translucency", "TRAN");
                     break;
 
                 case Keys.F10:
@@ -636,6 +702,8 @@ namespace NewTimer.Forms
                         tabs.Appearance = TabAppearance.Normal;
                         tabs.ItemSize = new Size(30, 18);
                         _secondaryFullscreenBar.Height = 50;
+
+                        Globals.Broadcast("Uncollapse", null);
                     }
                     else
                     {
@@ -651,6 +719,8 @@ namespace NewTimer.Forms
                         tabs.Appearance = TabAppearance.FlatButtons;
                         tabs.ItemSize = new Size(0, 1);
                         _secondaryFullscreenBar.Height = 0;
+
+                        Globals.Broadcast("Collapse", null);
                     }
 
 
@@ -662,20 +732,24 @@ namespace NewTimer.Forms
 
                     _console.Show();
                     _console.BringToFront();
+                    Globals.Broadcast("Console", "CONS");
                     return;
 
                 case Keys.F2:
                     Globals.SwapHandPriorities = !Globals.SwapHandPriorities;
+                    Globals.Broadcast("Swap Analog Hand Priority", "HAND");
                     return;
 
                 case Keys.F3:
                     if (e.Shift)
                     {
                         Command.GetByType<Commands.ColorScheme>().Execute(new string[] { "sync" }, nullOutput);
+                        Globals.Broadcast("Sync Color Schemes", "SYNC");
                     }
                     else
                     {
                         Globals.PrimaryTimer.ColorizeTimerBar();
+                        Globals.Broadcast("Re-Colorize", "COLR");
                     }
 
                     _microView.Recolorize();
@@ -693,6 +767,8 @@ namespace NewTimer.Forms
 
                     else
                         Globals.PrimaryTimer.Target = Globals.PrimaryTimer.Target.AddMinutes(1);
+
+                    Globals.Broadcast("Shift To: " + Globals.PrimaryTimer.Target, Globals.PrimaryTimer.Target.ToString("HH''mm"));
                     break;
 
                 case Keys.Down:
@@ -707,6 +783,8 @@ namespace NewTimer.Forms
 
                     else
                         Globals.PrimaryTimer.Target = Globals.PrimaryTimer.Target.AddMinutes(-1);
+
+                    Globals.Broadcast("Shift To: " + Globals.PrimaryTimer.Target, Globals.PrimaryTimer.Target.ToString("HH''mm"));
                     break;
             }
 

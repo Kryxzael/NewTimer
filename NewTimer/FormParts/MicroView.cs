@@ -111,7 +111,7 @@ namespace NewTimer.FormParts
             Brush bgBrush = new SolidBrush(Color.FromArgb(0x5F, new ThemedColor(Color.Silver, Color.Black)));
 
             //Create brush that's used to fade between secondary timer and unit
-            if (SecondaryCommand.IsValid)
+            if (SecondaryCommand.IsValid && Globals.CurrentMicroBroadcastMessage == null)
             {
                 if (DateTime.Now.Second % 5 == 4)
                     fgFadeBrush = new SolidBrush(Color.FromArgb((int)((1000 - DateTime.Now.Millisecond) / 1000f * 255), ForeColor));
@@ -130,15 +130,26 @@ namespace NewTimer.FormParts
             char offset;
             char unit = CurrentCommand.Unit;
 
-            getDisplaySettings(CurrentCommand.Number, CurrentCommand.AllowDecimals, out numDisplay, out displayDot, out offset);
-
-            if (DateTime.Now.Second % 10 < 5 && SecondaryCommand.IsValid)
+            if (Globals.CurrentMicroBroadcastMessage != null)
             {
-                string secondaryTimerDisplay;
-                getDisplaySettings(SecondaryCommand.Number, SecondaryCommand.AllowDecimals, out secondaryTimerDisplay, out displaySecondaryDot, out _);
+                displayDot = false;
+                string paddedMessage = Globals.CurrentMicroBroadcastMessage.PadRight(4);
+                numDisplay = paddedMessage.Substring(0, 2);
+                offset = paddedMessage[2];
+                unit = paddedMessage[3];
+            }
+            else
+            {
+                getDisplaySettings(CurrentCommand.Number, CurrentCommand.AllowDecimals, out numDisplay, out displayDot, out offset);
 
-                offset = secondaryTimerDisplay[0];
-                unit = secondaryTimerDisplay[1];
+                if (DateTime.Now.Second % 10 < 5 && SecondaryCommand.IsValid)
+                {
+                    string secondaryTimerDisplay;
+                    getDisplaySettings(SecondaryCommand.Number, SecondaryCommand.AllowDecimals, out secondaryTimerDisplay, out displaySecondaryDot, out _);
+
+                    offset = secondaryTimerDisplay[0];
+                    unit = secondaryTimerDisplay[1];
+                }
             }
 
             e.Graphics.DrawString("@@", DEFAULT_FONT, bgBrush, new Point(0, 0));

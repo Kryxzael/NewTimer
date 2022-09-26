@@ -21,6 +21,13 @@ namespace NewTimer
             TimeSpan tl = Globals.PrimaryTimer.TimeLeft;
             string title;
 
+            //A broadcast is in progress. Display it
+            if (Globals.CurrentBroadcastMessage != null)
+            {
+                f.Text = Globals.CurrentBroadcastMessage;
+                return;
+            }
+
             //Free mode, show current date and time
             if (Globals.PrimaryTimer.InFreeMode)
             {

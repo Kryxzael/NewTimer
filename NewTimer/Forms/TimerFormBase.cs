@@ -485,7 +485,7 @@ namespace NewTimer.Forms
                     Command.GetByType<Freeze>().Execute(new string[0], nullOutput);
 
                     if (Globals.PrimaryTimer.Paused)
-                        Globals.Broadcast("Pause", "PAUS");
+                        Globals.Broadcast(null, "PAUS");
                     else
                         Globals.Broadcast("Resume", "RESU");
 

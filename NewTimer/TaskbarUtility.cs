@@ -125,6 +125,9 @@ namespace NewTimer
                 title += " ago";
             }
 
+            if (Globals.PrimaryTimer.Paused)
+                title = "Pause - " + title;
+
             f.Text = title;
         }
 

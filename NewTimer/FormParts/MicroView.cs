@@ -286,6 +286,50 @@ namespace NewTimer.FormParts
                 BackColor = Globals.GlobalBackColor;
 
             Invalidate();
+
+            if (!Globals.PrimaryTimer.InFreeMode && !Globals.PrimaryTimer.Paused)
+            {
+                broadcastAt("DAY ", 24,  0, false);
+                broadcastAt("HOUR",  1,  0, false);
+                broadcastAt("HALF",  0, 30, false);
+                broadcastAt("QUAT",  0, 15, false);
+                broadcastAt("MIN ",  0,  1, false);
+                broadcastAt("ZERO",  0,  0, true);
+
+                /*
+                 * Broadcasts (to micro-view only) the provided message at the given amount of time on the clock
+                 */
+                void broadcastAt(string msg, int hours, int minutes, bool overtimeOnly)
+                {
+                    //Do not override "real" broadcasts
+                    if (Globals.CurrentBroadcastMessage != null)
+                        return;
+
+                    if (!isOvertime && overtimeOnly)
+                        return;
+
+                    if (span.Days != 0)
+                        return;
+
+                    TimeSpan target = new TimeSpan(hours, minutes, 0);
+
+                    if (!isOvertime)
+                        target -= new TimeSpan(0, 0, 1);
+
+                    if (span.Hours == target.Hours && span.Minutes == target.Minutes && span.Seconds == target.Seconds)
+                    {
+                        if (isOvertime && span.Milliseconds > 100)
+                            return;
+
+                        if (!isOvertime && span.Milliseconds < 900)
+                            return;
+
+                        Globals.Broadcast(null, msg);
+                    }
+                        
+
+                }
+            }
         }
 
         /// <summary>

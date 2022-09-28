@@ -504,7 +504,7 @@ namespace NewTimer.Forms
                         Globals.PrimaryTimer.ColorScheme = Globals.ColorSchemes[(currentIndex + 1) % Globals.ColorSchemes.Length];
                         Globals.PrimaryTimer.ColorizeTimerBar();
                         _microView.Recolorize();
-                        Globals.Broadcast("Color Scheme: " + Globals.PrimaryTimer.ColorScheme.Name, "CL" + Globals.PrimaryTimer.ColorScheme.Name.Substring(0, 2));
+                        Globals.Broadcast("Color Scheme: " + Globals.PrimaryTimer.ColorScheme.Name, "CS" + Globals.PrimaryTimer.ColorScheme.Name.Substring(0, 2));
                     }    
                         
                     else
@@ -558,7 +558,7 @@ namespace NewTimer.Forms
                         Globals.PrimaryTimer.ColorScheme = Globals.ColorSchemes[currentIndex - 1];
                         Globals.PrimaryTimer.ColorizeTimerBar();
                         _microView.Recolorize();
-                        Globals.Broadcast("Color Scheme: " + Globals.PrimaryTimer.ColorScheme.Name, "CL" + Globals.PrimaryTimer.ColorScheme.Name.Substring(0, 2));
+                        Globals.Broadcast("Color Scheme: " + Globals.PrimaryTimer.ColorScheme.Name, "CS" + Globals.PrimaryTimer.ColorScheme.Name.Substring(0, 2));
                     }
                     else
                     {

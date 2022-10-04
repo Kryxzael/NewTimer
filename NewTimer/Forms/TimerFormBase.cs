@@ -618,6 +618,7 @@ namespace NewTimer.Forms
                         "F1: Help",
                         "--------",
                         "F2: Swap analog clock hand emphasis",
+                        "Shift + F2: Toggle Alternate Analog Disks",
                         "F3: Generate new colors",
                         "Shift + F3: Sync primary and secondary timers' colors",
                         "Shift + Page Up: Next color scheme",
@@ -779,8 +780,23 @@ namespace NewTimer.Forms
                     return;
 
                 case Keys.F2:
-                    Globals.SwapHandPriorities = !Globals.SwapHandPriorities;
-                    Globals.Broadcast("Swap Analog Hand Priority", "HAND");
+                    if (e.Shift)
+                    {
+                        Globals.PrimaryTimer.NeverShowMinuteDisks = !Globals.PrimaryTimer.NeverShowMinuteDisks;
+
+                        if (Globals.PrimaryTimer.NeverShowMinuteDisks)
+                            Globals.Broadcast("Show Minute Disks: Off", "HDSK");
+
+                        else
+                            Globals.Broadcast("Show Minute Disks: On", "MDSK");
+                    }
+                    else
+                    {
+                        Globals.SwapHandPriorities = !Globals.SwapHandPriorities;
+                        Globals.Broadcast("Swap Analog Hand Priority", "HAND");
+                    }
+
+                    
                     return;
 
                 case Keys.F3:

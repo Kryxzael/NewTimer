@@ -253,7 +253,11 @@ namespace NewTimer.FormParts
                 height: (int)(squareArea.Height * (1 - BG_FRAME_SCALE))
             );
 
-            e.Graphics.FillEllipse(Globals.PrimaryTimer.RealTimeLeft.TotalMinutes < 1f ? BG_TRUE_BRUSH : BG_BRUSH, nonFrameArea);
+            if ((Globals.PrimaryTimer.NeverShowMinuteDisks && Globals.PrimaryTimer.RealTimeLeft.TotalHours < 1f) || Globals.PrimaryTimer.RealTimeLeft.TotalMinutes < 1f)
+                e.Graphics.FillEllipse(BG_TRUE_BRUSH, nonFrameArea);
+
+            else
+                e.Graphics.FillEllipse(BG_BRUSH, nonFrameArea);
         }
 
         /// <summary>
@@ -507,15 +511,29 @@ namespace NewTimer.FormParts
             Color[] colors = timer.AnalogColors;
 
             //Create the final-minute color shift
-            if (createLastCountdownEffects && timer.TimeLeft.TotalMinutes < 1f && !timer.Overtime)
+            if (createLastCountdownEffects && !timer.Overtime)
             {
-                fillPie(
-                    color: BG_BRUSH,
-                    startAngle: (DateTime.Now.Second + DateTime.Now.Millisecond / 1000f) / 60f * 360f,
-                    angle: (float)timer.RealTimeLeft.TotalSeconds / 60f * 360f,
-                    scale: 1 - BG_FRAME_SCALE,
-                    centerOffset: 0f
-                );
+                if (timer.TimeLeft.TotalHours < 1f && Globals.PrimaryTimer.NeverShowMinuteDisks)
+                {
+                    fillPie(
+                        color: BG_BRUSH,
+                        startAngle: (DateTime.Now.Minute + DateTime.Now.Second / 60f) / 60f * 360f,
+                        angle: (float)timer.RealTimeLeft.TotalMinutes / 60f * 360f,
+                        scale: 1 - BG_FRAME_SCALE,
+                        centerOffset: 0f
+                    );
+                }
+                else if (timer.TimeLeft.TotalMinutes < 1f && !Globals.PrimaryTimer.NeverShowMinuteDisks)
+                {
+                    fillPie(
+                        color: BG_BRUSH,
+                        startAngle: (DateTime.Now.Second + DateTime.Now.Millisecond / 1000f) / 60f * 360f,
+                        angle: (float)timer.RealTimeLeft.TotalSeconds / 60f * 360f,
+                        scale: 1 - BG_FRAME_SCALE,
+                        centerOffset: 0f
+                    );
+                }
+                
             }
 
             /*
@@ -582,7 +600,7 @@ namespace NewTimer.FormParts
             }
 
             //Draw for hours (more than 3 hours)
-            else if (timer.TimeLeft.TotalHours >= 3)
+            else if (timer.TimeLeft.TotalHours >= 3 || timer.NeverShowMinuteDisks)
             {
                 float dividend = 1f;
                 for (int i = 0; i < Math.Ceiling(timer.TimeLeft.TotalDays * 2); i++)

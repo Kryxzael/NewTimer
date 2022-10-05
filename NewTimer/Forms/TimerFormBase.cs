@@ -782,13 +782,13 @@ namespace NewTimer.Forms
                 case Keys.F2:
                     if (e.Shift)
                     {
-                        Globals.PrimaryTimer.NeverShowMinuteDisks = !Globals.PrimaryTimer.NeverShowMinuteDisks;
+                        Globals.PrimaryTimer.HybridDiskMode = !Globals.PrimaryTimer.HybridDiskMode;
 
-                        if (Globals.PrimaryTimer.NeverShowMinuteDisks)
-                            Globals.Broadcast("Show Minute Disks: Off", "HDSK");
+                        if (Globals.PrimaryTimer.HybridDiskMode)
+                            Globals.Broadcast("Hybrid Disk Mode", "HYBR");
 
                         else
-                            Globals.Broadcast("Show Minute Disks: On", "MDSK");
+                            Globals.Broadcast("Seperate Disk Mode", "SEP");
                     }
                     else
                     {

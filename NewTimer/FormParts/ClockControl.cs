@@ -602,7 +602,7 @@ namespace NewTimer.FormParts
             }
 
             //Draw for hours (more than 3 hours)
-            else if (timer.TimeLeft.TotalHours >= 3 || timer.NeverShowMinuteDisks)
+            else if (timer.TimeLeft.TotalHours >= 3 || timer.HybridDiskMode)
             {
                 float dividend = 1f;
                 for (int i = 0; i < Math.Ceiling(timer.TimeLeft.TotalDays * 2); i++)
@@ -661,7 +661,7 @@ namespace NewTimer.FormParts
                             float startAngle = (DateTime.Now.Minute + DateTime.Now.Second / 60f) / 60f * 360f;
                             float angle = (float)(timer.RealTimeLeft.TotalMinutes % 60) / 60f * 360f;
 
-                            if (timer.NeverShowMinuteDisks)
+                            if (timer.HybridDiskMode)
                             {
                                 drawArc(altPen, startAngle, angle, arcScale);
                             }
@@ -673,7 +673,7 @@ namespace NewTimer.FormParts
                         }
                         else
                         {
-                            if (timer.NeverShowMinuteDisks)
+                            if (timer.HybridDiskMode)
                             {
                                 drawArc(altPen, 0, 360f, arcScale);
                             }
@@ -686,6 +686,26 @@ namespace NewTimer.FormParts
 
                     dividend += DISC_DIVIDEND_INCREMENT;
                 }
+            }
+
+            //Draw the little arrow in hybrid mode when more than 3 hours remain
+            else if (timer.HybridDiskMode && timer.TimeLeft.Days < 1f)
+            {
+                Point center = new Point(squareArea.X + squareArea.Width / 2, squareArea.Y + squareArea.Height / 2);
+                float angle = CalculateAngle(timer.Target.Minute, 60f);
+                float length = DISC_INITAL_SCALE * squareArea.Width / 2f;
+
+                e.Graphics.DrawLine(
+                    pen: new Pen(colors[4 % colors.Length], 4) 
+                    { 
+                        EndCap = timer == Globals.PrimaryTimer ? LineCap.ArrowAnchor : LineCap.Flat,
+                        DashStyle = timer == Globals.PrimaryTimer ? DashStyle.Solid : DashStyle.Dot,
+                        DashCap = DashCap.Round,
+                        DashOffset = 0.5f
+                    },
+                    pt1: GetPointAtAngle(center, length * 0.875f, angle),
+                    pt2: GetPointAtAngle(center, length, angle)
+                );
             }
 
             //Draw for seconds (less than 12 minutes)

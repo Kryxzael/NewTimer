@@ -253,7 +253,7 @@ namespace NewTimer.FormParts
                 height: (int)(squareArea.Height * (1 - BG_FRAME_SCALE))
             );
 
-            if ((Globals.PrimaryTimer.NeverShowMinuteDisks && Globals.PrimaryTimer.RealTimeLeft.TotalHours < 1f) || Globals.PrimaryTimer.RealTimeLeft.TotalMinutes < 1f)
+            if (Globals.PrimaryTimer.RealTimeLeft.TotalMinutes < 1f)
                 e.Graphics.FillEllipse(BG_TRUE_BRUSH, nonFrameArea);
 
             else
@@ -507,23 +507,25 @@ namespace NewTimer.FormParts
                 e.Graphics.DrawPie(color, area, -90 + startAngle, angle);
             }
 
+            /* local */ void drawArc(Pen color, float startAngle, float angle, float scale) 
+            {
+                Rectangle area = new Rectangle(
+                    x: squareArea.X + (int)(squareArea.Width * (1 - scale) / 2f),
+                    y: squareArea.Y + (int)(squareArea.Height * (1 - scale) / 2f),
+                    width: Math.Max(1, (int)(squareArea.Width * scale)),
+                    height: Math.Max(1, (int)(squareArea.Height * scale))
+                );
+
+                e.Graphics.DrawArc(color, area, -90 + startAngle, angle);
+            }
+
             //Color scheme to use
             Color[] colors = timer.AnalogColors;
 
             //Create the final-minute color shift
             if (createLastCountdownEffects && !timer.Overtime)
             {
-                if (timer.TimeLeft.TotalHours < 1f && Globals.PrimaryTimer.NeverShowMinuteDisks)
-                {
-                    fillPie(
-                        color: BG_BRUSH,
-                        startAngle: (DateTime.Now.Minute + DateTime.Now.Second / 60f) / 60f * 360f,
-                        angle: (float)timer.RealTimeLeft.TotalMinutes / 60f * 360f,
-                        scale: 1 - BG_FRAME_SCALE,
-                        centerOffset: 0f
-                    );
-                }
-                else if (timer.TimeLeft.TotalMinutes < 1f && !Globals.PrimaryTimer.NeverShowMinuteDisks)
+                if (timer.TimeLeft.TotalMinutes < 1f)
                 {
                     fillPie(
                         color: BG_BRUSH,
@@ -635,33 +637,50 @@ namespace NewTimer.FormParts
             }
 
             //Draw for minutes (less than 3 hours)
-            else
+            if (timer.TimeLeft.TotalHours < 3f)
             {
                 float dividend = 1f;
                 for (int i = 0; i < Math.Ceiling(timer.TimeLeft.TotalHours); i++)
                 {
                     //Create a colored pen based on what hour we are drawing
                     using (Brush b = createBrush[i % createBrush.Length](colors[i % colors.Length]))
+                    using (Pen altPen = new Pen(colors[i % colors.Length], 4f) 
+                    { 
+                        EndCap = timer.Overtime ? LineCap.Round : LineCap.ArrowAnchor, 
+                        StartCap = timer.Overtime ? LineCap.ArrowAnchor : LineCap.Flat, 
+                        DashStyle = timer == Globals.PrimaryTimer ? DashStyle.Solid : DashStyle.Dot,
+                        DashCap = DashCap.Round,
+                        DashOffset = 0.5f
+                    })
                     {
+                        //Used for arcs. Did some finetuning here
+                        float arcScale = (DISC_INITAL_SCALE * 0.95f) - (0.1f) * i;
+
                         if (i == Math.Floor(timer.TimeLeft.TotalHours))
                         {
-                            fillPie(
-                                color: b,
-                                startAngle: (DateTime.Now.Minute + DateTime.Now.Second / 60f) / 60f * 360f,
-                                angle: (float)(timer.RealTimeLeft.TotalMinutes % 60) / 60f * 360f,
-                                scale: DISC_INITAL_SCALE / dividend,
-                                centerOffset: 0f
-                            );
+                            float startAngle = (DateTime.Now.Minute + DateTime.Now.Second / 60f) / 60f * 360f;
+                            float angle = (float)(timer.RealTimeLeft.TotalMinutes % 60) / 60f * 360f;
+
+                            if (timer.NeverShowMinuteDisks)
+                            {
+                                drawArc(altPen, startAngle, angle, arcScale);
+                            }
+                            else
+                            {
+                                fillPie(b, startAngle, angle, DISC_INITAL_SCALE / dividend, 0f);
+                            }
+                            
                         }
                         else
                         {
-                            fillPie(
-                                color: b,
-                                startAngle: 0f,
-                                angle: 360f,
-                                scale: DISC_INITAL_SCALE / dividend,
-                                centerOffset: 0f
-                            );
+                            if (timer.NeverShowMinuteDisks)
+                            {
+                                drawArc(altPen, 0, 360f, arcScale);
+                            }
+                            else
+                            {
+                                fillPie(b, 0f, 360f, DISC_INITAL_SCALE / dividend, 0f);
+                            }
                         }
                     }
 

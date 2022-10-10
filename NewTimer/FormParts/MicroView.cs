@@ -246,7 +246,7 @@ namespace NewTimer.FormParts
             {
                 if (Globals.CurrentBroadcastMessage == null)
                 {
-                    if (Globals.PrimaryTimer.StopAtZero && isOvertime && DateTime.Now.Millisecond < 500)
+                    if (Globals.PrimaryTimer.StopAtZero && isOvertime && Globals.PrimaryTimer.RealTimeLeft.Milliseconds < -500)
                     {
                         Globals.Broadcast(null, "");
                     }

@@ -57,6 +57,11 @@ namespace NewTimer
         public ColorScheme ColorScheme { get; set; }
 
         /// <summary>
+        /// Gets or sets whether this timer has been configured to never show its minute disk in analog mode (showing hour disks in its stead)
+        /// </summary>
+        public bool HybridDiskMode { get; set; }
+
+        /// <summary>
         /// Gets whether the timer is currently frozen
         /// </summary>
         public bool Paused 

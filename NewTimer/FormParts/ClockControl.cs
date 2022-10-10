@@ -253,7 +253,11 @@ namespace NewTimer.FormParts
                 height: (int)(squareArea.Height * (1 - BG_FRAME_SCALE))
             );
 
-            e.Graphics.FillEllipse(Globals.PrimaryTimer.RealTimeLeft.TotalMinutes < 1f ? BG_TRUE_BRUSH : BG_BRUSH, nonFrameArea);
+            if (Globals.PrimaryTimer.RealTimeLeft.TotalMinutes < 1f)
+                e.Graphics.FillEllipse(BG_TRUE_BRUSH, nonFrameArea);
+
+            else
+                e.Graphics.FillEllipse(BG_BRUSH, nonFrameArea);
         }
 
         /// <summary>
@@ -503,19 +507,35 @@ namespace NewTimer.FormParts
                 e.Graphics.DrawPie(color, area, -90 + startAngle, angle);
             }
 
+            /* local */ void drawArc(Pen color, float startAngle, float angle, float scale) 
+            {
+                Rectangle area = new Rectangle(
+                    x: squareArea.X + (int)(squareArea.Width * (1 - scale) / 2f),
+                    y: squareArea.Y + (int)(squareArea.Height * (1 - scale) / 2f),
+                    width: Math.Max(1, (int)(squareArea.Width * scale)),
+                    height: Math.Max(1, (int)(squareArea.Height * scale))
+                );
+
+                e.Graphics.DrawArc(color, area, -90 + startAngle, angle);
+            }
+
             //Color scheme to use
             Color[] colors = timer.AnalogColors;
 
             //Create the final-minute color shift
-            if (createLastCountdownEffects && timer.TimeLeft.TotalMinutes < 1f && !timer.Overtime)
+            if (createLastCountdownEffects && !timer.Overtime)
             {
-                fillPie(
-                    color: BG_BRUSH,
-                    startAngle: (DateTime.Now.Second + DateTime.Now.Millisecond / 1000f) / 60f * 360f,
-                    angle: (float)timer.RealTimeLeft.TotalSeconds / 60f * 360f,
-                    scale: 1 - BG_FRAME_SCALE,
-                    centerOffset: 0f
-                );
+                if (timer.TimeLeft.TotalMinutes < 1f)
+                {
+                    fillPie(
+                        color: BG_BRUSH,
+                        startAngle: (DateTime.Now.Second + DateTime.Now.Millisecond / 1000f) / 60f * 360f,
+                        angle: (float)timer.RealTimeLeft.TotalSeconds / 60f * 360f,
+                        scale: 1 - BG_FRAME_SCALE,
+                        centerOffset: 0f
+                    );
+                }
+                
             }
 
             /*
@@ -582,7 +602,7 @@ namespace NewTimer.FormParts
             }
 
             //Draw for hours (more than 3 hours)
-            else if (timer.TimeLeft.TotalHours >= 3)
+            else if (timer.TimeLeft.TotalHours >= 3 || timer.HybridDiskMode)
             {
                 float dividend = 1f;
                 for (int i = 0; i < Math.Ceiling(timer.TimeLeft.TotalDays * 2); i++)
@@ -617,38 +637,75 @@ namespace NewTimer.FormParts
             }
 
             //Draw for minutes (less than 3 hours)
-            else
+            if (timer.TimeLeft.TotalHours < 3f)
             {
                 float dividend = 1f;
                 for (int i = 0; i < Math.Ceiling(timer.TimeLeft.TotalHours); i++)
                 {
                     //Create a colored pen based on what hour we are drawing
                     using (Brush b = createBrush[i % createBrush.Length](colors[i % colors.Length]))
+                    using (Pen altPen = new Pen(colors[i % colors.Length], 4f) 
+                    { 
+                        EndCap = timer.Overtime ? LineCap.Round : LineCap.ArrowAnchor, 
+                        StartCap = timer.Overtime ? LineCap.ArrowAnchor : LineCap.Flat, 
+                        DashStyle = timer == Globals.PrimaryTimer ? DashStyle.Solid : DashStyle.Dot,
+                        DashCap = DashCap.Round,
+                        DashOffset = 0.5f
+                    })
                     {
+                        //Used for arcs. Did some finetuning here
+                        float arcScale = (DISC_INITAL_SCALE * 0.95f) - (0.1f) * i;
+
                         if (i == Math.Floor(timer.TimeLeft.TotalHours))
                         {
-                            fillPie(
-                                color: b,
-                                startAngle: (DateTime.Now.Minute + DateTime.Now.Second / 60f) / 60f * 360f,
-                                angle: (float)(timer.RealTimeLeft.TotalMinutes % 60) / 60f * 360f,
-                                scale: DISC_INITAL_SCALE / dividend,
-                                centerOffset: 0f
-                            );
+                            float startAngle = (DateTime.Now.Minute + DateTime.Now.Second / 60f) / 60f * 360f;
+                            float angle = (float)(timer.RealTimeLeft.TotalMinutes % 60) / 60f * 360f;
+
+                            if (timer.HybridDiskMode)
+                            {
+                                drawArc(altPen, startAngle, angle, arcScale);
+                            }
+                            else
+                            {
+                                fillPie(b, startAngle, angle, DISC_INITAL_SCALE / dividend, 0f);
+                            }
+                            
                         }
                         else
                         {
-                            fillPie(
-                                color: b,
-                                startAngle: 0f,
-                                angle: 360f,
-                                scale: DISC_INITAL_SCALE / dividend,
-                                centerOffset: 0f
-                            );
+                            if (timer.HybridDiskMode)
+                            {
+                                drawArc(altPen, 0, 360f, arcScale);
+                            }
+                            else
+                            {
+                                fillPie(b, 0f, 360f, DISC_INITAL_SCALE / dividend, 0f);
+                            }
                         }
                     }
 
                     dividend += DISC_DIVIDEND_INCREMENT;
                 }
+            }
+
+            //Draw the little arrow in hybrid mode when more than 3 hours remain
+            else if (timer.HybridDiskMode && timer.TimeLeft.Days < 1f)
+            {
+                Point center = new Point(squareArea.X + squareArea.Width / 2, squareArea.Y + squareArea.Height / 2);
+                float angle = CalculateAngle(timer.Target.Minute, 60f);
+                float length = DISC_INITAL_SCALE * squareArea.Width / 2f;
+
+                e.Graphics.DrawLine(
+                    pen: new Pen(colors[4 % colors.Length], 4) 
+                    { 
+                        EndCap = timer == Globals.PrimaryTimer ? LineCap.ArrowAnchor : LineCap.Flat,
+                        DashStyle = timer == Globals.PrimaryTimer ? DashStyle.Solid : DashStyle.Dot,
+                        DashCap = DashCap.Round,
+                        DashOffset = 0.5f
+                    },
+                    pt1: GetPointAtAngle(center, length * 0.875f, angle),
+                    pt2: GetPointAtAngle(center, length, angle)
+                );
             }
 
             //Draw for seconds (less than 12 minutes)

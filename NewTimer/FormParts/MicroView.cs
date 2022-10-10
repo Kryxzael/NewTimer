@@ -244,6 +244,20 @@ namespace NewTimer.FormParts
             }
             else
             {
+                if (Globals.CurrentBroadcastMessage == null)
+                {
+                    if (Globals.PrimaryTimer.StopAtZero && isOvertime && DateTime.Now.Millisecond < 500)
+                    {
+                        Globals.Broadcast(null, "");
+                    }
+                    else
+                    {
+                        Globals.Broadcast(null, null);
+                    }
+                }
+                
+
+
                 if (span.TotalSeconds < 100)
                     CurrentCommand = new MicroViewCommand(span.TotalSeconds, ' ', false);
 
@@ -294,7 +308,9 @@ namespace NewTimer.FormParts
                 broadcastAt("HALF",  0, 30, false);
                 broadcastAt("QUAT",  0, 15, false);
                 broadcastAt("MIN ",  0,  1, false);
-                broadcastAt("ZERO",  0,  0, true);
+
+                if (!Globals.PrimaryTimer.StopAtZero)
+                    broadcastAt("ZERO",  0,  0, true);
 
                 /*
                  * Broadcasts (to micro-view only) the provided message at the given amount of time on the clock
@@ -316,7 +332,7 @@ namespace NewTimer.FormParts
                     if (!isOvertime)
                         target -= new TimeSpan(0, 0, 1);
 
-                    if (span.Hours == target.Hours && span.Minutes == target.Minutes && span.Seconds == target.Seconds)
+                    if (span.Days == target.Days && span.Hours == target.Hours && span.Minutes == target.Minutes && span.Seconds == target.Seconds)
                     {
                         if (isOvertime && span.Milliseconds > 100)
                             return;

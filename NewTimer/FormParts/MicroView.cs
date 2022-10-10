@@ -244,6 +244,20 @@ namespace NewTimer.FormParts
             }
             else
             {
+                if (Globals.CurrentBroadcastMessage == null)
+                {
+                    if (Globals.PrimaryTimer.StopAtZero && isOvertime && DateTime.Now.Millisecond < 500)
+                    {
+                        Globals.Broadcast(null, "");
+                    }
+                    else
+                    {
+                        Globals.Broadcast(null, null);
+                    }
+                }
+                
+
+
                 if (span.TotalSeconds < 100)
                     CurrentCommand = new MicroViewCommand(span.TotalSeconds, ' ', false);
 

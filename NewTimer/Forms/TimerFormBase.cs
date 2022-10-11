@@ -487,7 +487,14 @@ namespace NewTimer.Forms
                     if (Globals.PrimaryTimer.Paused)
                         Globals.Broadcast(null, "PAUS");
                     else
-                        Globals.Broadcast("Resume", "RESU");
+                    {
+                        if (Globals.PrimaryTimer.TimeLeft == new TimeSpan())
+                            Globals.Broadcast("Go", "GO");
+
+                        else
+                            Globals.Broadcast("Resume", "RESU");
+                    }
+
 
                     return;
 

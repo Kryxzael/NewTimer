@@ -246,13 +246,12 @@ namespace NewTimer.FormParts
             {
                 if (Globals.CurrentBroadcastMessage == null)
                 {
-                    if (Globals.PrimaryTimer.StopAtZero && isOvertime && DateTime.Now.Millisecond < 500)
+                    if (Globals.PrimaryTimer.StopAtZero && isOvertime)
                     {
-                        Globals.Broadcast(null, "");
-                    }
-                    else
-                    {
-                        Globals.Broadcast(null, null);
+                        if (DateTime.Now.Millisecond < 500)
+                            Globals.Broadcast(null, "");
+                        else
+                            Globals.Broadcast(null, null);
                     }
                 }
                 

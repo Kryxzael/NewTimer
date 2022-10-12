@@ -204,8 +204,21 @@ namespace NewTimer.FormParts
                     //ToString was annoying with rounding instead of flooring, so doing this instead
                     int num = (int)(input * 10);
 
-                    output = num.ToString("00", CultureInfo.InvariantCulture);
-                    showDot = true;
+                    //Number is divisible by ten and should not have a decimal part
+                    if (num % 10 == 0)
+                    {
+                        output = " " + (num / 10).ToString("0", CultureInfo.InvariantCulture);
+                        showDot = false;
+                    }
+
+                    //Number needs a decimal part
+                    else
+                    {
+                        output = num.ToString("00", CultureInfo.InvariantCulture);
+                        showDot = true;
+                    }
+
+                    
                     offsetOutput = getOffsetMarker(input * 10);
                 }
                 else

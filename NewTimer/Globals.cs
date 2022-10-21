@@ -100,6 +100,11 @@ namespace NewTimer
         public static ThemedColor GlobalForeColor { get; } = new ThemedColor(ColorTranslator.FromHtml("#111"), ColorTranslator.FromHtml("#ddd"));
 
         /// <summary>
+        /// The color that will be used as the text color for the whole application
+        /// </summary>
+        public static ThemedColor GlobalSecondaryForeColor { get; } = new ThemedColor(ColorTranslator.FromHtml("#222"), ColorTranslator.FromHtml("#ccc"));
+
+        /// <summary>
         /// The color that will be used as the background color for the whole application
         /// </summary>
         public static ThemedColor GlobalBackColor { get; } = new ThemedColor(ColorTranslator.FromHtml("#ddd"), ColorTranslator.FromHtml("#111"));

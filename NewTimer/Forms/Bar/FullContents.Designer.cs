@@ -31,6 +31,7 @@
             this.lblTotalMinutes = new System.Windows.Forms.Label();
             this.lblTotalHours = new System.Windows.Forms.Label();
             this.lblTotalSeconds = new System.Windows.Forms.Label();
+            this.Full2ndM = new NewTimer.FormParts.LabelGrayedLeadingZeros();
             this.timerBar1 = new NewTimer.FormParts.TimerBar();
             this.FullD = new NewTimer.FormParts.LabelGrayedLeadingZeros();
             this.overwatchBar2 = new NewTimer.FormParts.TimerBar();
@@ -42,6 +43,9 @@
             this.FullTotalH = new NewTimer.FormParts.LabelGrayedLeadingZeros();
             this.FullM = new NewTimer.FormParts.LabelGrayedLeadingZeros();
             this.FullTotalS = new NewTimer.FormParts.LabelGrayedLeadingZeros();
+            this.Full2ndH = new NewTimer.FormParts.LabelGrayedLeadingZeros();
+            this.Full2ndS = new NewTimer.FormParts.LabelGrayedLeadingZeros();
+            this.Full2ndD = new NewTimer.FormParts.LabelGrayedLeadingZeros();
             this.SuspendLayout();
             // 
             // lblTotalMinutes
@@ -73,6 +77,22 @@
             this.lblTotalSeconds.Size = new System.Drawing.Size(49, 13);
             this.lblTotalSeconds.TabIndex = 19;
             this.lblTotalSeconds.Text = "Seconds";
+            // 
+            // Full2ndM
+            // 
+            this.Full2ndM.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Full2ndM.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(221)))), ((int)(((byte)(221)))), ((int)(((byte)(221)))));
+            this.Full2ndM.HighlightColor = System.Drawing.Color.Empty;
+            this.Full2ndM.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.Full2ndM.LeadingZerosColor = System.Drawing.Color.Gray;
+            this.Full2ndM.Location = new System.Drawing.Point(137, 57);
+            this.Full2ndM.Name = "Full2ndM";
+            this.Full2ndM.Progress = 0F;
+            this.Full2ndM.RenderLeadingZeros = false;
+            this.Full2ndM.Size = new System.Drawing.Size(28, 27);
+            this.Full2ndM.TabIndex = 27;
+            this.Full2ndM.Text = "00";
+            this.Full2ndM.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // timerBar1
             // 
@@ -258,11 +278,63 @@
             this.FullTotalS.Text = "0000000";
             this.FullTotalS.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
+            // Full2ndH
+            // 
+            this.Full2ndH.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Full2ndH.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(221)))), ((int)(((byte)(221)))), ((int)(((byte)(221)))));
+            this.Full2ndH.HighlightColor = System.Drawing.Color.Empty;
+            this.Full2ndH.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.Full2ndH.LeadingZerosColor = System.Drawing.Color.Gray;
+            this.Full2ndH.Location = new System.Drawing.Point(112, 59);
+            this.Full2ndH.Name = "Full2ndH";
+            this.Full2ndH.Progress = 0F;
+            this.Full2ndH.RenderLeadingZeros = false;
+            this.Full2ndH.Size = new System.Drawing.Size(22, 27);
+            this.Full2ndH.TabIndex = 29;
+            this.Full2ndH.Text = "00";
+            this.Full2ndH.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // Full2ndS
+            // 
+            this.Full2ndS.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Full2ndS.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(221)))), ((int)(((byte)(221)))), ((int)(((byte)(221)))));
+            this.Full2ndS.HighlightColor = System.Drawing.Color.Empty;
+            this.Full2ndS.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.Full2ndS.LeadingZerosColor = System.Drawing.Color.Gray;
+            this.Full2ndS.Location = new System.Drawing.Point(171, 64);
+            this.Full2ndS.Name = "Full2ndS";
+            this.Full2ndS.Progress = 0F;
+            this.Full2ndS.RenderLeadingZeros = false;
+            this.Full2ndS.Size = new System.Drawing.Size(22, 20);
+            this.Full2ndS.TabIndex = 30;
+            this.Full2ndS.Text = "00";
+            this.Full2ndS.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // Full2ndD
+            // 
+            this.Full2ndD.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Full2ndD.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(221)))), ((int)(((byte)(221)))), ((int)(((byte)(221)))));
+            this.Full2ndD.HighlightColor = System.Drawing.Color.Empty;
+            this.Full2ndD.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.Full2ndD.LeadingZerosColor = System.Drawing.Color.Gray;
+            this.Full2ndD.Location = new System.Drawing.Point(93, 59);
+            this.Full2ndD.Name = "Full2ndD";
+            this.Full2ndD.Progress = 0F;
+            this.Full2ndD.RenderLeadingZeros = false;
+            this.Full2ndD.Size = new System.Drawing.Size(17, 27);
+            this.Full2ndD.TabIndex = 31;
+            this.Full2ndD.Text = "00";
+            this.Full2ndD.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
             // FullContents
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Transparent;
+            this.Controls.Add(this.Full2ndD);
+            this.Controls.Add(this.Full2ndS);
+            this.Controls.Add(this.Full2ndH);
+            this.Controls.Add(this.Full2ndM);
             this.Controls.Add(this.timerBar1);
             this.Controls.Add(this.FullD);
             this.Controls.Add(this.overwatchBar2);
@@ -300,5 +372,9 @@
         private FormParts.LabelGrayedLeadingZeros FullS;
         private FormParts.LabelGrayedLeadingZeros FullD;
         private FormParts.TimerBar timerBar1;
+        private FormParts.LabelGrayedLeadingZeros Full2ndM;
+        private FormParts.LabelGrayedLeadingZeros Full2ndH;
+        private FormParts.LabelGrayedLeadingZeros Full2ndS;
+        private FormParts.LabelGrayedLeadingZeros Full2ndD;
     }
 }

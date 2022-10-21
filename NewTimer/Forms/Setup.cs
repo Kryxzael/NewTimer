@@ -47,6 +47,8 @@ namespace NewTimer.Forms
             knbDurMin.CircleTrackColor = new ThemedColor(Color.White, Color.Black);
             knbDurSec.CircleTrackColor = new ThemedColor(Color.White, Color.Black);
 
+            chkAdv.ForeColor = Globals.GlobalForeColor;
+
             knbHour.ForeColor = Globals.HoursColor;
             knbMin.ForeColor = Globals.MinutesColor;
             knbSec.ForeColor = Globals.SecondsColor;

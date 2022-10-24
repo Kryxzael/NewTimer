@@ -13,9 +13,14 @@ namespace NewTimer.Forms.Bar
 {
     public partial class FullContents : UserControl, ICountdown
     {
+        private Point _secondaryHourDefaultPosition;
+        private Point _secondaryHourAlternatePosition = new Point(71, 131);
+
         public FullContents()
         {
             InitializeComponent();
+
+            _secondaryHourDefaultPosition = Full2ndH.Location;
 
             //Sets foreground colors to comply with global settings
             FullD.ForeColor = Globals.GlobalForeColor;
@@ -143,8 +148,37 @@ namespace NewTimer.Forms.Bar
             {
                 Full2ndD.Visible = true;
                 Full2ndH.Visible = true;
-                Full2ndM.Visible = true;
-                Full2ndS.Visible = true;
+
+                if (Globals.PrimaryTimer.TimeLeft.Seconds == Globals.SecondaryTimer.TimeLeft.Seconds 
+                    && Globals.PrimaryTimer.Overtime == Globals.SecondaryTimer.Overtime
+                )
+                {
+                    if (Globals.PrimaryTimer.TimeLeft.Minutes == Globals.SecondaryTimer.TimeLeft.Minutes)
+                        Full2ndM.Visible = false;
+
+                    else
+                        Full2ndM.Visible = true;
+
+                    Full2ndS.Visible = false;
+                }
+                else
+                {
+                    Full2ndM.Visible = true;
+                    Full2ndS.Visible = true;
+                }
+
+                if (Globals.PrimaryTimer.RealTimeLeft.Days == Globals.SecondaryTimer.RealTimeLeft.Days
+                    && !Full2ndM.Visible
+                    && !Full2ndS.Visible
+                )
+                {
+                    Full2ndH.Location = _secondaryHourAlternatePosition;
+                }
+                else 
+                {
+                    Full2ndH.Location = _secondaryHourDefaultPosition;
+                }
+                
 
                 //2nd days
                 Full2ndD.Text = Globals.SecondaryTimer.TimeLeft.Days.ToString("00");

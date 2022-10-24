@@ -153,7 +153,9 @@ namespace NewTimer.Forms.Bar
                     && Globals.PrimaryTimer.Overtime == Globals.SecondaryTimer.Overtime
                 )
                 {
-                    if (Globals.PrimaryTimer.TimeLeft.Minutes == Globals.SecondaryTimer.TimeLeft.Minutes)
+                    if (Globals.PrimaryTimer.TimeLeft.Minutes == Globals.SecondaryTimer.TimeLeft.Minutes
+                        && Globals.SecondaryTimer.TimeLeft.TotalDays < 1f
+                    )
                         Full2ndM.Visible = false;
 
                     else

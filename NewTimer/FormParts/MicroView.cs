@@ -84,7 +84,7 @@ namespace NewTimer.FormParts
         /// </summary>
         public void Recolorize()
         {
-            ForeColor = Globals.PrimaryTimer.ColorScheme.GenerateOne(Globals.MasterRandom);
+            Globals.PrimaryTimer.ColorizeTimerBar();
         }
 
         /// <summary>
@@ -106,22 +106,32 @@ namespace NewTimer.FormParts
         {
             base.OnPaint(e);
 
-            Brush fgBrush = new SolidBrush(ForeColor);
-            Brush fgFadeBrush = null;
+            Brush primaryBrush = new SolidBrush(Globals.PrimaryTimer.MicroViewColor);
+            Brush secondaryBrush = null;
             Brush bgBrush = new SolidBrush(Color.FromArgb(0x5F, new ThemedColor(Color.Silver, Color.Black)));
 
             //Create brush that's used to fade between secondary timer and unit
             if (SecondaryCommand.IsValid && Globals.CurrentMicroBroadcastMessage == null)
             {
+                Color baseColor;
+
+                if (DateTime.Now.Second % 10 >= 5 || Globals.PrimaryTimer.InFreeMode)
+                    baseColor = Globals.PrimaryTimer.MicroViewColor;
+
+                else
+                    baseColor = Globals.SecondaryTimer.MicroViewColor;
+
                 if (DateTime.Now.Second % 5 == 4)
-                    fgFadeBrush = new SolidBrush(Color.FromArgb((int)((1000 - DateTime.Now.Millisecond) / 1000f * 255), ForeColor));
+                    secondaryBrush = new SolidBrush(Color.FromArgb((int)((1000 - DateTime.Now.Millisecond) / 1000f * 255), baseColor));
 
                 else if (DateTime.Now.Second % 5 == 0)
-                    fgFadeBrush = new SolidBrush(Color.FromArgb((int)(DateTime.Now.Millisecond / 1000f * 255), ForeColor));
-            }
+                    secondaryBrush = new SolidBrush(Color.FromArgb((int)(DateTime.Now.Millisecond / 1000f * 255), baseColor));
 
-            if (fgFadeBrush == null)
-                fgFadeBrush = new SolidBrush(ForeColor);
+                else
+                    secondaryBrush = new SolidBrush(baseColor);
+            }
+            else
+                secondaryBrush = new SolidBrush(Globals.PrimaryTimer.MicroViewColor);
 
 
             string numDisplay;
@@ -158,18 +168,18 @@ namespace NewTimer.FormParts
             e.Graphics.DrawString(".", SMALL_FONT, bgBrush, new PointF(PANEL_WIDTH - 20, 9.5f));
 
 
-            e.Graphics.DrawString(numDisplay, DEFAULT_FONT, fgBrush, new Point(0, 0));
-            e.Graphics.DrawString(offset.ToString(),  SMALL_FONT, fgFadeBrush, new Point(PANEL_WIDTH - 20, 5));
-            e.Graphics.DrawString(unit.ToString(),  SMALL_FONT, fgFadeBrush, new Point(PANEL_WIDTH - 20, PANEL_HEIGHT - 25));
+            e.Graphics.DrawString(numDisplay, DEFAULT_FONT, primaryBrush, new Point(0, 0));
+            e.Graphics.DrawString(offset.ToString(),  SMALL_FONT, secondaryBrush, new Point(PANEL_WIDTH - 20, 5));
+            e.Graphics.DrawString(unit.ToString(),  SMALL_FONT, secondaryBrush, new Point(PANEL_WIDTH - 20, PANEL_HEIGHT - 25));
 
 
             if (displayDot)
-                e.Graphics.DrawString(".", DEFAULT_FONT, fgBrush, new Point(19, 0));
+                e.Graphics.DrawString(".", DEFAULT_FONT, primaryBrush, new Point(19, 0));
 
             if (displaySecondaryDot)
-                e.Graphics.DrawString(".", SMALL_FONT, fgFadeBrush, new PointF(PANEL_WIDTH - 19, 9.5f));
+                e.Graphics.DrawString(".", SMALL_FONT, secondaryBrush, new PointF(PANEL_WIDTH - 19, 9.5f));
 
-            fgBrush.Dispose();
+            primaryBrush.Dispose();
             bgBrush.Dispose();
 
             char getOffsetMarker(double d)

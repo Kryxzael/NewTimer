@@ -160,7 +160,7 @@ namespace NewTimer
         /// <summary>
         /// Keeps the color of the micro-view
         /// </summary>
-        public Color MicroViewColor { get; private set; }
+        public Color MicroViewColor { get; set; }
 
         /// <summary>
         /// Gets the configuration settings that the time bar will use. The key is the minimum unit time that will be used to apply the settings

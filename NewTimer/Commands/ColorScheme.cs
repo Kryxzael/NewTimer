@@ -44,6 +44,7 @@ namespace NewTimer.Commands
                     }
 
                     Array.Copy(Globals.SecondaryTimer.AnalogColors, Globals.PrimaryTimer.AnalogColors, Globals.PrimaryTimer.AnalogColors.Length);
+                    Globals.PrimaryTimer.MicroViewColor = Globals.SecondaryTimer.MicroViewColor;
 
                     target.WriteLine("Synchronized color schemes");
                     return;

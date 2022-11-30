@@ -93,6 +93,7 @@
             this.Full2ndM.TabIndex = 27;
             this.Full2ndM.Text = "00";
             this.Full2ndM.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.Full2ndM.Visible = false;
             // 
             // timerBar1
             // 
@@ -293,6 +294,7 @@
             this.Full2ndH.TabIndex = 29;
             this.Full2ndH.Text = "00";
             this.Full2ndH.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            this.Full2ndH.Visible = false;
             // 
             // Full2ndS
             // 
@@ -309,6 +311,7 @@
             this.Full2ndS.TabIndex = 30;
             this.Full2ndS.Text = "00";
             this.Full2ndS.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            this.Full2ndS.Visible = false;
             // 
             // Full2ndD
             // 
@@ -325,6 +328,7 @@
             this.Full2ndD.TabIndex = 31;
             this.Full2ndD.Text = "00";
             this.Full2ndD.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            this.Full2ndD.Visible = false;
             // 
             // FullContents
             // 

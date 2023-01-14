@@ -76,15 +76,6 @@ namespace NewTimer.FormParts
         {
             Size = new Size(PANEL_WIDTH, PANEL_HEIGHT);
             DoubleBuffered = true;
-            Recolorize();
-        }
-
-        /// <summary>
-        /// Generates a new color for the control
-        /// </summary>
-        public void Recolorize()
-        {
-            Globals.PrimaryTimer.ColorizeTimerBar();
         }
 
         /// <summary>
@@ -95,7 +86,7 @@ namespace NewTimer.FormParts
         protected override void OnClick(EventArgs e)
         {
             base.OnClick(e);
-            Recolorize();
+            Globals.PrimaryTimer.ColorizeTimerBar();
         }
 
         /// <summary>

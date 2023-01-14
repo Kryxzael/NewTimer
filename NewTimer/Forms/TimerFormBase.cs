@@ -510,7 +510,6 @@ namespace NewTimer.Forms
 
                         Globals.PrimaryTimer.ColorScheme = Globals.ColorSchemes[(currentIndex + 1) % Globals.ColorSchemes.Length];
                         Globals.PrimaryTimer.ColorizeTimerBar();
-                        _microView.Recolorize();
                         Globals.Broadcast("Color Scheme: " + Globals.PrimaryTimer.ColorScheme.Name, "CS" + Globals.PrimaryTimer.ColorScheme.Name.Substring(0, 2));
                     }    
                         
@@ -564,7 +563,6 @@ namespace NewTimer.Forms
 
                         Globals.PrimaryTimer.ColorScheme = Globals.ColorSchemes[currentIndex - 1];
                         Globals.PrimaryTimer.ColorizeTimerBar();
-                        _microView.Recolorize();
                         Globals.Broadcast("Color Scheme: " + Globals.PrimaryTimer.ColorScheme.Name, "CS" + Globals.PrimaryTimer.ColorScheme.Name.Substring(0, 2));
                     }
                     else
@@ -795,7 +793,7 @@ namespace NewTimer.Forms
                             Globals.Broadcast("Hybrid Disk Mode", "HYBR");
 
                         else
-                            Globals.Broadcast("Seperate Disk Mode", "SEP");
+                            Globals.Broadcast("Separate Disk Mode", "SEP");
                     }
                     else
                     {
@@ -818,7 +816,6 @@ namespace NewTimer.Forms
                         Globals.Broadcast("Re-Colorize", "COLR");
                     }
 
-                    _microView.Recolorize();
                     return;
 
                 case Keys.Up:

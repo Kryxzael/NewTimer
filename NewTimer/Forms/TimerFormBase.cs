@@ -822,10 +822,10 @@ namespace NewTimer.Forms
                     if (e.Shift)
                         Globals.PrimaryTimer.Target = Globals.PrimaryTimer.Target.AddMinutes(5);
 
-                    if (e.Alt)
+                    else if (e.Alt)
                         Globals.PrimaryTimer.Target = Globals.PrimaryTimer.Target.AddMinutes(15);
 
-                    if (e.Control)
+                    else if (e.Control)
                         Globals.PrimaryTimer.Target = Globals.PrimaryTimer.Target.AddHours(1);
 
                     else
@@ -838,10 +838,10 @@ namespace NewTimer.Forms
                     if (e.Shift)
                         Globals.PrimaryTimer.Target = Globals.PrimaryTimer.Target.AddMinutes(-5);
 
-                    if (e.Alt)
+                    else if (e.Alt)
                         Globals.PrimaryTimer.Target = Globals.PrimaryTimer.Target.AddMinutes(-15);
 
-                    if (e.Control)
+                    else if (e.Control)
                         Globals.PrimaryTimer.Target = Globals.PrimaryTimer.Target.AddHours(-1);
 
                     else

@@ -83,9 +83,6 @@ namespace NewTimer.FormParts
              * This is to make the effect go up and not down
              * It was done on purpose
              */
-            Brush fgBrush = new SolidBrush(ForeColor);
-            Brush hiBrush = new SolidBrush(HighlightColor);
-            Brush grayBrush = new SolidBrush(Globals.GlobalGrayedColor);
 
             //Draws the "background text"
             foreach (char i in Text)

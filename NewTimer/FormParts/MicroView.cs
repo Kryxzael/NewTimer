@@ -98,7 +98,7 @@ namespace NewTimer.FormParts
             base.OnPaint(e);
 
             Brush primaryBrush = new SolidBrush(Globals.PrimaryTimer.MicroViewColor);
-            Brush secondaryBrush = null;
+            Brush secondaryBrush;
             Brush bgBrush = new SolidBrush(Color.FromArgb(0x5F, new ThemedColor(Color.Silver, Color.Black)));
 
             //Create brush that's used to fade between secondary timer and unit

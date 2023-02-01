@@ -16,11 +16,15 @@ namespace NewTimer.Forms.Bar
         private Point _secondaryHourDefaultPosition;
         private Point _secondaryHourAlternatePosition = new Point(71, 131);
 
+        private Point _secondaryDayDefaultPosition;
+        private Point _secondaryDayAlternatePosition = new Point(50, 128);
+
         public FullContents()
         {
             InitializeComponent();
 
             _secondaryHourDefaultPosition = Full2ndH.Location;
+            _secondaryDayDefaultPosition = Full2ndD.Location;
 
             //Sets foreground colors to comply with global settings
             FullD.ForeColor = Globals.GlobalForeColor;
@@ -153,9 +157,7 @@ namespace NewTimer.Forms.Bar
                     && Globals.PrimaryTimer.Overtime == Globals.SecondaryTimer.Overtime
                 )
                 {
-                    if (Globals.PrimaryTimer.TimeLeft.Minutes == Globals.SecondaryTimer.TimeLeft.Minutes
-                        && Globals.SecondaryTimer.TimeLeft.TotalDays < 1f
-                    )
+                    if (Globals.PrimaryTimer.TimeLeft.Minutes == Globals.SecondaryTimer.TimeLeft.Minutes)
                         Full2ndM.Visible = false;
 
                     else
@@ -169,16 +171,15 @@ namespace NewTimer.Forms.Bar
                     Full2ndS.Visible = true;
                 }
 
-                if (Globals.PrimaryTimer.RealTimeLeft.Days == Globals.SecondaryTimer.RealTimeLeft.Days
-                    && !Full2ndM.Visible
-                    && !Full2ndS.Visible
-                )
+                if (!Full2ndM.Visible && !Full2ndS.Visible)
                 {
                     Full2ndH.Location = _secondaryHourAlternatePosition;
+                    Full2ndD.Location = _secondaryDayAlternatePosition;
                 }
                 else 
                 {
                     Full2ndH.Location = _secondaryHourDefaultPosition;
+                    Full2ndD.Location = _secondaryDayDefaultPosition;
                 }
                 
 

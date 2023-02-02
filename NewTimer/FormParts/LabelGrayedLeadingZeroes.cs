@@ -24,6 +24,9 @@ namespace NewTimer.FormParts
         private bool _renderLeadingZeros;
         private Color _hiColor;
 
+        private string _oldText;
+        private Dictionary<int, DigitRollOverAnimation> _animations = new Dictionary<int, DigitRollOverAnimation>();
+
         /// <summary>
         /// Get or sets the amount of the label that should be colored with highlighting color. Intended range is 0 through 1
         /// </summary>
@@ -32,6 +35,16 @@ namespace NewTimer.FormParts
             get => _progress;
             set => _progress = Math.Max(0, Math.Min(1, value));
         }
+
+        /// <summary>
+        /// Gets or sets whether the animation should progress up or down
+        /// </summary>
+        public bool RollUp { get; set; }
+
+        /// <summary>
+        /// Gets or sets the animation time of each roll. Set to 0 for instant change
+        /// </summary>
+        public TimeSpan AnimationTime { get; set; }
 
         /// <summary>
         /// Gets or sets the leading zeros' color
@@ -73,6 +86,19 @@ namespace NewTimer.FormParts
             }
         }
 
+        protected override void OnTextChanged(EventArgs e)
+        {
+            base.OnTextChanged(e);
+
+            for (int i = 0; i < Math.Min(_oldText?.Length ?? 0, Text.Length); i++)
+            {
+                if (Text[i] != _oldText[i])
+                    _animations[i] = new DigitRollOverAnimation(_oldText[i], AnimationTime);
+            }
+
+            _oldText = Text;
+        }
+
         protected override void OnPaint(PaintEventArgs e)
         {
             int offset = 0;
@@ -84,78 +110,117 @@ namespace NewTimer.FormParts
              * It was done on purpose
              */
 
-            //Draws the "background text"
-            foreach (char i in Text)
+            for (int i = 0; i < Text.Length; i++)
             {
+                char c = Text[i];
+                DigitRollOverAnimation animation = _animations.ContainsKey(i) ? _animations[i] : null;
+
                 Rectangle offsetClipRect = e.ClipRectangle;
                 offsetClipRect.X += offset;
                 offsetClipRect.Width -= offset;
 
-                if (i != '0')
+                if (c != '0')
                 {
                     renderGrays = false;
                 }
 
-                //Draw the char
-                TextRenderer.DrawText(
-                    dc: e.Graphics, 
-                    text: i.ToString(), 
-                    font: Font, 
-                    bounds: offsetClipRect, 
-                    foreColor: renderGrays ? LeadingZerosColor : HighlightColor, 
-                    flags: TextFormatFlags.NoPadding
-                );
+                if (animation == null)
+                {
+                    drawDigit(c, offsetClipRect, true);
+                }
+                else
+                {
+                    Rectangle oldDigitRect = offsetClipRect;
+                    Rectangle newDigitRect = offsetClipRect;
 
-                //Add char's width to offset variable
-                offset += TextRenderer.MeasureText(
-                    dc: e.Graphics, 
-                    text: i.ToString(), 
-                    font: Font, 
-                    proposedSize: offsetClipRect.Size, 
-                    flags: TextFormatFlags.NoPadding
-                ).Width;
+                    if (RollUp)
+                    {
+                        oldDigitRect.Y -= (int)(oldDigitRect.Height * animation.AnimationProgress);
+                        newDigitRect.Y -= (int)(newDigitRect.Height * animation.AnimationProgress);
+                        newDigitRect.Y += oldDigitRect.Height;
+                    }
+                    else
+                    {
+                        oldDigitRect.Y += (int)(oldDigitRect.Height * animation.AnimationProgress);
+                        newDigitRect.Y += (int)(newDigitRect.Height * animation.AnimationProgress);
+                        newDigitRect.Y -= oldDigitRect.Height;
+                    }
+                    
+
+                    drawDigit(animation.FromValue, oldDigitRect, false);
+                    drawDigit(c, newDigitRect, true);
+                }
+                
+
+                void drawDigit(char digit, Rectangle bounds, bool addToMessurements)
+                {
+                    //Draws the "background text"
+                    TextRenderer.DrawText(
+                        dc: e.Graphics,
+                        text: digit.ToString(),
+                        font: Font,
+                        bounds: bounds,
+                        foreColor: renderGrays ? LeadingZerosColor : HighlightColor,
+                        flags: TextFormatFlags.NoPadding
+                    );
+
+                    //AdjustedProgress takes the visible height of the font into account.
+                    //The font-height and the visible part of its characters are different
+                    //The numbers below have been painstakingly picked and tweaked for the best result.
+                    //They don't have any derivable meaning, so don't go looking for it
+                    float adjustedProgress = (_progress * 0.725f) + 0.185f;
+                    bounds.Height = (int)(bounds.Height * adjustedProgress);
+
+                    //Draw the char
+                    TextRenderer.DrawText(
+                        dc: e.Graphics,
+                        text: digit.ToString(),
+                        font: Font,
+                        bounds: bounds,
+                        foreColor: renderGrays ? LeadingZerosColor : ForeColor,
+                        flags: TextFormatFlags.NoPadding
+                    );
+
+                    if (addToMessurements)
+                    {
+                        //Add char's width to offset variable
+                        offset += TextRenderer.MeasureText(
+                            dc: e.Graphics,
+                            text: digit.ToString(),
+                            font: Font,
+                            proposedSize: offsetClipRect.Size,
+                            flags: TextFormatFlags.NoPadding
+                        ).Width;
+                    }
+                }
+            }
+        }
+
+        private class DigitRollOverAnimation
+        {
+            public char FromValue  { get; }
+
+            public float AnimationProgress
+            {
+                get
+                {
+                    long now = DateTime.Now.Ticks;
+                    long start = AnimationStart.Ticks;
+                    long end = AnimationEnd.Ticks;
+
+                    float duration = (now - start) / (float)(end - start);
+                    return Math.Max(Math.Min(1, duration), 0);
+                }
             }
 
-            offset = 0;
-            renderGrays = !RenderLeadingZeros;
+            private DateTime AnimationStart { get; }
+            private DateTime AnimationEnd { get; }
 
-            //Draws the "foreground text"
-            foreach (char i in Text)
+            public DigitRollOverAnimation(char fromValue, TimeSpan animationDuration)
             {
-                Rectangle offsetClipRect = e.ClipRectangle;
-                offsetClipRect.X += offset;
-                offsetClipRect.Width -= offset;
-
-                //AdjustedProgress takes the visible height of the font into account.
-                //The font-height and the visible part of its characters are different
-                //The numbers below have been painstakingly picked and tweaked for the best result.
-                //They don't have any derivable meaning, so don't go looking for it
-                float adjustedProgress = (_progress * 0.725f) + 0.185f;
-                offsetClipRect.Height = (int)(offsetClipRect.Height * adjustedProgress);
-
-                if (i != '0')
-                {
-                    renderGrays = false;
-                }
-
-                //Draw the char
-                TextRenderer.DrawText(
-                    dc: e.Graphics,
-                    text: i.ToString(),
-                    font: Font,
-                    bounds: offsetClipRect,
-                    foreColor: renderGrays ? LeadingZerosColor : ForeColor,
-                    flags: TextFormatFlags.NoPadding
-                );
-
-                //Add char's width to offset variable
-                offset += TextRenderer.MeasureText(
-                    dc: e.Graphics,
-                    text: i.ToString(),
-                    font: Font,
-                    proposedSize: offsetClipRect.Size,
-                    flags: TextFormatFlags.NoPadding
-                ).Width;
+                FromValue = fromValue;
+                AnimationStart = DateTime.Now;
+                AnimationEnd = AnimationStart + animationDuration;
             }
         }
     }

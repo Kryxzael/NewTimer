@@ -86,7 +86,7 @@ namespace NewTimer.FormParts
         protected override void OnClick(EventArgs e)
         {
             base.OnClick(e);
-            Globals.PrimaryTimer.ColorizeTimerBar();
+            Globals.PrimaryTimer.Recolorize();
         }
 
         /// <summary>
@@ -268,37 +268,69 @@ namespace NewTimer.FormParts
                             Globals.Broadcast(null, null);
                     }
                 }
-                
 
+                if (!Globals.PrimaryTimer.HybridDiskMode)
+                {
+                    if (span.TotalSeconds < 100)
+                        CurrentCommand = new MicroViewCommand(span.TotalSeconds, ' ', false);
 
-                if (span.TotalSeconds < 100)
-                    CurrentCommand = new MicroViewCommand(span.TotalSeconds, ' ', false);
+                    else if (span.TotalMinutes < 100)
+                        CurrentCommand = new MicroViewCommand(span.TotalMinutes, 'M', true);
 
-                else if (span.TotalMinutes < 100)
-                    CurrentCommand = new MicroViewCommand(span.TotalMinutes, 'M', true);
+                    else if (span.TotalHours < 100)
+                        CurrentCommand = new MicroViewCommand(span.TotalHours, 'H', true);
 
-                else if (span.TotalHours < 100)
-                    CurrentCommand = new MicroViewCommand(span.TotalHours, 'H', true);
-
+                    else
+                        CurrentCommand = new MicroViewCommand(span.TotalDays, 'D', true);
+                }
                 else
-                    CurrentCommand = new MicroViewCommand(span.TotalDays, 'D', true);
+                {
+                    if (span.TotalSeconds < 60)
+                        CurrentCommand = new MicroViewCommand(span.TotalSeconds, ' ', false);
+
+                    else if (span.TotalMinutes < 60)
+                        CurrentCommand = new MicroViewCommand(span.TotalMinutes, 'M', true);
+
+                    else if (span.TotalHours < 24)
+                        CurrentCommand = new MicroViewCommand(span.TotalHours, 'H', true);
+
+                    else
+                        CurrentCommand = new MicroViewCommand(span.TotalDays, 'D', true);
+                }
             }
             
 
 
             if (!Globals.SecondaryTimer.InFreeMode && !Globals.PrimaryTimer.InFreeMode)
             {
-                if (secondarySpan.TotalSeconds < 100)
-                    SecondaryCommand = new MicroViewCommand(secondarySpan.TotalSeconds, ' ', false);
+                if (!Globals.SecondaryTimer.HybridDiskMode)
+                {
+                    if (secondarySpan.TotalSeconds < 100)
+                        SecondaryCommand = new MicroViewCommand(secondarySpan.TotalSeconds, ' ', false);
 
-                else if (secondarySpan.TotalMinutes < 100)
-                    SecondaryCommand = new MicroViewCommand(secondarySpan.TotalMinutes, 'M', true);
+                    else if (secondarySpan.TotalMinutes < 100)
+                        SecondaryCommand = new MicroViewCommand(secondarySpan.TotalMinutes, 'M', true);
 
-                else if (secondarySpan.TotalHours < 100)
-                    SecondaryCommand = new MicroViewCommand(secondarySpan.TotalHours, 'H', true);
+                    else if (secondarySpan.TotalHours < 100)
+                        SecondaryCommand = new MicroViewCommand(secondarySpan.TotalHours, 'H', true);
 
+                    else
+                        SecondaryCommand = new MicroViewCommand(secondarySpan.TotalDays, 'D', true);
+                }
                 else
-                    SecondaryCommand = new MicroViewCommand(secondarySpan.TotalDays, 'D', true);
+                {
+                    if (secondarySpan.TotalSeconds < 60)
+                        SecondaryCommand = new MicroViewCommand(secondarySpan.TotalSeconds, ' ', false);
+
+                    else if (secondarySpan.TotalMinutes < 60)
+                        SecondaryCommand = new MicroViewCommand(secondarySpan.TotalMinutes, 'M', true);
+
+                    else if (secondarySpan.TotalHours < 24)
+                        SecondaryCommand = new MicroViewCommand(secondarySpan.TotalHours, 'H', true);
+
+                    else
+                        SecondaryCommand = new MicroViewCommand(secondarySpan.TotalDays, 'D', true);
+                }
             }
             else if (!Globals.PrimaryTimer.InFreeMode)
             {

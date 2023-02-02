@@ -841,7 +841,7 @@ namespace NewTimer.FormParts
             //Only change palette if the user clicks the actual clock
             if (GetDistance(localMousePos, center) < squareArea.Width / 2) //Height would work here as well
             {
-                Globals.PrimaryTimer.ColorizeTimerBar();
+                Globals.PrimaryTimer.Recolorize();
                 Invalidate();
             }
         }

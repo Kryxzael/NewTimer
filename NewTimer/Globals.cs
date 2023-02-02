@@ -275,8 +275,8 @@ namespace NewTimer
             }
 
             //Colorize the bar
-            PrimaryTimer.ColorizeTimerBar();
-            SecondaryTimer.ColorizeTimerBar();
+            PrimaryTimer.Recolorize();
+            SecondaryTimer.Recolorize();
 
             //Show main form
             new TimerFormBase().Show();

@@ -163,7 +163,7 @@ namespace NewTimer.FormParts
 
         protected override void OnClick(EventArgs e)
         {
-            Timer.ColorizeTimerBar();
+            Timer.Recolorize();
         }
 
         public void OnCountdownTick(TimeSpan span, TimeSpan secondSpan, bool isOvertime)

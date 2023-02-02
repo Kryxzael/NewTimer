@@ -52,6 +52,22 @@ namespace NewTimer
         }
 
         /// <summary>
+        /// Copies all color and color-scheme information from the provided timer
+        /// </summary>
+        /// <param name="secondaryTimer"></param>
+        public void CopyColorInfoFrom(TimerConfig secondaryTimer)
+        {
+            foreach (TimeSpan i in BarSettings.Keys)
+            {
+                BarSettings[i].FillColor = secondaryTimer.BarSettings[i].FillColor;
+                BarSettings[i].OverflowColor = secondaryTimer.BarSettings[i].OverflowColor;
+            }
+
+            Array.Copy(secondaryTimer.AnalogColors, AnalogColors, AnalogColors.Length);
+            MicroViewColor = secondaryTimer.MicroViewColor;
+        }
+
+        /// <summary>
         /// The color scheme that is selected. This value is set when the timer starts
         /// </summary>
         public ColorScheme ColorScheme { get; set; }
@@ -186,7 +202,7 @@ namespace NewTimer
         /// <summary>
         /// Populates the bar control with a colors from the current color scheme
         /// </summary>
-        public void ColorizeTimerBar()
+        public void Recolorize()
         {
             //Get colors
             Color[] color = ColorScheme.GenerateMany(BarSettings.Count + 1, Globals.MasterRandom).ToArray();

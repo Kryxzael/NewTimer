@@ -37,15 +37,7 @@ namespace NewTimer.Commands
             {
                 if (args[0] == "sync")
                 {
-                    foreach (TimeSpan i in Globals.PrimaryTimer.BarSettings.Keys)
-                    {
-                        Globals.PrimaryTimer.BarSettings[i].FillColor     = Globals.SecondaryTimer.BarSettings[i].FillColor;
-                        Globals.PrimaryTimer.BarSettings[i].OverflowColor = Globals.SecondaryTimer.BarSettings[i].OverflowColor;
-                    }
-
-                    Array.Copy(Globals.SecondaryTimer.AnalogColors, Globals.PrimaryTimer.AnalogColors, Globals.PrimaryTimer.AnalogColors.Length);
-                    Globals.PrimaryTimer.MicroViewColor = Globals.SecondaryTimer.MicroViewColor;
-
+                    Globals.PrimaryTimer.CopyColorInfoFrom(Globals.SecondaryTimer);
                     target.WriteLine("Synchronized color schemes");
                     return;
                 }
@@ -69,7 +61,7 @@ namespace NewTimer.Commands
                 );
             }
 
-            Globals.PrimaryTimer.ColorizeTimerBar();
+            Globals.PrimaryTimer.Recolorize();
             target.WriteLine("Color scheme has been updated to '" + Globals.PrimaryTimer.ColorScheme.Name + "'");
         }
     }

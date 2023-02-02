@@ -259,7 +259,7 @@ namespace NewTimer.FormParts
         protected override void OnClick(EventArgs e)
         {
             base.OnClick(e);
-            Timer.ColorizeTimerBar();
+            Timer.Recolorize();
         }
 
         protected override void OnPaint(PaintEventArgs e)

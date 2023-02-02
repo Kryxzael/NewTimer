@@ -472,27 +472,28 @@ namespace NewTimer.Forms
                         else
                             Globals.Broadcast("Timer Mode", "TMR");
                     }
-
                     else
                     {
                         Globals.PrimaryTimer.Target = DateTime.Now;
                         Globals.Broadcast("Reset", "RSET");
                     }
-                        
+
                     return;
 
                 case Keys.Pause:
-                    Command.GetByType<Freeze>().Execute(new string[0], nullOutput);
+                    Globals.PrimaryTimer.Paused = !Globals.PrimaryTimer.Paused;
 
                     if (Globals.PrimaryTimer.Paused)
+                    { 
                         Globals.Broadcast(null, "PAUS");
+                    }
                     else
                     {
                         if (Globals.PrimaryTimer.TimeLeft == new TimeSpan())
-                            Globals.Broadcast("Go", "GO");
+                            Globals.Broadcast(null, "GO");
 
                         else
-                            Globals.Broadcast("Resume", "RESU");
+                            Globals.Broadcast(null, "RESU");
                     }
 
 
@@ -509,40 +510,14 @@ namespace NewTimer.Forms
                             currentIndex = -1;
 
                         Globals.PrimaryTimer.ColorScheme = Globals.ColorSchemes[(currentIndex + 1) % Globals.ColorSchemes.Length];
-                        Globals.PrimaryTimer.ColorizeTimerBar();
+                        Globals.PrimaryTimer.Recolorize();
                         Globals.Broadcast("Color Scheme: " + Globals.PrimaryTimer.ColorScheme.Name, "CS" + Globals.PrimaryTimer.ColorScheme.Name.Substring(0, 2));
                     }    
                         
                     else
                     {
                         Globals.PrimaryTimer.Target = Globals.PrimaryTimer.Target.AddDays(1.0);
-
-                        string microBroadcast = Globals.PrimaryTimer.Target.ToString("dd''MM");
-                        string broadcast = Globals.PrimaryTimer.Target.ToString("ddd MMM dd");
-
-                        //Use common names for days around today
-                        if (Globals.PrimaryTimer.Target.Date == DateTime.Today)
-                        {
-                            broadcast = "Today";
-                            microBroadcast = "TDAY";
-                        }
-
-                        else if (Globals.PrimaryTimer.Target.Date == DateTime.Today.AddDays(1))
-                        {
-                            broadcast = "Tomorrow";
-                            microBroadcast = "TMRW";
-                        }
-
-                        else if (Globals.PrimaryTimer.Target.Date == DateTime.Today.AddDays(-1))
-                        {
-                            broadcast = "Yesterday";
-                            microBroadcast = "YDAY";
-                        }
-
-                        //Use day-of-the-week instead of month number if we are within one month of the target
-                        else if (Math.Abs((Globals.PrimaryTimer.Target - DateTime.Now).TotalDays) < 30)
-                            microBroadcast = microBroadcast.Substring(0, 2) + Globals.PrimaryTimer.Target.ToString("ddd").Substring(0, 2);
-
+                        GetBroadcastTextsForDay(Globals.PrimaryTimer.Target, out string broadcast, out string microBroadcast);
                         Globals.Broadcast("Target Day: " + broadcast, microBroadcast);
                     }
 
@@ -562,39 +537,13 @@ namespace NewTimer.Forms
                             currentIndex = Globals.ColorSchemes.Length;
 
                         Globals.PrimaryTimer.ColorScheme = Globals.ColorSchemes[currentIndex - 1];
-                        Globals.PrimaryTimer.ColorizeTimerBar();
+                        Globals.PrimaryTimer.Recolorize();
                         Globals.Broadcast("Color Scheme: " + Globals.PrimaryTimer.ColorScheme.Name, "CS" + Globals.PrimaryTimer.ColorScheme.Name.Substring(0, 2));
                     }
                     else
                     {
                         Globals.PrimaryTimer.Target = Globals.PrimaryTimer.Target.AddDays(-1.0);
-
-                        string microBroadcast = Globals.PrimaryTimer.Target.ToString("dd''MM");
-                        string broadcast = Globals.PrimaryTimer.Target.ToString("ddd MMM dd");
-
-                        //Use common names for days around today
-                        if (Globals.PrimaryTimer.Target.Date == DateTime.Today)
-                        {
-                            broadcast = "Today";
-                            microBroadcast = "TDAY";
-                        }
-
-                        else if (Globals.PrimaryTimer.Target.Date == DateTime.Today.AddDays(1))
-                        {
-                            broadcast = "Tomorrow";
-                            microBroadcast = "TMRW";
-                        }
-
-                        else if (Globals.PrimaryTimer.Target.Date == DateTime.Today.AddDays(-1))
-                        {
-                            broadcast = "Yesterday";
-                            microBroadcast = "YDAY";
-                        }
-
-                        //Use day-of-the-week instead of month number if we are within one month of the target
-                        else if (Math.Abs((Globals.PrimaryTimer.Target - DateTime.Now).TotalDays) < 30)
-                            microBroadcast = microBroadcast.Substring(0, 2) + Globals.PrimaryTimer.Target.ToString("ddd").Substring(0, 2);
-
+                        GetBroadcastTextsForDay(Globals.PrimaryTimer.Target, out string broadcast, out string microBroadcast);
                         Globals.Broadcast("Target Day: " + broadcast, microBroadcast);
                     }
                     
@@ -807,12 +756,12 @@ namespace NewTimer.Forms
                 case Keys.F3:
                     if (e.Shift)
                     {
-                        Command.GetByType<Commands.ColorScheme>().Execute(new string[] { "sync" }, nullOutput);
+                        Globals.PrimaryTimer.CopyColorInfoFrom(Globals.SecondaryTimer);
                         Globals.Broadcast("Sync Color Schemes", "SYNC");
                     }
                     else
                     {
-                        Globals.PrimaryTimer.ColorizeTimerBar();
+                        Globals.PrimaryTimer.Recolorize();
                         Globals.Broadcast("Re-Colorize", "COLR");
                     }
 
@@ -902,8 +851,38 @@ namespace NewTimer.Forms
             {
                 LastInvisibileInputTextUpdateTime = DateTime.Now;
             }
+        }
 
-            
+        private static void GetBroadcastTextsForDay(DateTime date, out string message, out string microMessage)
+        {
+            message = date.ToString("ddd MMM dd");
+            microMessage = date.ToString("dd''MM");
+
+            //Get rid of potential timestamp part of date-time
+            date = date.Date;
+
+            //Use common names for days around today
+            if (date == DateTime.Today)
+            {
+                message = "Today";
+                microMessage = "TDAY";
+            }
+
+            else if (date == DateTime.Today.AddDays(1))
+            {
+                message = "Tomorrow";
+                microMessage = "TMRW";
+            }
+
+            else if (date == DateTime.Today.AddDays(-1))
+            {
+                message = "Yesterday";
+                microMessage = "YDAY";
+            }
+
+            //Use day-of-the-week instead of month number if we are within one month of the target
+            else if (Math.Abs((date - DateTime.Now).TotalDays) < 30)
+                microMessage = microMessage.Substring(0, 2) + date.ToString("ddd").Substring(0, 2);
         }
     }
 }

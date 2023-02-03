@@ -113,7 +113,7 @@ namespace NewTimer.FormParts
             for (int i = 0; i < Text.Length; i++)
             {
                 char c = Text[i];
-                DigitRollOverAnimation animation = _animations.ContainsKey(i) ? _animations[i] : null;
+                _animations.TryGetValue(i, out DigitRollOverAnimation animation);
 
                 Rectangle offsetClipRect = e.ClipRectangle;
                 offsetClipRect.X += offset;
@@ -123,6 +123,12 @@ namespace NewTimer.FormParts
                 {
                     renderGrays = false;
                 }
+
+                if (animation != null && animation.AnimationProgress >= 1f)
+                {
+                    animation = null;
+                    _animations.Remove(i);
+                }    
 
                 if (animation == null)
                 {

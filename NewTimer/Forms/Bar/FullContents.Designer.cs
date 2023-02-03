@@ -153,7 +153,7 @@
             // 
             // FullS
             // 
-            this.FullS.AnimationTime = System.TimeSpan.Parse("00:00:00.2500000");
+            this.FullS.AnimationTime = System.TimeSpan.Parse("00:00:00.20000");
             this.FullS.Font = new System.Drawing.Font("Microsoft Sans Serif", 36F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.FullS.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(221)))), ((int)(((byte)(221)))), ((int)(((byte)(221)))));
             this.FullS.HighlightColor = System.Drawing.Color.Empty;
@@ -283,7 +283,7 @@
             // 
             // FullTotalS
             // 
-            this.FullTotalS.AnimationTime = System.TimeSpan.Parse("00:00:00.2500000");
+            this.FullTotalS.AnimationTime = System.TimeSpan.Parse("00:00:00.2000");
             this.FullTotalS.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.FullTotalS.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(221)))), ((int)(((byte)(221)))), ((int)(((byte)(221)))));
             this.FullTotalS.HighlightColor = System.Drawing.Color.Empty;

@@ -756,8 +756,13 @@ namespace NewTimer.Forms
                 case Keys.F3:
                     if (e.Shift)
                     {
-                        Globals.PrimaryTimer.CopyColorInfoFrom(Globals.SecondaryTimer);
-                        Globals.Broadcast("Sync Color Schemes", "SYNC");
+                        bool invert = Globals.PrimaryTimer.AnalogColors.SequenceEqual(Globals.SecondaryTimer.AnalogColors);
+
+                        Globals.PrimaryTimer.CopyColorInfoFrom(Globals.SecondaryTimer, invert);
+                        Globals.Broadcast(
+                            invert ? "Invert-sync color schemes" : "Sync Color Schemes", 
+                            invert ? "INV" : "SYNC"
+                        );
                     }
                     else
                     {

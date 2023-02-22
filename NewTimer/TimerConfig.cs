@@ -1,5 +1,7 @@
 ﻿using Bars;
 
+using NewTimer.Properties;
+
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -55,16 +57,38 @@ namespace NewTimer
         /// Copies all color and color-scheme information from the provided timer
         /// </summary>
         /// <param name="secondaryTimer"></param>
-        public void CopyColorInfoFrom(TimerConfig secondaryTimer)
+        public void CopyColorInfoFrom(TimerConfig secondaryTimer, bool invert = false)
         {
             foreach (TimeSpan i in BarSettings.Keys)
             {
-                BarSettings[i].FillColor = secondaryTimer.BarSettings[i].FillColor;
-                BarSettings[i].OverflowColor = secondaryTimer.BarSettings[i].OverflowColor;
+                BarSettings destSetting = BarSettings[i];
+                BarSettings srcSetting  = secondaryTimer.BarSettings[i];
+
+                destSetting.FillColor     = srcSetting.FillColor;
+                destSetting.OverflowColor = srcSetting.OverflowColor;
+
+                if (invert) 
+                {
+                    destSetting.FillColor     = invertColor(destSetting.FillColor);
+                    destSetting.OverflowColor = invertColor(destSetting.OverflowColor);
+                }
             }
 
             Array.Copy(secondaryTimer.AnalogColors, AnalogColors, AnalogColors.Length);
             MicroViewColor = secondaryTimer.MicroViewColor;
+
+            if (invert)
+            {
+                for (int i = 0; i < AnalogColors.Length; i++)
+                    AnalogColors[i] = invertColor(AnalogColors[i]);
+
+                MicroViewColor = invertColor(MicroViewColor);
+            }
+
+            Color invertColor(Color c)
+            {
+                return Color.FromArgb(c.A, 0xFF - c.R, 0xFF - c.G, 0xFF - c.B);
+            }
         }
 
         /// <summary>

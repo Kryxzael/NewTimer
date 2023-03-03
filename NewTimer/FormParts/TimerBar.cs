@@ -300,6 +300,10 @@ namespace NewTimer.FormParts
                 //It has been hacked to draw segments over the entire bar. As a result, this code is ugly as fuck
                 //Please rewrite this at some point. Thank you, and good luck
                 int subSegmentCount = GetSubSegmentCount(DisplayedTimeLeft);
+
+                if (subSegmentCount == 0)
+                    return;
+
                 float widthPerSubSegement = overflowWidth / subSegmentCount;
                 int fullSubSegmentCount = (int)(bounds.Width / widthPerSubSegement);
 

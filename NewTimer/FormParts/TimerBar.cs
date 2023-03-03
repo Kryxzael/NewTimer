@@ -296,8 +296,14 @@ namespace NewTimer.FormParts
             using (Pen transparentPen = new Pen(Color.FromArgb((int)(overflowWidth / bounds.Width * 0x8F), Color.White)) { DashStyle = System.Drawing.Drawing2D.DashStyle.Dash })
             {
                 //Draw subsegments
+                //This code was originally designed to only draw sub-segments on the left-most part of the bar
+                //It has been hacked to draw segments over the entire bar. As a result, this code is ugly as fuck
+                //Please rewrite this at some point. Thank you, and good luck
                 int subSegmentCount = GetSubSegmentCount(DisplayedTimeLeft);
-                for (int i = 0; i < subSegmentCount; i++)
+                float widthPerSubSegement = overflowWidth / subSegmentCount;
+                int fullSubSegmentCount = (int)(bounds.Width / widthPerSubSegement);
+
+                for (int i = 0; i <= fullSubSegmentCount; i++)
                 {
                     e.Graphics.DrawLine(
                         pen: transparentPen,

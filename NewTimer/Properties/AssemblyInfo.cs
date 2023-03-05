@@ -8,9 +8,9 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("NewTimer")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("VFK IKT")]
+[assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("NewTimer")]
-[assembly: AssemblyCopyright("Copyright © VFK IKT 2017")]
+[assembly: AssemblyCopyright("")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

@@ -269,68 +269,14 @@ namespace NewTimer.FormParts
                     }
                 }
 
-                if (!Globals.PrimaryTimer.HybridDiskMode)
-                {
-                    if (span.TotalSeconds < 100)
-                        CurrentCommand = new MicroViewCommand(span.TotalSeconds, ' ', false);
-
-                    else if (span.TotalMinutes < 100)
-                        CurrentCommand = new MicroViewCommand(span.TotalMinutes, 'M', true);
-
-                    else if (span.TotalHours < 100)
-                        CurrentCommand = new MicroViewCommand(span.TotalHours, 'H', true);
-
-                    else
-                        CurrentCommand = new MicroViewCommand(span.TotalDays, 'D', true);
-                }
-                else
-                {
-                    if (span.TotalSeconds < 60)
-                        CurrentCommand = new MicroViewCommand(span.TotalSeconds, ' ', false);
-
-                    else if (span.TotalMinutes < 60)
-                        CurrentCommand = new MicroViewCommand(span.TotalMinutes, 'M', true);
-
-                    else if (span.TotalHours < 24)
-                        CurrentCommand = new MicroViewCommand(span.TotalHours, 'H', true);
-
-                    else
-                        CurrentCommand = new MicroViewCommand(span.TotalDays, 'D', true);
-                }
+                CurrentCommand = Globals.PrimaryTimer.MicroViewUnit.Selector(Globals.PrimaryTimer.TimeLeft);
             }
             
 
 
             if (!Globals.SecondaryTimer.InFreeMode && !Globals.PrimaryTimer.InFreeMode)
             {
-                if (!Globals.SecondaryTimer.HybridDiskMode)
-                {
-                    if (secondarySpan.TotalSeconds < 100)
-                        SecondaryCommand = new MicroViewCommand(secondarySpan.TotalSeconds, ' ', false);
-
-                    else if (secondarySpan.TotalMinutes < 100)
-                        SecondaryCommand = new MicroViewCommand(secondarySpan.TotalMinutes, 'M', true);
-
-                    else if (secondarySpan.TotalHours < 100)
-                        SecondaryCommand = new MicroViewCommand(secondarySpan.TotalHours, 'H', true);
-
-                    else
-                        SecondaryCommand = new MicroViewCommand(secondarySpan.TotalDays, 'D', true);
-                }
-                else
-                {
-                    if (secondarySpan.TotalSeconds < 60)
-                        SecondaryCommand = new MicroViewCommand(secondarySpan.TotalSeconds, ' ', false);
-
-                    else if (secondarySpan.TotalMinutes < 60)
-                        SecondaryCommand = new MicroViewCommand(secondarySpan.TotalMinutes, 'M', true);
-
-                    else if (secondarySpan.TotalHours < 24)
-                        SecondaryCommand = new MicroViewCommand(secondarySpan.TotalHours, 'H', true);
-
-                    else
-                        SecondaryCommand = new MicroViewCommand(secondarySpan.TotalDays, 'D', true);
-                }
+                CurrentCommand = Globals.SecondaryTimer.MicroViewUnit.Selector(Globals.SecondaryTimer.TimeLeft);
             }
             else if (!Globals.PrimaryTimer.InFreeMode)
             {
@@ -441,6 +387,131 @@ namespace NewTimer.FormParts
                 Unit = unit;
                 AllowDecimals = allowDecimals;
             }
+        }
+
+        public class MicroViewUnitSelector
+        {
+            /// <summary>
+            /// The identifier of the unit selector
+            /// </summary>
+            public string ID { get; }
+
+            /// <summary>
+            /// The selector function that will generate commands
+            /// </summary>
+            public Func<TimeSpan, MicroViewCommand> Selector { get; }
+
+            /// <summary>
+            /// Holds all selectors
+            /// </summary>
+            public static readonly List<MicroViewUnitSelector> All = new List<MicroViewUnitSelector>();
+
+            /// <summary>
+            /// Creates a new micro-view unit selector
+            /// </summary>
+            /// <param name="id"></param>
+            /// <param name="selector"></param>
+            private MicroViewUnitSelector(string id, Func<TimeSpan, MicroViewCommand> selector)
+            {
+                ID = id;
+                Selector = selector;
+                All.Add(this);
+            }
+
+            /// <summary>
+            /// Displays time using the most accurate unit available. This is default
+            /// </summary>
+            public static readonly MicroViewUnitSelector MostAccurate = new MicroViewUnitSelector("default", span =>
+            {
+                if (span.TotalSeconds < 100)
+                    return new MicroViewCommand(span.TotalSeconds, ' ', false);
+
+                else if (span.TotalMinutes < 100)
+                    return new MicroViewCommand(span.TotalMinutes, 'M', true);
+
+                else if (span.TotalHours < 100)
+                    return new MicroViewCommand(span.TotalHours, 'H', true);
+
+                else
+                    return new MicroViewCommand(span.TotalDays, 'D', true);
+            });
+
+            /// <summary>
+            /// Displays time using days, hours, minutes and seconds. Switching units when the current unit drops below 1
+            /// </summary>
+            public static readonly MicroViewUnitSelector MostNatural = new MicroViewUnitSelector("natural", span =>
+            {
+                if (span.TotalSeconds < 60)
+                    return new MicroViewCommand(span.TotalSeconds, ' ', false);
+
+                else if (span.TotalMinutes < 60)
+                    return new MicroViewCommand(span.TotalMinutes, 'M', true);
+
+                else if (span.TotalHours < 24)
+                    return new MicroViewCommand(span.TotalHours, 'H', true);
+
+                else
+                    return new MicroViewCommand(span.TotalDays, 'D', true);
+            });
+
+            /// <summary>
+            /// Always displays time using seconds
+            /// </summary>
+            public static readonly MicroViewUnitSelector AlwaysSeconds = new MicroViewUnitSelector("seconds", span =>
+            {
+                return new MicroViewCommand(span.TotalSeconds, ' ', true);
+            });
+
+            /// <summary>
+            /// Always displays time using seconds
+            /// </summary>
+            public static readonly MicroViewUnitSelector AlwaysMinutes = new MicroViewUnitSelector("minutes", span =>
+            {
+                return new MicroViewCommand(span.TotalMinutes, 'M', true);
+            });
+
+            /// <summary>
+            /// Always displays time using seconds
+            /// </summary>
+            public static readonly MicroViewUnitSelector AlwaysHours = new MicroViewUnitSelector("hours", span =>
+            {
+                return new MicroViewCommand(span.TotalHours, 'H', true);
+            });
+
+            /// <summary>
+            /// Always displays time using seconds
+            /// </summary>
+            public static readonly MicroViewUnitSelector AlwaysDays = new MicroViewUnitSelector("days", span =>
+            {
+                return new MicroViewCommand(span.TotalDays, 'D', true);
+            });
+
+            /// <summary>
+            /// Always displays time using seconds
+            /// </summary>
+            public static readonly MicroViewUnitSelector MinimumMinutes = new MicroViewUnitSelector("min-minutes", span =>
+            {
+                if (span.TotalMinutes < 60)
+                    return new MicroViewCommand(span.TotalMinutes, 'M', true);
+
+                else if (span.TotalHours < 24)
+                    return new MicroViewCommand(span.TotalHours, 'H', true);
+
+                else
+                    return new MicroViewCommand(span.TotalDays, 'D', true);
+            });
+
+            /// <summary>
+            /// Always displays time using seconds
+            /// </summary>
+            public static readonly MicroViewUnitSelector MinimumHours = new MicroViewUnitSelector("min-hours", span =>
+            {
+                if (span.TotalHours < 24)
+                    return new MicroViewCommand(span.TotalHours, 'H', true);
+
+                else
+                    return new MicroViewCommand(span.TotalDays, 'D', true);
+            });
         }
     }
 }

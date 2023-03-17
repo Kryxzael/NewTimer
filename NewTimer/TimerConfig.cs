@@ -1,5 +1,6 @@
 ﻿using Bars;
 
+using NewTimer.FormParts;
 using NewTimer.Properties;
 
 using System;
@@ -100,6 +101,11 @@ namespace NewTimer
         /// Gets or sets whether this timer has been configured to never show its minute disk in analog mode (showing hour disks in its stead)
         /// </summary>
         public bool HybridDiskMode { get; set; }
+
+        /// <summary>
+        /// Gets or sets the micro-view unit to use for the timer
+        /// </summary>
+        public MicroView.MicroViewUnitSelector MicroViewUnit { get; set; } = MicroView.MicroViewUnitSelector.MostAccurate;
 
         /// <summary>
         /// Gets whether the timer is currently frozen

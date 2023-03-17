@@ -34,6 +34,7 @@ namespace NewTimer
             Command.Register<Commands.EndMode>();
             Command.Register<Commands.StartTime>();
             Command.Register<Commands.Idle>();
+            Command.Register<Commands.Unit>();
 
             //If there is an argument, treat is as a file path and open it
             if (args.Length > 0)

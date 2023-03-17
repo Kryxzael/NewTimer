@@ -62,6 +62,7 @@
     <Compile Include="Commands\Freeze.cs" />
     <Compile Include="Commands\Target.cs" />
     <Compile Include="Commands\TimeLeft.cs" />
+    <Compile Include="Commands\Unit.cs" />
     <Compile Include="FormParts\ClockControl.cs">
       <SubType>UserControl</SubType>
     </Compile>

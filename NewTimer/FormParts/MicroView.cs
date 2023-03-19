@@ -276,7 +276,7 @@ namespace NewTimer.FormParts
 
             if (!Globals.SecondaryTimer.InFreeMode && !Globals.PrimaryTimer.InFreeMode)
             {
-                CurrentCommand = Globals.SecondaryTimer.MicroViewUnit.Selector(Globals.SecondaryTimer.TimeLeft);
+                SecondaryCommand = Globals.SecondaryTimer.MicroViewUnit.Selector(Globals.SecondaryTimer.TimeLeft);
             }
             else if (!Globals.PrimaryTimer.InFreeMode)
             {

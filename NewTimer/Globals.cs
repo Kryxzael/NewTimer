@@ -320,7 +320,7 @@ namespace NewTimer
         /// Loads the provided save slot into the current primary timer
         /// </summary>
         /// <param name="slot"></param>
-        public static void LoadQuickSlot(int slot)
+        public static void LoadQuickSlot(int slot, bool adjustToToday)
         {
             string loadPath = GetSaveSlotName(slot);
             if (File.Exists(loadPath))
@@ -328,7 +328,11 @@ namespace NewTimer
                 try
                 {
                     PrimaryTimer.Deserialize(HierarchyNode.FromFile(GetSaveSlotName(slot)));
-                    Broadcast("Loaded quick-slot " + (slot + 1), "LD" + (slot + 1).ToString("00", CultureInfo.InvariantCulture));
+
+                    if (adjustToToday)
+                        PrimaryTimer.Target = DateTime.Today.Add(PrimaryTimer.Target.TimeOfDay);
+
+                    Broadcast("Loaded: " + PrimaryTimer.Target.ToString(), PrimaryTimer.Target.ToString("HHmm"));
                 }
                 catch (Exception)
                 {

@@ -488,8 +488,11 @@ namespace NewTimer.Forms
                     if (e.Shift)
                         Globals.SaveQuickSlot(e.KeyCode - Keys.F1);
 
+                    else if (e.Control)
+                        Globals.LoadQuickSlot(e.KeyCode - Keys.F1, true);
+
                     else
-                        Globals.LoadQuickSlot(e.KeyCode - Keys.F1);
+                        Globals.LoadQuickSlot(e.KeyCode - Keys.F1, false);
                     break;
 
                 case Keys.Delete:
@@ -623,6 +626,7 @@ namespace NewTimer.Forms
                         "Alt + 0930: Set countdown to 9 hours and 30 minutes",
                         "--------",
                         "F1-F24: Load quick-save",
+                        "F1-F24: Load quick-save, but adjust date to today",
                         "Shift + F1-F24: Make quick-save",
                         "--------",
                         "Up: Add 1 minute to target",

@@ -461,7 +461,30 @@ namespace NewTimer.Forms
                     Globals.Broadcast(modifierDescription(InvisibleInputText.PadRight(4, '?').Substring(0, 2), InvisibleInputText.PadRight(4, '?').Substring(2, 2)), InvisibleInputText);
                     break;
 
-                case Keys.Delete:
+                case Keys.F1:
+                case Keys.F2:
+                case Keys.F3:
+                case Keys.F4:
+                case Keys.F5:
+                case Keys.F6:
+                case Keys.F7:
+                case Keys.F8:
+                case Keys.F9:
+                case Keys.F10:
+                case Keys.F11:
+                case Keys.F12:
+                case Keys.F13:
+                case Keys.F14:
+                case Keys.F15:
+                case Keys.F16:
+                case Keys.F17:
+                case Keys.F18:
+                case Keys.F19:
+                case Keys.F20:
+                case Keys.F21:
+                case Keys.F22:
+                case Keys.F23:
+                case Keys.F24:
                     if (e.Shift)
                         Globals.SaveQuickSlot(e.KeyCode - Keys.F1);
 
@@ -598,6 +621,9 @@ namespace NewTimer.Forms
                         "0930: Set target to 09:30 (Must be in 24h format)",
                         "Shift + 0930: Set countdown to 9 minutes and 30 seconds",
                         "Alt + 0930: Set countdown to 9 hours and 30 minutes",
+                        "--------",
+                        "F1-F24: Load quick-save",
+                        "Shift + F1-F24: Make quick-save",
                         "--------",
                         "Up: Add 1 minute to target",
                         "Shift + Up: Add 5 minutes to target",
@@ -838,6 +864,7 @@ namespace NewTimer.Forms
                     TimeSpan newTarget = new TimeSpan(hour, minute, second);
                     Globals.PrimaryTimer.Target = DateTime.Now + newTarget;
                     Globals.PrimaryTimer.InFreeMode = false;
+                    Globals.PrimaryTimer.LastInputWasDuration = true;
                 }
 
                 //Target
@@ -850,6 +877,7 @@ namespace NewTimer.Forms
                     {
                         Globals.PrimaryTimer.Target = DateTime.Today.AddHours(hour).AddMinutes(minute);
                         Globals.PrimaryTimer.InFreeMode = false;
+                        Globals.PrimaryTimer.LastInputWasDuration = false;
                     }
                         
                 }

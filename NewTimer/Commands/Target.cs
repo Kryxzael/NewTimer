@@ -29,6 +29,7 @@ namespace NewTimer.Commands
                 {
                     Globals.PrimaryTimer.Target = DateTime.Parse(args.JoinEnd(0));
                     Globals.PrimaryTimer.InFreeMode = false;
+                    Globals.PrimaryTimer.LastInputWasDuration = false;
 
                     target.WriteLine("Target time has been updated");
                 }

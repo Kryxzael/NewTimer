@@ -1,5 +1,7 @@
 ﻿using Bars;
 
+using CleanNodeTree;
+
 using NewTimer.FormParts;
 using NewTimer.Properties;
 
@@ -29,6 +31,11 @@ namespace NewTimer
         /// Gets or sets whether the timer is not currently tracking a target time. Also referred to as 'idle'
         /// </summary>
         public bool InFreeMode { get; set; } = true;
+
+        /// <summary>
+        /// Gets whether the last time-set input of this timer a duration input
+        /// </summary>
+        public bool LastInputWasDuration { get; set; }
 
         /// <summary>
         /// Gets the time the timer was started at
@@ -259,6 +266,131 @@ namespace NewTimer
         private static BarSettings CreateBarSettings(float maxValue, int interval)
         {
             return new BarSettings(maxValue, interval, Color.White, Color.White, 3);
+        }
+
+        /// <summary>
+        /// Serializes the state of the timer
+        /// </summary>
+        /// <returns></returns>
+        public HierarchyNode Serialize()
+        {
+            HierarchyNode root = new HierarchyNode("Timer");
+            root.Add("Idle", InFreeMode);
+
+            if (LastInputWasDuration)
+                root.Add(TimeSpanToNode(RealTimeLeft, "Duration"));
+
+            else
+                root.Add(DateTimeToNode(Target, "Target"));
+
+            root.Add(DateTimeToNode(StartTime, "StartTime"));
+            root.Add("StopAtZero", StopAtZero);
+
+            HierarchyNode colorNode = root.Add("ColorInfo");
+            colorNode.Add("ColorScheme", ColorScheme.Name);
+            colorNode.Add("AnalogColors").AddRange(AnalogColors.Select(i => ColorTranslator.ToHtml(i)));
+            colorNode.Add("MicroViewColor", ColorTranslator.ToHtml(MicroViewColor));
+
+            HierarchyNode barColorNode = colorNode.Add("BarColorInfo");
+            barColorNode.Add("Fill").AddRange(BarSettings.Values.Select(i => ColorTranslator.ToHtml(i.FillColor)));
+            barColorNode.Add("Overflow").AddRange(BarSettings.Values.Select(i => ColorTranslator.ToHtml(i.OverflowColor)));
+
+            root.Add("MicroViewUnit", MicroViewUnit.ID);
+            root.Add("UseArrows", HybridDiskMode);
+
+            return root;
+
+            HierarchyNode DateTimeToNode(DateTime dt, string nodeName)
+            {
+                HierarchyNode dateTimeNode = new HierarchyNode(nodeName);
+                dateTimeNode.Add("Year", dt.Year);
+                dateTimeNode.Add("Month", dt.Month);
+                dateTimeNode.Add("Day", dt.Day);
+                dateTimeNode.Add("Hour", dt.Hour);
+                dateTimeNode.Add("Minute", dt.Minute);
+                dateTimeNode.Add("Second", dt.Second);
+                dateTimeNode.Add("Milli", dt.Millisecond);
+
+                return dateTimeNode;
+
+            }
+
+            HierarchyNode TimeSpanToNode(TimeSpan ts, string nodeName)
+            {
+                HierarchyNode timeSpanNode = new HierarchyNode(nodeName);
+                timeSpanNode.Add("Days", ts.Days);
+                timeSpanNode.Add("Hours", ts.Hours);
+                timeSpanNode.Add("Minutes", ts.Minutes);
+                timeSpanNode.Add("Seconds", ts.Seconds);
+                timeSpanNode.Add("Millis", ts.Milliseconds);
+
+                return timeSpanNode;
+            }
+        }
+
+        /// <summary>
+        /// Deserializes a hierarchy node and populates the timer config with its values
+        /// </summary>
+        /// <param name="root"></param>
+        public void Deserialize(HierarchyNode root)
+        {
+            InFreeMode = root["Idle"].Boolean;
+
+            if (root.HasChild("Target"))
+            {
+                Paused = false;
+                Target = nodeToDateTime(root["Target"]);
+                LastInputWasDuration = false;
+            }
+            else if (root.HasChild("Duration"))
+            {
+                Paused = true;
+                Target = DateTime.Now + nodeToTimeSpan(root["Duration"]);
+                LastInputWasDuration = true;
+            }
+
+            StartTime = nodeToDateTime(root["StartTime"]);
+            StopAtZero = root["StopAtZero"].Boolean;
+
+            ColorScheme = Globals.ColorSchemes.SingleOrDefault(i => i.Name == root["ColorInfo;ColorScheme"].String) ?? ColorScheme;
+            AnalogColors = root["ColorInfo;AnalogColors"].Children.Select(i => ColorTranslator.FromHtml(i.Name)).ToArray();
+            MicroViewColor = ColorTranslator.FromHtml(root["ColorInfo;MicroViewColor"].String);
+
+            {
+                for (int i = 0; i < BarSettings.Count; i++)
+                {
+                    BarSettings.Values.ElementAt(i).FillColor = ColorTranslator.FromHtml(root["ColorInfo;BarColorInfo;Fill"].Children[i].Name);
+                    BarSettings.Values.ElementAt(i).OverflowColor = ColorTranslator.FromHtml(root["ColorInfo;BarColorInfo;Overflow"].Children[i].Name);
+                }
+            }
+            
+
+            MicroViewUnit = MicroView.MicroViewUnitSelector.All.Single(i => i.ID == root["MicroViewUnit"].String);
+            HybridDiskMode = root["UseArrows"].Boolean;
+
+            DateTime nodeToDateTime(HierarchyNode node)
+            {
+                return new DateTime(
+                    node["Year"].Int, 
+                    node["Month"].Int, 
+                    node["Day"].Int, 
+                    node["Hour"].Int, 
+                    node["Minute"].Int, 
+                    node["Second"].Int, 
+                    node["Milli"].Int
+                );
+            }
+
+            TimeSpan nodeToTimeSpan(HierarchyNode node)
+            {
+                return new TimeSpan(
+                    node["Days"].Int,
+                    node["Hours"].Int,
+                    node["Minutes"].Int,
+                    node["Seconds"].Int,
+                    node["Millis"].Int
+                );
+            }
         }
     }
 }

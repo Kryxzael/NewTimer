@@ -57,6 +57,7 @@ namespace NewTimer.Commands
                     }
 
                     Globals.PrimaryTimer.InFreeMode = false;
+                    Globals.PrimaryTimer.LastInputWasDuration = true;
                     target.WriteLine("Target time has been updated to " + Globals.PrimaryTimer.Target);
                 }
                 catch (Exception)

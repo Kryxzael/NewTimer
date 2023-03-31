@@ -218,6 +218,7 @@ namespace NewTimer.Forms
             {
                 flwTimeSuggestions.Controls.Add(new FormParts.Setup.TimeSugestion(
                     text: target.ToString(Globals.Use24HourSelector ? "HH:mm" : "h:mm tt"), 
+                    representsDuration: false,
                     getTarget: () => target)
                 );
             }
@@ -226,7 +227,8 @@ namespace NewTimer.Forms
             /* local */ void createTimeWithText(string text, DateTime target)
             {
                 flwTimeSuggestions.Controls.Add(new FormParts.Setup.TimeSugestion(
-                    text: text, 
+                    text: text,
+                    representsDuration: false,
                     getTarget: () => target)
                 );
             }
@@ -235,7 +237,8 @@ namespace NewTimer.Forms
             /* local */ void createTimeDuration(string text, TimeSpan duration)
             {
                 flwTimeSuggestionsDuration.Controls.Add(new FormParts.Setup.TimeSugestion(
-                    text: text, 
+                    text: text,
+                    representsDuration: true,
                     getTarget: () => DateTime.Now + duration)
                 );
             }
@@ -410,6 +413,7 @@ namespace NewTimer.Forms
                     target: new DateTime((int)numYear.Value, (int)knbMonth.Value, (int)knbDay.Value, (int)knbHour.Value, (int)knbMin.Value, (int)knbSec.Value),
                     stopAtZero: chkStopAtZero.Checked,
                     colorScheme: GetSelectedColorScheme(),
+                    startedFromDuration: false,
                     closingForm: this
                 );
             }
@@ -421,6 +425,7 @@ namespace NewTimer.Forms
                     target: DateTime.Now.Add(new TimeSpan((int)knbDurHour.Value, (int)knbDurMin.Value, (int)knbDurSec.Value)),
                     stopAtZero: chkStopAtZero.Checked, 
                     colorScheme: GetSelectedColorScheme(),
+                    startedFromDuration: true,
                     closingForm: this
                 );
             }

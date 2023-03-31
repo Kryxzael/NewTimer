@@ -16,6 +16,7 @@ namespace NewTimer.FormParts.Setup
     public class TimeSugestion : UserControl
     {
         public override string Text { get => base.Text; set => base.Text = value; } //Overriden for visibility in inspector
+        public bool RepresentsDuration { get; }
 
         /// <summary>
         /// Gets or sets the delegate used to get the time this sugestion button will target when clicked
@@ -36,9 +37,10 @@ namespace NewTimer.FormParts.Setup
         /// </summary>
         /// <param name="text"></param>
         /// <param name="getTarget"></param>
-        public TimeSugestion(string text, Func<DateTime> getTarget) : this()
+        public TimeSugestion(string text, bool representsDuration, Func<DateTime> getTarget) : this()
         {
             Text = text;
+            RepresentsDuration = representsDuration;
             GetTarget = getTarget;
             ForeColor = Globals.GlobalForeColor.Dark;
         }
@@ -78,6 +80,7 @@ namespace NewTimer.FormParts.Setup
                 target: GetTarget(), 
                 colorScheme: (ParentForm as Forms.Setup).GetSelectedColorScheme(), 
                 stopAtZero: (ParentForm as Forms.Setup).chkStopAtZero.Checked,
+                startedFromDuration: RepresentsDuration,
                 closingForm: ParentForm
             );
         }

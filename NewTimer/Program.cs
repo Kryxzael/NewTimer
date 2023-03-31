@@ -35,6 +35,8 @@ namespace NewTimer
             Command.Register<Commands.StartTime>();
             Command.Register<Commands.Idle>();
             Command.Register<Commands.Unit>();
+            Command.Register<Commands.SaveTimer>();
+            Command.Register<Commands.LoadTimer>();
 
             //If there is an argument, treat is as a file path and open it
             if (args.Length > 0)
@@ -49,6 +51,7 @@ namespace NewTimer
             }
 
             Application.Run();
+
 
             //Dispose taskbar icon before shutdown
             TaskbarHelper.DisposeIcon();

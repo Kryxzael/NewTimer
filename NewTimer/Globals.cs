@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Text;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -9,6 +10,8 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 
 using Bars;
+
+using CleanNodeTree;
 
 using NewTimer.Forms;
 using NewTimer.ThemedColors;
@@ -39,6 +42,11 @@ namespace NewTimer
         /// Gets whether the time-left hands should be emphasized instead of the normal time hands
         /// </summary>
         public static bool SwapHandPriorities { get; set; }
+
+        /// <summary>
+        /// The cwd can be changed using the 'cd' command, so we store it here
+        /// </summary>
+        private static readonly string _startupDirectory = Environment.CurrentDirectory;
 
         /// <summary>
         /// Gets the time the last broadcast was done
@@ -252,7 +260,7 @@ namespace NewTimer
         /// </summary>
         /// <param name="target">Target time</param>
         /// <param name="closingForm">Form that will be closed, this should be the settings form</param>
-        public static void StartTimer(DateTime target, ColorScheme colorScheme, bool stopAtZero, Form closingForm = null)
+        public static void StartTimer(DateTime target, ColorScheme colorScheme, bool stopAtZero, bool startedFromDuration, Form closingForm = null)
         {
             //Set target and color scheme
             PrimaryTimer.Target      = target;
@@ -260,6 +268,7 @@ namespace NewTimer
             PrimaryTimer.ColorScheme = colorScheme;
             PrimaryTimer.StopAtZero  = stopAtZero;
             PrimaryTimer.InFreeMode  = false;
+            PrimaryTimer.LastInputWasDuration = startedFromDuration;
 
             SecondaryTimer.Target = target;
             SecondaryTimer.StartTime = DateTime.Now;
@@ -305,7 +314,57 @@ namespace NewTimer
             _currentBroadcastMessage = titleMessage;
             _currentMicroBroadcastMessage = microMessage;
             _lastBroadcastStartTime = DateTime.Now;
+        }
 
+        /// <summary>
+        /// Loads the provided save slot into the current primary timer
+        /// </summary>
+        /// <param name="slot"></param>
+        public static void LoadQuickSlot(int slot)
+        {
+            string loadPath = GetSaveSlotName(slot);
+            if (File.Exists(loadPath))
+            {
+                try
+                {
+                    PrimaryTimer.Deserialize(HierarchyNode.FromFile(GetSaveSlotName(slot)));
+                    Broadcast("Loaded quick-slot " + (slot + 1), "LD" + (slot + 1).ToString("00", CultureInfo.InvariantCulture));
+                }
+                catch (Exception)
+                {
+                    Broadcast("Failed to load quick-slot " + (slot + 1), "FAIL");
+                }
+            }
+            else
+            {
+                Broadcast("Quick-slot " + (slot + 1) + " missing.", "GONE");
+            }
+        }
+
+        /// <summary>
+        /// Saves the current primary timer to the current quick-save slot
+        /// </summary>
+        public static void SaveQuickSlot(int slot)
+        {
+            try
+            {
+                PrimaryTimer.Serialize().ToFile(GetSaveSlotName(slot));
+                Broadcast("Saved quick-slot " + (slot + 1), "SA" + (slot + 1).ToString("00", CultureInfo.InvariantCulture));
+            }
+            catch (Exception)
+            {
+                Broadcast("Failed to save quick-slot " + (slot + 1), "FAIL");
+            }
+        }
+
+        /// <summary>
+        /// Gets the file-path to a quick-save slot
+        /// </summary>
+        /// <param name="slot"></param>
+        /// <returns></returns>
+        private static string GetSaveSlotName(int slot)
+        {
+            return Path.Combine(_startupDirectory, "QuickSlot" + slot.ToString(CultureInfo.InvariantCulture) + ".livetimer");
         }
 
         /// <summary>

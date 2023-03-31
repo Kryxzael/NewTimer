@@ -115,7 +115,7 @@ namespace NewTimer
         /// <summary>
         /// The color that will be used as the background color for the whole application
         /// </summary>
-        public static ThemedColor GlobalBackColor { get; } = new ThemedColor(ColorTranslator.FromHtml("#ddd"), ColorTranslator.FromHtml("#111"));
+        public static ThemedColor GlobalBackColor { get; } = new ThemedColor(ColorTranslator.FromHtml("#eee"), ColorTranslator.FromHtml("#111"));
 
         /// <summary>
         /// The color that will be used as the background color for the whole application

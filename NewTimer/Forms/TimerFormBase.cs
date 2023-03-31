@@ -463,24 +463,19 @@ namespace NewTimer.Forms
 
                 case Keys.Delete:
                     if (e.Shift)
-                    {
-                        Globals.PrimaryTimer.InFreeMode = !Globals.PrimaryTimer.InFreeMode;
+                        Globals.SaveQuickSlot(e.KeyCode - Keys.F1);
 
-                        if (Globals.PrimaryTimer.InFreeMode)
-                            Globals.Broadcast("Idle Mode", "IDLE");
-
-                        else
-                            Globals.Broadcast("Timer Mode", "TMR");
-                    }
                     else
-                    {
-                        Globals.PrimaryTimer.Target = DateTime.Now;
-                        Globals.Broadcast("Reset", "RSET");
-                    }
+                        Globals.LoadQuickSlot(e.KeyCode - Keys.F1);
+                    break;
 
+                case Keys.Delete:
+                    Globals.PrimaryTimer.Target = DateTime.Now;
+                    Globals.Broadcast("Reset", "RSET");
                     return;
 
                 case Keys.Pause:
+                case Keys.P:
                     Globals.PrimaryTimer.Paused = !Globals.PrimaryTimer.Paused;
 
                     if (Globals.PrimaryTimer.Paused)
@@ -499,22 +494,17 @@ namespace NewTimer.Forms
 
                     return;
 
-                case Keys.PageUp:
-                    if (e.Shift)
-                    {
-                        int currentIndex = Globals.ColorSchemes
-                            .TakeWhile(i => i != Globals.PrimaryTimer.ColorScheme)
-                            .Count();
+                case Keys.I:
+                    Globals.PrimaryTimer.InFreeMode = !Globals.PrimaryTimer.InFreeMode;
 
-                        if (currentIndex >= Globals.ColorSchemes.Length)
-                            currentIndex = -1;
+                    if (Globals.PrimaryTimer.InFreeMode)
+                        Globals.Broadcast("Idle Mode", "IDLE");
 
-                        Globals.PrimaryTimer.ColorScheme = Globals.ColorSchemes[(currentIndex + 1) % Globals.ColorSchemes.Length];
-                        Globals.PrimaryTimer.Recolorize();
-                        Globals.Broadcast("Color Scheme: " + Globals.PrimaryTimer.ColorScheme.Name, "CS" + Globals.PrimaryTimer.ColorScheme.Name.Substring(0, 2));
-                    }    
-                        
                     else
+                        Globals.Broadcast("Timer Mode", "TMR");
+                    break;
+
+                case Keys.PageUp:
                     {
                         Globals.PrimaryTimer.Target = Globals.PrimaryTimer.Target.AddDays(1.0);
                         GetBroadcastTextsForDay(Globals.PrimaryTimer.Target, out string broadcast, out string microBroadcast);
@@ -524,6 +514,15 @@ namespace NewTimer.Forms
                     return;
 
                 case Keys.PageDown:
+                    {
+                        Globals.PrimaryTimer.Target = Globals.PrimaryTimer.Target.AddDays(-1.0);
+                        GetBroadcastTextsForDay(Globals.PrimaryTimer.Target, out string broadcast, out string microBroadcast);
+                        Globals.Broadcast("Target Day: " + broadcast, microBroadcast);
+                    }
+
+                    return;
+
+                case Keys.C:
                     if (e.Shift)
                     {
                         int currentIndex = Globals.ColorSchemes
@@ -542,14 +541,21 @@ namespace NewTimer.Forms
                     }
                     else
                     {
-                        Globals.PrimaryTimer.Target = Globals.PrimaryTimer.Target.AddDays(-1.0);
-                        GetBroadcastTextsForDay(Globals.PrimaryTimer.Target, out string broadcast, out string microBroadcast);
-                        Globals.Broadcast("Target Day: " + broadcast, microBroadcast);
-                    }
-                    
-                    return;
+                        int currentIndex = Globals.ColorSchemes
+                            .TakeWhile(i => i != Globals.PrimaryTimer.ColorScheme)
+                            .Count();
 
-                case Keys.Insert:
+                        if (currentIndex >= Globals.ColorSchemes.Length)
+                            currentIndex = -1;
+
+                        Globals.PrimaryTimer.ColorScheme = Globals.ColorSchemes[(currentIndex + 1) % Globals.ColorSchemes.Length];
+                        Globals.PrimaryTimer.Recolorize();
+                        Globals.Broadcast("Color Scheme: " + Globals.PrimaryTimer.ColorScheme.Name, "CS" + Globals.PrimaryTimer.ColorScheme.Name.Substring(0, 2));
+                    }
+
+                    break;
+
+                case Keys.E:
                     Globals.PrimaryTimer.StopAtZero = !Globals.PrimaryTimer.StopAtZero;
 
                     if (Globals.PrimaryTimer.StopAtZero)
@@ -566,27 +572,27 @@ namespace NewTimer.Forms
                         Globals.Broadcast("Second Timer New", "NEW");
                     return;
 
-                case Keys.F1:
+                case Keys.H:
                     Globals.Broadcast("Help!", "HELP");
                     MessageBox.Show(string.Join(Environment.NewLine, 
-                        "F1: Help",
+                        "H: Help",
                         "--------",
-                        "F2: Swap analog clock hand emphasis",
-                        "Shift + F2: Toggle Alternate Analog Disks",
-                        "F3: Generate new colors",
-                        "Shift + F3: Sync primary and secondary timers' colors",
-                        "Shift + Page Up: Next color scheme",
-                        "Shift + Page Dn: Previous color scheme",
+                        "W: Swap analog clock hand emphasis",
+                        "A: Toggle Alternate Analog Disks",
+                        "R: Randomize colors",
+                        "S: Sync primary and secondary timers' colors",
+                        "C: Next color scheme",
+                        "Shift + C: Previous color scheme",
                         "--------",
-                        "F9: Toggle Micro Mode",
-                        "F10: Collapse/Uncollapse",
-                        "F11: Translucency Mode",
-                        "F12: Console",
+                        "M: Toggle Micro Mode",
+                        "Shift + M: Collapse/Uncollapse",
+                        "T: Translucency Mode",
+                        "`: Console",
                         "--------",
-                        "Shift + Del: Idle Mode",
+                        "I: Idle (Free) Mode",
                         "Enter: Swap Primary/Secondary Timer",
-                        "Ins: Change end mode",
-                        "Pause: Freeze/Unfreeze",
+                        "E: Change end mode",
+                        "Pause/P: Pause/Unpause",
                         "--------",
                         "Del: Reset to zero",
                         "0930: Set target to 09:30 (Must be in 24h format)",
@@ -606,125 +612,128 @@ namespace NewTimer.Forms
                     ), "Keyboard Shortcuts");
                     return;
 
-                case Keys.F9:
+                case Keys.M:
                     //Enable micro mode
-                    if (tabs.Visible)
+                    if (!e.Shift)
                     {
-                        tabs.SelectedIndex = 1; //Just to make sure the size isn't overridden by the Digi tab
-                        tabs.Visible = false;
-                        FormBorderStyle = FormBorderStyle.None;
-                        Size = _microView.Size;
-                        _macroViewPosition = Location;
-
-                        //Figure out where to pin the control based on how close it is to the different corners of the screen
-                        Screen containingScreen = Screen.FromControl(this);
-
-                        int distanceFromLeft  = Math.Abs(Bounds.Left - containingScreen.WorkingArea.Left);
-                        int distanceFromRight = Math.Abs(Bounds.Right - containingScreen.WorkingArea.Right);
-                        int distanceFromTop = Math.Abs(Bounds.Top - containingScreen.WorkingArea.Top);
-                        int distanceFromBottom = Math.Abs(Bounds.Bottom - containingScreen.WorkingArea.Bottom);
-
-                        if (distanceFromLeft < distanceFromRight)
+                        if (tabs.Visible)
                         {
-                            //Closest to top left
-                            if (distanceFromTop < distanceFromBottom)
-                            {
-                                Location = containingScreen.WorkingArea.Location;
-                            }
+                            tabs.SelectedIndex = 1; //Just to make sure the size isn't overridden by the Digi tab
+                            tabs.Visible = false;
+                            FormBorderStyle = FormBorderStyle.None;
+                            Size = _microView.Size;
+                            _macroViewPosition = Location;
 
-                            //Closest to bottom left
+                            //Figure out where to pin the control based on how close it is to the different corners of the screen
+                            Screen containingScreen = Screen.FromControl(this);
+
+                            int distanceFromLeft  = Math.Abs(Bounds.Left - containingScreen.WorkingArea.Left);
+                            int distanceFromRight = Math.Abs(Bounds.Right - containingScreen.WorkingArea.Right);
+                            int distanceFromTop = Math.Abs(Bounds.Top - containingScreen.WorkingArea.Top);
+                            int distanceFromBottom = Math.Abs(Bounds.Bottom - containingScreen.WorkingArea.Bottom);
+
+                            if (distanceFromLeft < distanceFromRight)
+                            {
+                                //Closest to top left
+                                if (distanceFromTop < distanceFromBottom)
+                                {
+                                    Location = containingScreen.WorkingArea.Location;
+                                }
+
+                                //Closest to bottom left
+                                else
+                                {
+                                    Location = new Point(
+                                        x: containingScreen.WorkingArea.Left,
+                                        y: containingScreen.WorkingArea.Bottom - Height
+                                    );
+                                }
+                            }
                             else
                             {
-                                Location = new Point(
-                                    x: containingScreen.WorkingArea.Left,
-                                    y: containingScreen.WorkingArea.Bottom - Height
-                                );
+                                //Closest to top right
+                                if (distanceFromTop < distanceFromBottom)
+                                {
+                                    Location = new Point(
+                                        x: containingScreen.WorkingArea.Right - Width,
+                                        y: containingScreen.WorkingArea.Top
+                                    );
+                                }
+
+                                //Closest to bottom right
+                                else
+                                {
+                                    Location = new Point(
+                                        x: containingScreen.WorkingArea.Right - Width,
+                                        y: containingScreen.WorkingArea.Bottom - Height
+                                    );
+                                }
                             }
+
+                            Globals.Broadcast("Enable Micro View", "MICR");
+                        }
+
+                        //Disable micro mode
+                        else
+                        {
+                            tabs.Visible = true;
+                            FormBorderStyle = FormBorderStyle.Sizable;
+                            tabs.SelectedIndex = 0;
+                            Location = _macroViewPosition;
+
+                            Globals.Broadcast("Disable Micro View", null);
+                        }
+                    }
+
+                    //Collapse
+                    else
+                    {
+                        const int COLLAPSE_HEIGHT = 70;
+
+                        Rectangle initialBounds = DesktopBounds;
+
+                        if (tabs.SelectedIndex == 4)
+                        {
+                            //Abusing the fact that tab 0 forces a certain size
+                            int lastHeigh = Height;
+                            tabs.SelectedIndex = 0;
+                            Top -= (Height - lastHeigh);
+                            FormBorderStyle = FormBorderStyle.Sizable;
+
+                            //Found this solution on stack
+                            tabs.Appearance = TabAppearance.Normal;
+                            tabs.ItemSize = new Size(30, 18);
+                            _secondaryFullscreenBar.Height = 50;
+
+                            Globals.Broadcast("Uncollapse", null);
                         }
                         else
                         {
-                            //Closest to top right
-                            if (distanceFromTop < distanceFromBottom)
-                            {
-                                Location = new Point(
-                                    x: containingScreen.WorkingArea.Right - Width,
-                                    y: containingScreen.WorkingArea.Top
-                                );
-                            }
+                            tabs.SelectedIndex = 4;
+                            FormBorderStyle = FormBorderStyle.None;
+                            DesktopBounds = Rectangle.FromLTRB(
+                                initialBounds.Left,
+                                initialBounds.Bottom - COLLAPSE_HEIGHT,
+                                initialBounds.Right,
+                                initialBounds.Bottom
+                            );
 
-                            //Closest to bottom right
-                            else
-                            {
-                                Location = new Point(
-                                    x: containingScreen.WorkingArea.Right - Width,
-                                    y: containingScreen.WorkingArea.Bottom - Height
-                                );
-                            }
+                            tabs.Appearance = TabAppearance.FlatButtons;
+                            tabs.ItemSize = new Size(0, 1);
+                            _secondaryFullscreenBar.Height = 0;
+
+                            Globals.Broadcast("Collapse", null);
                         }
-
-                        Globals.Broadcast("Enable Micro View", "MICR");
-                    }
-
-                    //Disable micro mode
-                    else
-                    {
-                        tabs.Visible = true;
-                        FormBorderStyle = FormBorderStyle.Sizable;
-                        tabs.SelectedIndex = 0;
-                        Location = _macroViewPosition;
-
-                        Globals.Broadcast("Disable Micro View", null);
                     }
 
                     break;
 
-                case Keys.F11:
+                case Keys.T:
                     ToggleWindowTranslucencyMode();
                     Globals.Broadcast("Toggle Translucency", "TRAN");
                     break;
 
-                case Keys.F10:
-                    const int COLLAPSE_HEIGHT = 70;
-
-                    Rectangle initialBounds = DesktopBounds;
-
-                    if (tabs.SelectedIndex == 4)
-                    {
-                        //Abusing the fact that tab 0 forces a certain size
-                        int lastHeigh = Height;
-                        tabs.SelectedIndex = 0;
-                        Top -= (Height - lastHeigh);
-                        FormBorderStyle = FormBorderStyle.Sizable;
-
-                        //Found this solution on stack
-                        tabs.Appearance = TabAppearance.Normal;
-                        tabs.ItemSize = new Size(30, 18);
-                        _secondaryFullscreenBar.Height = 50;
-
-                        Globals.Broadcast("Uncollapse", null);
-                    }
-                    else
-                    {
-                        tabs.SelectedIndex = 4;
-                        FormBorderStyle = FormBorderStyle.None;
-                        DesktopBounds = Rectangle.FromLTRB(
-                            initialBounds.Left, 
-                            initialBounds.Bottom - COLLAPSE_HEIGHT, 
-                            initialBounds.Right, 
-                            initialBounds.Bottom
-                        );
-
-                        tabs.Appearance = TabAppearance.FlatButtons;
-                        tabs.ItemSize = new Size(0, 1);
-                        _secondaryFullscreenBar.Height = 0;
-
-                        Globals.Broadcast("Collapse", null);
-                    }
-
-
-                    break;
-
-                case Keys.F12:
+                case Keys.Oem5:
                     if (_console == null || _console.IsDisposed)
                         _console = new UserConsole();
 
@@ -733,44 +742,40 @@ namespace NewTimer.Forms
                     Globals.Broadcast("Console", "CONS");
                     return;
 
-                case Keys.F2:
+                case Keys.A:
+                    Globals.PrimaryTimer.HybridDiskMode = !Globals.PrimaryTimer.HybridDiskMode;
+
+                    if (Globals.PrimaryTimer.HybridDiskMode)
+                        Globals.Broadcast("Arrow Mode", "ARRO");
+
+                    else
+                        Globals.Broadcast("Disk Mode", "DISK");
+
+                    return;
+
+                case Keys.W:
+                    Globals.SwapHandPriorities = !Globals.SwapHandPriorities;
+                    Globals.Broadcast("Swap Analog Hand Priority", "HAND");
+                    break;
+
+                case Keys.S:
                     if (e.Shift)
                     {
-                        Globals.PrimaryTimer.HybridDiskMode = !Globals.PrimaryTimer.HybridDiskMode;
-
-                        if (Globals.PrimaryTimer.HybridDiskMode)
-                            Globals.Broadcast("Hybrid Disk Mode", "HYBR");
-
-                        else
-                            Globals.Broadcast("Separate Disk Mode", "SEP");
+                        Globals.PrimaryTimer.CopyColorInfoFrom(Globals.SecondaryTimer, true);
+                        Globals.Broadcast("Invert-sync color schemes", "INV");
                     }
                     else
                     {
-                        Globals.SwapHandPriorities = !Globals.SwapHandPriorities;
-                        Globals.Broadcast("Swap Analog Hand Priority", "HAND");
-                    }
-
-                    
-                    return;
-
-                case Keys.F3:
-                    if (e.Shift)
-                    {
-                        bool invert = Globals.PrimaryTimer.AnalogColors.SequenceEqual(Globals.SecondaryTimer.AnalogColors);
-
-                        Globals.PrimaryTimer.CopyColorInfoFrom(Globals.SecondaryTimer, invert);
-                        Globals.Broadcast(
-                            invert ? "Invert-sync color schemes" : "Sync Color Schemes", 
-                            invert ? "INV" : "SYNC"
-                        );
-                    }
-                    else
-                    {
-                        Globals.PrimaryTimer.Recolorize();
-                        Globals.Broadcast("Re-Colorize", "COLR");
+                        Globals.PrimaryTimer.CopyColorInfoFrom(Globals.SecondaryTimer, false);
+                        Globals.Broadcast("Sync color schemes", "SYNC");
                     }
 
                     return;
+
+                case Keys.R:
+                    Globals.PrimaryTimer.Recolorize();
+                    Globals.Broadcast("Re-Colorize", "COLR");
+                    break;
 
                 case Keys.Up:
                     if (e.Shift)

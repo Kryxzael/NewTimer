@@ -397,6 +397,11 @@ namespace NewTimer.FormParts
             public string ID { get; }
 
             /// <summary>
+            /// Two-letter ID used by micro-view broadcasts
+            /// </summary>
+            public string ShortID { get; }
+
+            /// <summary>
             /// The selector function that will generate commands
             /// </summary>
             public Func<TimeSpan, MicroViewCommand> Selector { get; }
@@ -411,9 +416,10 @@ namespace NewTimer.FormParts
             /// </summary>
             /// <param name="id"></param>
             /// <param name="selector"></param>
-            private MicroViewUnitSelector(string id, Func<TimeSpan, MicroViewCommand> selector)
+            private MicroViewUnitSelector(string id, string shortId, Func<TimeSpan, MicroViewCommand> selector)
             {
                 ID = id;
+                ShortID = shortId;
                 Selector = selector;
                 All.Add(this);
             }
@@ -421,7 +427,7 @@ namespace NewTimer.FormParts
             /// <summary>
             /// Displays time using the most accurate unit available. This is default
             /// </summary>
-            public static readonly MicroViewUnitSelector MostAccurate = new MicroViewUnitSelector("default", span =>
+            public static readonly MicroViewUnitSelector MostAccurate = new MicroViewUnitSelector("default", "- ", span =>
             {
                 if (span.TotalSeconds < 100)
                     return new MicroViewCommand(span.TotalSeconds, ' ', false);
@@ -439,7 +445,7 @@ namespace NewTimer.FormParts
             /// <summary>
             /// Displays time using days, hours, minutes and seconds. Switching units when the current unit drops below 1
             /// </summary>
-            public static readonly MicroViewUnitSelector MostNatural = new MicroViewUnitSelector("natural", span =>
+            public static readonly MicroViewUnitSelector MostNatural = new MicroViewUnitSelector("natural", "N ", span =>
             {
                 if (span.TotalSeconds < 60)
                     return new MicroViewCommand(span.TotalSeconds, ' ', false);
@@ -457,7 +463,7 @@ namespace NewTimer.FormParts
             /// <summary>
             /// Always displays time using seconds
             /// </summary>
-            public static readonly MicroViewUnitSelector AlwaysSeconds = new MicroViewUnitSelector("seconds", span =>
+            public static readonly MicroViewUnitSelector AlwaysSeconds = new MicroViewUnitSelector("seconds", "S ", span =>
             {
                 return new MicroViewCommand(span.TotalSeconds, ' ', true);
             });
@@ -465,7 +471,7 @@ namespace NewTimer.FormParts
             /// <summary>
             /// Always displays time using seconds
             /// </summary>
-            public static readonly MicroViewUnitSelector AlwaysMinutes = new MicroViewUnitSelector("minutes", span =>
+            public static readonly MicroViewUnitSelector AlwaysMinutes = new MicroViewUnitSelector("minutes", "M ", span =>
             {
                 return new MicroViewCommand(span.TotalMinutes, 'M', true);
             });
@@ -473,7 +479,7 @@ namespace NewTimer.FormParts
             /// <summary>
             /// Always displays time using seconds
             /// </summary>
-            public static readonly MicroViewUnitSelector AlwaysHours = new MicroViewUnitSelector("hours", span =>
+            public static readonly MicroViewUnitSelector AlwaysHours = new MicroViewUnitSelector("hours", "H ", span =>
             {
                 return new MicroViewCommand(span.TotalHours, 'H', true);
             });
@@ -481,7 +487,7 @@ namespace NewTimer.FormParts
             /// <summary>
             /// Always displays time using seconds
             /// </summary>
-            public static readonly MicroViewUnitSelector AlwaysDays = new MicroViewUnitSelector("days", span =>
+            public static readonly MicroViewUnitSelector AlwaysDays = new MicroViewUnitSelector("days", "D ", span =>
             {
                 return new MicroViewCommand(span.TotalDays, 'D', true);
             });
@@ -489,7 +495,7 @@ namespace NewTimer.FormParts
             /// <summary>
             /// Always displays time using seconds
             /// </summary>
-            public static readonly MicroViewUnitSelector MinimumMinutes = new MicroViewUnitSelector("min-minutes", span =>
+            public static readonly MicroViewUnitSelector MinimumMinutes = new MicroViewUnitSelector("min-minutes", "MM", span =>
             {
                 if (span.TotalMinutes < 60)
                     return new MicroViewCommand(span.TotalMinutes, 'M', true);
@@ -504,7 +510,7 @@ namespace NewTimer.FormParts
             /// <summary>
             /// Always displays time using seconds
             /// </summary>
-            public static readonly MicroViewUnitSelector MinimumHours = new MicroViewUnitSelector("min-hours", span =>
+            public static readonly MicroViewUnitSelector MinimumHours = new MicroViewUnitSelector("min-hours", "MH", span =>
             {
                 if (span.TotalHours < 24)
                     return new MicroViewCommand(span.TotalHours, 'H', true);

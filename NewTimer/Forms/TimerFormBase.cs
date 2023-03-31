@@ -609,6 +609,8 @@ namespace NewTimer.Forms
                         "S: Sync primary and secondary timers' colors",
                         "C: Next color scheme",
                         "Shift + C: Previous color scheme",
+                        "U: Next micro-view unit types",
+                        "Shift + U: Previous micro-view unit types",
                         "--------",
                         "M: Toggle Micro Mode",
                         "Shift + M: Collapse/Uncollapse",
@@ -786,6 +788,25 @@ namespace NewTimer.Forms
                 case Keys.W:
                     Globals.SwapHandPriorities = !Globals.SwapHandPriorities;
                     Globals.Broadcast("Swap Analog Hand Priority", "HAND");
+                    break;
+
+                case Keys.U:
+                    var currentUnitIndex = MicroView.MicroViewUnitSelector.All.IndexOf(Globals.PrimaryTimer.MicroViewUnit);
+
+                    if (e.Shift)
+                    {
+                        currentUnitIndex--;
+                        if (currentUnitIndex < 0)
+                            currentUnitIndex = MicroView.MicroViewUnitSelector.All.Count - 1;
+                    }
+                    else
+                    {
+                        currentUnitIndex = (currentUnitIndex + 1) % MicroView.MicroViewUnitSelector.All.Count;
+                    }
+
+                    Globals.PrimaryTimer.MicroViewUnit = MicroView.MicroViewUnitSelector.All[currentUnitIndex];
+                    Globals.Broadcast("Micro-View Unit: " + Globals.PrimaryTimer.MicroViewUnit.ID, "UN" + Globals.PrimaryTimer.MicroViewUnit.ShortID.Substring(0, 2));
+
                     break;
 
                 case Keys.S:

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Text;
 using System.Globalization;
@@ -46,7 +47,7 @@ namespace NewTimer
         /// <summary>
         /// The cwd can be changed using the 'cd' command, so we store it here
         /// </summary>
-        private static readonly string _startupDirectory = Environment.CurrentDirectory;
+        private static readonly string _startupDirectory = Path.GetDirectoryName(Process.GetCurrentProcess().MainModule.FileName);
 
         /// <summary>
         /// Gets the time the last broadcast was done

@@ -161,8 +161,8 @@ namespace NewTimer.FormParts
             e.Graphics.DrawString(".",  DEFAULT_FONT, bgBrush, new Point(19, 0));
             e.Graphics.DrawString(".", SMALL_FONT, bgBrush, new PointF(BIG_DIGITS_WIDTH, 9.5f));
 
-            drawBinaryDigit(fadedPrimaryBrush, new Rectangle(0, 0, BIG_DIGITS_WIDTH / 2, PANEL_HEIGHT), numDisplay[0]);
-            drawBinaryDigit(fadedPrimaryBrush, new Rectangle(BIG_DIGITS_WIDTH / 2, 0, BIG_DIGITS_WIDTH / 2, PANEL_HEIGHT), numDisplay[1]);
+            drawBinaryDigit(fadedPrimaryBrush, new Rectangle(6, 0, (BIG_DIGITS_WIDTH / 2) - 2, PANEL_HEIGHT), numDisplay[0]);
+            drawBinaryDigit(fadedPrimaryBrush, new Rectangle((BIG_DIGITS_WIDTH / 2) + 4, 0, (BIG_DIGITS_WIDTH / 2) - 4, PANEL_HEIGHT), numDisplay[1]);
             e.Graphics.DrawString(numDisplay, DEFAULT_FONT, primaryBrush, new Point(0, 0));
 
             e.Graphics.DrawString(offset.ToString(),  SMALL_FONT, secondaryBrush, new Point(BIG_DIGITS_WIDTH, 5));

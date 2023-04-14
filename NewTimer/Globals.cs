@@ -45,7 +45,7 @@ namespace NewTimer
         public static bool SwapHandPriorities { get; set; }
 
         /// <summary>
-        /// The cwd can be changed using the 'cd' command, so we store it here
+        /// The directory that the quick-slots will be saved to
         /// </summary>
         private static readonly string _startupDirectory = Path.GetDirectoryName(Process.GetCurrentProcess().MainModule.FileName);
 

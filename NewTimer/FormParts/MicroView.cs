@@ -23,8 +23,11 @@ namespace NewTimer.FormParts
         private static readonly Font                  DEFAULT_FONT;
         private static readonly Font                  SMALL_FONT;
 
-        private const int   PANEL_WIDTH     = 115;
-        private const int   PANEL_HEIGHT    =  55;
+        private const int PANEL_WIDTH        = 115;
+        private const int PANEL_HEIGHT       =  55;
+        private const int SMALL_DIGITS_WIDTH =  20;
+        private const int BIG_DIGITS_WIDTH   = PANEL_WIDTH - SMALL_DIGITS_WIDTH;
+
         private const float FONT_SIZE       =  40f;
         private const float SMALL_FONT_SIZE =  14f;
 
@@ -98,6 +101,7 @@ namespace NewTimer.FormParts
             base.OnPaint(e);
 
             Brush primaryBrush = new SolidBrush(Globals.PrimaryTimer.MicroViewColor);
+            Brush fadedPrimaryBrush = new SolidBrush(Color.FromArgb(0x4F, Globals.PrimaryTimer.MicroViewColor));
             Brush secondaryBrush;
             Brush bgBrush = new SolidBrush(Color.FromArgb(0x5F, new ThemedColor(Color.Silver, Color.Black)));
 
@@ -123,7 +127,6 @@ namespace NewTimer.FormParts
             }
             else
                 secondaryBrush = new SolidBrush(Globals.PrimaryTimer.MicroViewColor);
-
 
             string numDisplay;
             bool displayDot;
@@ -154,14 +157,16 @@ namespace NewTimer.FormParts
             }
 
             e.Graphics.DrawString("@@", DEFAULT_FONT, bgBrush, new Point(0, 0));
-            e.Graphics.DrawString("@", SMALL_FONT, bgBrush, new Point(PANEL_WIDTH - 20, PANEL_HEIGHT - 25));
+            e.Graphics.DrawString("@", SMALL_FONT, bgBrush, new Point(BIG_DIGITS_WIDTH, PANEL_HEIGHT - 25));
             e.Graphics.DrawString(".",  DEFAULT_FONT, bgBrush, new Point(19, 0));
-            e.Graphics.DrawString(".", SMALL_FONT, bgBrush, new PointF(PANEL_WIDTH - 20, 9.5f));
+            e.Graphics.DrawString(".", SMALL_FONT, bgBrush, new PointF(BIG_DIGITS_WIDTH, 9.5f));
 
-
+            drawBinaryDigit(fadedPrimaryBrush, new Rectangle(0, 0, BIG_DIGITS_WIDTH / 2, PANEL_HEIGHT), numDisplay[0]);
+            drawBinaryDigit(fadedPrimaryBrush, new Rectangle(BIG_DIGITS_WIDTH / 2, 0, BIG_DIGITS_WIDTH / 2, PANEL_HEIGHT), numDisplay[1]);
             e.Graphics.DrawString(numDisplay, DEFAULT_FONT, primaryBrush, new Point(0, 0));
-            e.Graphics.DrawString(offset.ToString(),  SMALL_FONT, secondaryBrush, new Point(PANEL_WIDTH - 20, 5));
-            e.Graphics.DrawString(unit.ToString(),  SMALL_FONT, secondaryBrush, new Point(PANEL_WIDTH - 20, PANEL_HEIGHT - 25));
+
+            e.Graphics.DrawString(offset.ToString(),  SMALL_FONT, secondaryBrush, new Point(BIG_DIGITS_WIDTH, 5));
+            e.Graphics.DrawString(unit.ToString(),  SMALL_FONT, secondaryBrush, new Point(BIG_DIGITS_WIDTH, PANEL_HEIGHT - 25));
 
 
             if (displayDot)
@@ -172,6 +177,7 @@ namespace NewTimer.FormParts
 
             primaryBrush.Dispose();
             bgBrush.Dispose();
+            fadedPrimaryBrush.Dispose();
 
             char getOffsetMarker(double d)
             {
@@ -229,7 +235,40 @@ namespace NewTimer.FormParts
                     offsetOutput = getOffsetMarker(input);
                 }
             }
+
+            void drawBinaryDigit(Brush color, Rectangle area, char digit)
+            {
+                if (digit > '9' || digit < '0')
+                    return;
+
+                int digitNum = digit - '0';
+
+                bool[] segments = Convert.ToString(digitNum, 2)
+                .PadLeft(4, '0')
+                .Select(i => i == '1')
+                .ToArray();
+
+                const int MARGIN = 1;
+
+                for (int i = 0; i < segments.Length; i++)
+                {
+                    if (!segments[i])
+                        continue;
+
+                    RectangleF fillArea = new RectangleF(
+                    x: area.X,
+                    y: area.Y + (float)i / segments.Length * area.Height,
+                    width: area.Width,
+                    height: 1f / segments.Length * area.Height
+                );
+
+                    fillArea.Inflate(-MARGIN, -MARGIN);
+
+                    e.Graphics.FillRectangle(color, fillArea);
+                }
+            }
         }
+
 
         /// <summary>
         /// <inheritdoc />

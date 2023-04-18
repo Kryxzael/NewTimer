@@ -33,12 +33,12 @@ namespace NewTimer.Forms.Circle
             FullM.Text = Globals.PrimaryTimer.TimeLeft.Minutes.ToString("00");
             FullS.Text = Globals.PrimaryTimer.TimeLeft.Seconds.ToString("00");
 
-            FullTotalH.Text = Globals.PrimaryTimer.TimeLeft.TotalHours.ToString("00");
-            FullTotalM.Text = Globals.PrimaryTimer.TimeLeft.TotalMinutes.ToString("000");
-            FullTotalS.Text = Globals.PrimaryTimer.TimeLeft.TotalSeconds.ToString("0000000");
+            FullTotalH.Text = Math.Floor(Globals.PrimaryTimer.TimeLeft.TotalHours).ToString("00");
+            FullTotalM.Text = Math.Floor(Globals.PrimaryTimer.TimeLeft.TotalMinutes).ToString("000");
+            FullTotalS.Text = Math.Floor(Globals.PrimaryTimer.TimeLeft.TotalSeconds).ToString("0000000");
 
-            FullFracH.Text = ((Math.Ceiling(Globals.PrimaryTimer.TimeLeft.TotalHours) - Globals.PrimaryTimer.TimeLeft.TotalHours) * 1000).ToString("000");
-            FullFracM.Text = ((Math.Ceiling(Globals.PrimaryTimer.TimeLeft.TotalMinutes) - Globals.PrimaryTimer.TimeLeft.TotalMinutes) * 100).ToString("00");
+            FullFracH.Text = Globals.GetDecimals(Globals.PrimaryTimer.TimeLeft.TotalHours, 3).ToString("000");
+            FullFracM.Text = Globals.GetDecimals(Globals.PrimaryTimer.TimeLeft.TotalMinutes, 2).ToString("00");
         }
     }
 }

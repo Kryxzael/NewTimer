@@ -129,6 +129,28 @@ namespace NewTimer.Forms.Bar
             FullFracM.LeadingZerosColor = Globals.GlobalGrayedColor;
 
             /*
+             * Set animation settings
+             */
+            FullD.RollUp = Globals.PrimaryTimer.Overtime || Globals.PrimaryTimer.InFreeMode;
+            FullH.RollUp = Globals.PrimaryTimer.Overtime || Globals.PrimaryTimer.InFreeMode;
+            FullM.RollUp = Globals.PrimaryTimer.Overtime || Globals.PrimaryTimer.InFreeMode;
+            FullS.RollUp = Globals.PrimaryTimer.Overtime || Globals.PrimaryTimer.InFreeMode;
+
+            Full2ndD.RollUp = Globals.SecondaryTimer.Overtime || Globals.SecondaryTimer.InFreeMode;
+            Full2ndH.RollUp = Globals.SecondaryTimer.Overtime || Globals.SecondaryTimer.InFreeMode;
+            Full2ndM.RollUp = Globals.SecondaryTimer.Overtime || Globals.SecondaryTimer.InFreeMode;
+            Full2ndS.RollUp = Globals.SecondaryTimer.Overtime || Globals.SecondaryTimer.InFreeMode;
+
+            //Integer portions of total hours, minutes and seconds
+            FullTotalH.RollUp = Globals.PrimaryTimer.Overtime || Globals.PrimaryTimer.InFreeMode;
+            FullTotalM.RollUp = Globals.PrimaryTimer.Overtime || Globals.PrimaryTimer.InFreeMode;
+            FullTotalS.RollUp = Globals.PrimaryTimer.Overtime || Globals.PrimaryTimer.InFreeMode;
+
+            //Fraction portions of total hours and minutes
+            FullFracH.RollUp = Globals.PrimaryTimer.Overtime || Globals.PrimaryTimer.InFreeMode;
+            FullFracM.RollUp = Globals.PrimaryTimer.Overtime || Globals.PrimaryTimer.InFreeMode;
+
+            /*
              * Sets the text
              */
             //Main days

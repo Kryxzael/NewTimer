@@ -80,6 +80,7 @@
             // 
             // Full2ndM
             // 
+            this.Full2ndM.AnimationTime = System.TimeSpan.Parse("00:00:00.5000000");
             this.Full2ndM.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Full2ndM.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(221)))), ((int)(((byte)(221)))), ((int)(((byte)(221)))));
             this.Full2ndM.HighlightColor = System.Drawing.Color.Empty;
@@ -89,6 +90,7 @@
             this.Full2ndM.Name = "Full2ndM";
             this.Full2ndM.Progress = 0F;
             this.Full2ndM.RenderLeadingZeros = false;
+            this.Full2ndM.RollUp = false;
             this.Full2ndM.Size = new System.Drawing.Size(28, 27);
             this.Full2ndM.TabIndex = 27;
             this.Full2ndM.Text = "00";
@@ -115,6 +117,7 @@
             // 
             // FullD
             // 
+            this.FullD.AnimationTime = System.TimeSpan.Parse("00:00:03");
             this.FullD.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.FullD.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(221)))), ((int)(((byte)(221)))), ((int)(((byte)(221)))));
             this.FullD.HighlightColor = System.Drawing.Color.Empty;
@@ -124,6 +127,7 @@
             this.FullD.Name = "FullD";
             this.FullD.Progress = 0F;
             this.FullD.RenderLeadingZeros = false;
+            this.FullD.RollUp = false;
             this.FullD.Size = new System.Drawing.Size(29, 35);
             this.FullD.TabIndex = 24;
             this.FullD.Text = "00";
@@ -149,6 +153,7 @@
             // 
             // FullS
             // 
+            this.FullS.AnimationTime = System.TimeSpan.Parse("00:00:00.20000");
             this.FullS.Font = new System.Drawing.Font("Microsoft Sans Serif", 36F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.FullS.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(221)))), ((int)(((byte)(221)))), ((int)(((byte)(221)))));
             this.FullS.HighlightColor = System.Drawing.Color.Empty;
@@ -158,6 +163,7 @@
             this.FullS.Name = "FullS";
             this.FullS.Progress = 0F;
             this.FullS.RenderLeadingZeros = false;
+            this.FullS.RollUp = false;
             this.FullS.Size = new System.Drawing.Size(100, 54);
             this.FullS.TabIndex = 23;
             this.FullS.Text = "00";
@@ -165,6 +171,7 @@
             // 
             // FullH
             // 
+            this.FullH.AnimationTime = System.TimeSpan.Parse("00:00:01.5000000");
             this.FullH.Font = new System.Drawing.Font("Microsoft Sans Serif", 36F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.FullH.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(221)))), ((int)(((byte)(221)))), ((int)(((byte)(221)))));
             this.FullH.HighlightColor = System.Drawing.Color.Empty;
@@ -174,6 +181,7 @@
             this.FullH.Name = "FullH";
             this.FullH.Progress = 0F;
             this.FullH.RenderLeadingZeros = false;
+            this.FullH.RollUp = false;
             this.FullH.Size = new System.Drawing.Size(58, 54);
             this.FullH.TabIndex = 22;
             this.FullH.Text = "00";
@@ -181,6 +189,7 @@
             // 
             // FullFracM
             // 
+            this.FullFracM.AnimationTime = System.TimeSpan.Parse("00:00:00.5000000");
             this.FullFracM.AutoSize = true;
             this.FullFracM.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.FullFracM.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(221)))), ((int)(((byte)(221)))), ((int)(((byte)(221)))));
@@ -191,6 +200,7 @@
             this.FullFracM.Name = "FullFracM";
             this.FullFracM.Progress = 0F;
             this.FullFracM.RenderLeadingZeros = false;
+            this.FullFracM.RollUp = false;
             this.FullFracM.Size = new System.Drawing.Size(34, 20);
             this.FullFracM.TabIndex = 18;
             this.FullFracM.Text = ".00";
@@ -198,6 +208,7 @@
             // 
             // FullFracH
             // 
+            this.FullFracH.AnimationTime = System.TimeSpan.Parse("00:00:00.5000000");
             this.FullFracH.AutoSize = true;
             this.FullFracH.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.FullFracH.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(221)))), ((int)(((byte)(221)))), ((int)(((byte)(221)))));
@@ -208,6 +219,7 @@
             this.FullFracH.Name = "FullFracH";
             this.FullFracH.Progress = 0F;
             this.FullFracH.RenderLeadingZeros = false;
+            this.FullFracH.RollUp = false;
             this.FullFracH.Size = new System.Drawing.Size(44, 20);
             this.FullFracH.TabIndex = 17;
             this.FullFracH.Text = ".000";
@@ -215,6 +227,7 @@
             // 
             // FullTotalM
             // 
+            this.FullTotalM.AnimationTime = System.TimeSpan.Parse("00:00:00.5000000");
             this.FullTotalM.AutoSize = true;
             this.FullTotalM.Font = new System.Drawing.Font("Microsoft Sans Serif", 26.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.FullTotalM.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(221)))), ((int)(((byte)(221)))), ((int)(((byte)(221)))));
@@ -225,6 +238,7 @@
             this.FullTotalM.Name = "FullTotalM";
             this.FullTotalM.Progress = 0F;
             this.FullTotalM.RenderLeadingZeros = false;
+            this.FullTotalM.RollUp = false;
             this.FullTotalM.Size = new System.Drawing.Size(77, 39);
             this.FullTotalM.TabIndex = 15;
             this.FullTotalM.Text = "000";
@@ -232,6 +246,7 @@
             // 
             // FullTotalH
             // 
+            this.FullTotalH.AnimationTime = System.TimeSpan.Parse("00:00:01.5000000");
             this.FullTotalH.AutoSize = true;
             this.FullTotalH.Font = new System.Drawing.Font("Microsoft Sans Serif", 26.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.FullTotalH.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(221)))), ((int)(((byte)(221)))), ((int)(((byte)(221)))));
@@ -242,6 +257,7 @@
             this.FullTotalH.Name = "FullTotalH";
             this.FullTotalH.Progress = 0F;
             this.FullTotalH.RenderLeadingZeros = false;
+            this.FullTotalH.RollUp = false;
             this.FullTotalH.Size = new System.Drawing.Size(57, 39);
             this.FullTotalH.TabIndex = 14;
             this.FullTotalH.Text = "00";
@@ -249,6 +265,7 @@
             // 
             // FullM
             // 
+            this.FullM.AnimationTime = System.TimeSpan.Parse("00:00:00.5000000");
             this.FullM.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.FullM.Font = new System.Drawing.Font("Microsoft Sans Serif", 72F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.FullM.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(221)))), ((int)(((byte)(221)))), ((int)(((byte)(221)))));
@@ -258,6 +275,7 @@
             this.FullM.Name = "FullM";
             this.FullM.Progress = 0F;
             this.FullM.RenderLeadingZeros = false;
+            this.FullM.RollUp = false;
             this.FullM.Size = new System.Drawing.Size(208, 100);
             this.FullM.TabIndex = 13;
             this.FullM.Text = "00";
@@ -265,6 +283,7 @@
             // 
             // FullTotalS
             // 
+            this.FullTotalS.AnimationTime = System.TimeSpan.Parse("00:00:00.2000");
             this.FullTotalS.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.FullTotalS.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(221)))), ((int)(((byte)(221)))), ((int)(((byte)(221)))));
             this.FullTotalS.HighlightColor = System.Drawing.Color.Empty;
@@ -274,6 +293,7 @@
             this.FullTotalS.Name = "FullTotalS";
             this.FullTotalS.Progress = 0F;
             this.FullTotalS.RenderLeadingZeros = false;
+            this.FullTotalS.RollUp = false;
             this.FullTotalS.Size = new System.Drawing.Size(136, 27);
             this.FullTotalS.TabIndex = 16;
             this.FullTotalS.Text = "0000000";
@@ -281,6 +301,7 @@
             // 
             // Full2ndH
             // 
+            this.Full2ndH.AnimationTime = System.TimeSpan.Parse("00:00:01.5000000");
             this.Full2ndH.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Full2ndH.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(221)))), ((int)(((byte)(221)))), ((int)(((byte)(221)))));
             this.Full2ndH.HighlightColor = System.Drawing.Color.Empty;
@@ -290,6 +311,7 @@
             this.Full2ndH.Name = "Full2ndH";
             this.Full2ndH.Progress = 0F;
             this.Full2ndH.RenderLeadingZeros = false;
+            this.Full2ndH.RollUp = false;
             this.Full2ndH.Size = new System.Drawing.Size(22, 27);
             this.Full2ndH.TabIndex = 29;
             this.Full2ndH.Text = "00";
@@ -298,6 +320,7 @@
             // 
             // Full2ndS
             // 
+            this.Full2ndS.AnimationTime = System.TimeSpan.Parse("00:00:00.2500000");
             this.Full2ndS.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Full2ndS.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(221)))), ((int)(((byte)(221)))), ((int)(((byte)(221)))));
             this.Full2ndS.HighlightColor = System.Drawing.Color.Empty;
@@ -307,6 +330,7 @@
             this.Full2ndS.Name = "Full2ndS";
             this.Full2ndS.Progress = 0F;
             this.Full2ndS.RenderLeadingZeros = false;
+            this.Full2ndS.RollUp = false;
             this.Full2ndS.Size = new System.Drawing.Size(22, 20);
             this.Full2ndS.TabIndex = 30;
             this.Full2ndS.Text = "00";
@@ -315,6 +339,7 @@
             // 
             // Full2ndD
             // 
+            this.Full2ndD.AnimationTime = System.TimeSpan.Parse("00:00:03");
             this.Full2ndD.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Full2ndD.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(221)))), ((int)(((byte)(221)))), ((int)(((byte)(221)))));
             this.Full2ndD.HighlightColor = System.Drawing.Color.Empty;
@@ -324,6 +349,7 @@
             this.Full2ndD.Name = "Full2ndD";
             this.Full2ndD.Progress = 0F;
             this.Full2ndD.RenderLeadingZeros = false;
+            this.Full2ndD.RollUp = false;
             this.Full2ndD.Size = new System.Drawing.Size(17, 27);
             this.Full2ndD.TabIndex = 31;
             this.Full2ndD.Text = "00";

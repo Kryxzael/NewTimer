@@ -307,6 +307,9 @@ namespace NewTimer.FormParts
                 float widthPerSubSegement = overflowWidth / subSegmentCount;
                 int fullSubSegmentCount = (int)(bounds.Width / widthPerSubSegement);
 
+                if (fullSubSegmentCount > 50)
+                    return;
+
                 for (int i = 0; i <= fullSubSegmentCount; i++)
                 {
                     e.Graphics.DrawLine(

@@ -61,7 +61,19 @@ namespace NewTimer.Forms
         /// Gets or sets the text the user is currently typing when the window is selected
         /// </summary>
         private string InvisibleInputText { get; set; } = "";
+
         private DateTime LastInvisibileInputTextUpdateTime { get; set; }
+
+        /// <summary>
+        /// The timestamp of the last global-timer update
+        /// </summary>
+        private DateTime _lastUpdateTime = DateTime.Now;
+
+        /// <summary>
+        /// Contains a list of the last delta-times (times it takes between timer updates) to use for rolling averages
+        /// </summary>
+        private Queue<float> _deltaTimes = new Queue<float>(DELTA_TIMES_COUNT);
+        const int DELTA_TIMES_COUNT = 25;
 
         /// <summary>
         /// Used to control the visibility of the secondary timer bar when the window is in compact mode
@@ -177,6 +189,22 @@ namespace NewTimer.Forms
         /// <param name="e"></param>
         private void UpdateICountdowns(object sender, EventArgs e)
         {
+            /*
+             * Calculate whether to use rolling animations based on an average of performance over time
+             */
+
+            if (_deltaTimes.Count >= DELTA_TIMES_COUNT)
+                _deltaTimes.Dequeue();
+
+            _deltaTimes.Enqueue((DateTime.Now - _lastUpdateTime).Milliseconds);
+
+            LabelGrayedLeadingZeros.BypassAllAnimations = _deltaTimes.Average() > 100;
+            _lastUpdateTime = DateTime.Now;
+
+            /*
+             * Set colors
+             */
+
             ForeColor = Globals.GlobalForeColor;
 
             Color newBackColor;

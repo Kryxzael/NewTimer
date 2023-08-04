@@ -28,6 +28,11 @@ namespace NewTimer.FormParts
         private Dictionary<int, DigitRollOverAnimation> _animations = new Dictionary<int, DigitRollOverAnimation>();
 
         /// <summary>
+        /// If set, animations will never play
+        /// </summary>
+        public static bool BypassAllAnimations { get; set; }
+
+        /// <summary>
         /// Get or sets the amount of the label that should be colored with highlighting color. Intended range is 0 through 1
         /// </summary>
         public float Progress
@@ -139,21 +144,24 @@ namespace NewTimer.FormParts
                     Rectangle oldDigitRect = offsetClipRect;
                     Rectangle newDigitRect = offsetClipRect;
 
-                    if (RollUp)
+                    if (!BypassAllAnimations)
                     {
-                        oldDigitRect.Y -= (int)(oldDigitRect.Height * animation.AnimationProgress);
-                        newDigitRect.Y -= (int)(newDigitRect.Height * animation.AnimationProgress);
-                        newDigitRect.Y += oldDigitRect.Height;
-                    }
-                    else
-                    {
-                        oldDigitRect.Y += (int)(oldDigitRect.Height * animation.AnimationProgress);
-                        newDigitRect.Y += (int)(newDigitRect.Height * animation.AnimationProgress);
-                        newDigitRect.Y -= oldDigitRect.Height;
-                    }
-                    
+                        if (RollUp)
+                        {
+                            oldDigitRect.Y -= (int)(oldDigitRect.Height * animation.AnimationProgress);
+                            newDigitRect.Y -= (int)(newDigitRect.Height * animation.AnimationProgress);
+                            newDigitRect.Y += oldDigitRect.Height;
+                        }
+                        else
+                        {
+                            oldDigitRect.Y += (int)(oldDigitRect.Height * animation.AnimationProgress);
+                            newDigitRect.Y += (int)(newDigitRect.Height * animation.AnimationProgress);
+                            newDigitRect.Y -= oldDigitRect.Height;
+                        }
 
-                    drawDigit(animation.FromValue, oldDigitRect, false);
+                        drawDigit(animation.FromValue, oldDigitRect, false);
+                    }
+
                     drawDigit(c, newDigitRect, true);
                 }
                 

@@ -297,7 +297,13 @@ namespace NewTimer.FormParts
             {
                 //Draw subsegments
                 int subSegmentCount = GetSubSegmentCount(DisplayedTimeLeft);
-                for (int i = 0; i < subSegmentCount; i++)
+                float widthPerSubSegement = overflowWidth / subSegmentCount;
+                int fullSubSegmentCount = (int)(bounds.Width / widthPerSubSegement);
+
+                if (fullSubSegmentCount > 50)
+                    return;
+
+                for (int i = 0; i <= fullSubSegmentCount; i++)
                 {
                     e.Graphics.DrawLine(
                         pen: transparentPen,

@@ -244,9 +244,9 @@ namespace NewTimer.FormParts
                 int digitNum = digit - '0';
 
                 bool[] segments = Convert.ToString(digitNum, 2)
-                .PadLeft(4, '0')
-                .Select(i => i == '1')
-                .ToArray();
+                    .PadLeft(4, '0')
+                    .Select(i => i == '1')
+                    .ToArray();
 
                 const int MARGIN = 1;
 
@@ -294,44 +294,47 @@ namespace NewTimer.FormParts
                 //                                                        v Cheat to make offset display work
                 CurrentCommand   = new MicroViewCommand(hour + DateTime.Now.Second / 60f, amPm, false);
                 SecondaryCommand = new MicroViewCommand(DateTime.Now.Minute, amPm, false);
+
+                BackColor = Globals.GlobalFreeModeBackColor;
+
+                Invalidate();
+                return;
             }
-            else
-            {
-                if (Globals.CurrentBroadcastMessage == null)
-                {
-                    if (Globals.PrimaryTimer.StopAtZero && isOvertime)
-                    {
-                        if (Globals.PrimaryTimer.RealTimeLeft.Milliseconds < -500)
-                            Globals.Broadcast(null, "");
-                        else
-                            Globals.Broadcast(null, null);
-                    }
-                }
 
-                CurrentCommand = Globals.PrimaryTimer.MicroViewUnit.Selector(Globals.PrimaryTimer.TimeLeft);
-            }
-            
+            /*
+             * Primary timer is NOT in free mode
+             */
 
+            //Set commands
+            CurrentCommand = Globals.PrimaryTimer.MicroViewUnit.Selector(Globals.PrimaryTimer.TimeLeft);
 
-            if (!Globals.SecondaryTimer.InFreeMode && !Globals.PrimaryTimer.InFreeMode)
-            {
+            if (!Globals.SecondaryTimer.InFreeMode)
                 SecondaryCommand = Globals.SecondaryTimer.MicroViewUnit.Selector(Globals.SecondaryTimer.TimeLeft);
-            }
-            else if (!Globals.PrimaryTimer.InFreeMode)
-            {
+
+            else
                 SecondaryCommand = MicroViewCommand.INVALID;
+
+            //Blink when stopped at zero
+            if (Globals.CurrentBroadcastMessage == null)
+            {
+                if (Globals.PrimaryTimer.StopAtZero && isOvertime)
+                {
+                    if (Globals.PrimaryTimer.RealTimeLeft.Milliseconds < -500)
+                        Globals.Broadcast(null, "");
+                    else
+                        Globals.Broadcast(null, null);
+                }
             }
 
-
+            //Set background color
             if (isOvertime)
                 BackColor = Globals.GlobalOvertimeColor;
 
             else
                 BackColor = Globals.GlobalBackColor;
 
-            Invalidate();
-
-            if (!Globals.PrimaryTimer.InFreeMode && !Globals.PrimaryTimer.Paused)
+            //Broadcast milestones
+            if (!Globals.PrimaryTimer.Paused)
             {
                 broadcastAt("DAY ", 24,  0, false);
                 broadcastAt("HOUR",  1,  0, false);
@@ -340,7 +343,7 @@ namespace NewTimer.FormParts
                 broadcastAt("MIN ",  0,  1, false);
 
                 if (!Globals.PrimaryTimer.StopAtZero)
-                    broadcastAt("ZERO",  0,  0, true);
+                    broadcastAt("ZERO", 0, 0, true);
 
                 /*
                  * Broadcasts (to micro-view only) the provided message at the given amount of time on the clock
@@ -372,10 +375,10 @@ namespace NewTimer.FormParts
 
                         Globals.Broadcast(null, msg);
                     }
-                        
-
                 }
             }
+
+            Invalidate();
         }
 
         /// <summary>

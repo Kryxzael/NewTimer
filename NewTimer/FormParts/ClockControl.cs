@@ -456,7 +456,7 @@ namespace NewTimer.FormParts
             /*
              * Creates a filled pie
              */
-            /* local */ void fillPie(Brush color, float startAngle, float angle, float scale, float centerOffset)
+            /* local */ void fillPie(Brush color, Pen edge, float startAngle, float angle, float scale, float centerOffset)
             {
                 Rectangle area = new Rectangle(
                     x: squareArea.X + (int)(squareArea.Width * (1 - scale) / 2f),
@@ -490,6 +490,9 @@ namespace NewTimer.FormParts
                 e.Graphics.FillRegion(color, region);
                 region.Dispose();
                 path.Dispose();
+
+                if (edge != null)
+                    drawPie(edge, startAngle, angle, scale);
             }
 
             /*
@@ -527,13 +530,15 @@ namespace NewTimer.FormParts
             {
                 if (timer.TimeLeft.TotalMinutes < 1f)
                 {
-                    fillPie(
-                        color: BG_BRUSH,
-                        startAngle: (DateTime.Now.Second + DateTime.Now.Millisecond / 1000f) / 60f * 360f,
-                        angle: (float)timer.RealTimeLeft.TotalSeconds / 60f * 360f,
-                        scale: 1 - BG_FRAME_SCALE,
-                        centerOffset: 0f
-                    );
+                    using (Pen edge = new Pen(Globals.GlobalForeColor, 1.5f) { DashStyle = DashStyle.Dash })
+                        fillPie(
+                            color: BG_BRUSH,
+                            edge: edge,
+                            startAngle: (DateTime.Now.Second + DateTime.Now.Millisecond / 1000f) / 60f * 360f,
+                            angle: (float)timer.RealTimeLeft.TotalSeconds / 60f * 360f,
+                            scale: 1 - BG_FRAME_SCALE,
+                            centerOffset: 0f
+                        );
                 }
                 
             }
@@ -548,13 +553,16 @@ namespace NewTimer.FormParts
                 float dividend = 1f;
                 for (int i = 0; i < Math.Ceiling(timer.TimeLeft.TotalDays / 12); i++)
                 {
+                    Color pieColor = colors[(i + 6) % colors.Length];
+
                     //Create a colored pen based on what days we are drawing
-                    using (Brush b = createBrush[i % createBrush.Length](colors[(i + 6) % colors.Length]))
+                    using (Brush pieFill = createBrush[i % createBrush.Length](pieColor))
                     {
                         if (i == Math.Floor(timer.TimeLeft.TotalDays / 12))
                         {
                             fillPie(
-                                color: b,
+                                color: pieFill,
+                                edge: null, //Creating an edge here looks weird due to overdrawing happening later
                                 startAngle: 0f,
                                 angle: (float)timer.TimeLeft.TotalDays % 12f * 360f / 12f,
                                 scale: DISC_INITAL_SCALE / dividend,
@@ -564,7 +572,8 @@ namespace NewTimer.FormParts
                         else
                         {
                             fillPie(
-                                color: b,
+                                color: pieFill,
+                                edge: null, //See comment above
                                 startAngle: 0f,
                                 angle: 360f,
                                 scale: DISC_INITAL_SCALE / dividend,
@@ -590,13 +599,13 @@ namespace NewTimer.FormParts
                 }
 
                 //Draw week indicators
-                fillPie(Brushes.Gray, 7 / 12f * 360f, 1f, DISC_INITAL_SCALE, DISC_INITAL_SCALE_HOURS);
+                fillPie(Brushes.Gray, null, 7 / 12f * 360f, 0f, DISC_INITAL_SCALE, DISC_INITAL_SCALE_HOURS);
 
                 if (timer.TimeLeft.TotalDays >= 7f)
-                    fillPie(Brushes.Gray, 2 / 12f * 360f, 1f, DISC_INITAL_SCALE, DISC_INITAL_SCALE_HOURS);
+                    fillPie(Brushes.Gray, null, 2 / 12f * 360f, 0f, DISC_INITAL_SCALE, DISC_INITAL_SCALE_HOURS);
 
                 if (timer.TimeLeft.TotalDays >= 14f)
-                    fillPie(Brushes.Gray, 9 / 12f * 360f, 1f, DISC_INITAL_SCALE, DISC_INITAL_SCALE_HOURS);
+                    fillPie(Brushes.Gray, null, 9 / 12f * 360f, 0f, DISC_INITAL_SCALE, DISC_INITAL_SCALE_HOURS);
 
                 //fillPie(BG_BRUSH, 0f, 360f, DISC_INITAL_SCALE_HOURS);
             }
@@ -605,15 +614,19 @@ namespace NewTimer.FormParts
             else if (timer.TimeLeft.TotalHours >= 3 || timer.HybridDiskMode)
             {
                 float dividend = 1f;
+
                 for (int i = 0; i < Math.Ceiling(timer.TimeLeft.TotalDays * 2); i++)
                 {
                     //Create a colored pen based on what hours we are drawing
-                    using (Brush b = createBrush[i % createBrush.Length](colors[(i + 4) % colors.Length]))
+                    Color pieColor = colors[(i + 4) % colors.Length];
+                    using (Brush pieFill = createBrush[i % createBrush.Length](pieColor))
+                    using (Pen   pieEdge  = new Pen(pieColor))
                     {
                         if (i == Math.Floor(timer.TimeLeft.TotalDays * 2))
                         {
                             fillPie(
-                                color: b,
+                                color: pieFill,
+                                edge: pieEdge,
                                 startAngle: ((DateTime.Now.Hour % 12) + DateTime.Now.Minute / 60f) / 12f * 360f,
                                 angle: (float)(timer.RealTimeLeft.TotalHours % 12) / 12f * 360f,
                                 scale: DISC_INITAL_SCALE_HOURS / dividend,
@@ -623,7 +636,8 @@ namespace NewTimer.FormParts
                         else
                         {
                             fillPie(
-                                color: b,
+                                color: pieFill,
+                                edge: pieEdge,
                                 startAngle: 0f,
                                 angle: 360f,
                                 scale: DISC_INITAL_SCALE_HOURS / dividend,
@@ -640,11 +654,14 @@ namespace NewTimer.FormParts
             if (timer.TimeLeft.TotalHours < 3f)
             {
                 float dividend = 1f;
+
                 for (int i = 0; i < Math.Ceiling(timer.TimeLeft.TotalHours); i++)
                 {
                     //Create a colored pen based on what hour we are drawing
-                    using (Brush b = createBrush[i % createBrush.Length](colors[i % colors.Length]))
-                    using (Pen altPen = new Pen(colors[i % colors.Length], 4f) 
+                    Color pieColor = colors[i % colors.Length];
+                    using (Brush pieFill = createBrush[i % createBrush.Length](pieColor))
+                    using (Pen   pieEdge = new Pen(pieColor))
+                    using (Pen arrowPen = new Pen(pieColor, 4f) 
                     { 
                         EndCap = timer.Overtime ? LineCap.Round : LineCap.ArrowAnchor, 
                         StartCap = timer.Overtime ? LineCap.ArrowAnchor : LineCap.Flat, 
@@ -663,11 +680,11 @@ namespace NewTimer.FormParts
 
                             if (timer.HybridDiskMode)
                             {
-                                drawArc(altPen, startAngle, angle, arcScale);
+                                drawArc(arrowPen, startAngle, angle, arcScale);
                             }
                             else
                             {
-                                fillPie(b, startAngle, angle, DISC_INITAL_SCALE / dividend, 0f);
+                                fillPie(pieFill, pieEdge, startAngle, angle, DISC_INITAL_SCALE / dividend, 0f);
                             }
                             
                         }
@@ -675,11 +692,11 @@ namespace NewTimer.FormParts
                         {
                             if (timer.HybridDiskMode)
                             {
-                                drawArc(altPen, 0, 360f, arcScale);
+                                drawArc(arrowPen, 0, 360f, arcScale);
                             }
                             else
                             {
-                                fillPie(b, 0f, 360f, DISC_INITAL_SCALE / dividend, 0f);
+                                fillPie(pieFill, pieEdge, 0f, 360f, DISC_INITAL_SCALE / dividend, 0f);
                             }
                         }
                     }

@@ -55,6 +55,7 @@ namespace NewTimer
         private static DateTime _lastBroadcastStartTime;
         private static string _currentBroadcastMessage;
         private static string _currentMicroBroadcastMessage;
+        private static string _currentLongMicroBroadcastMessage;
 
         /// <summary>
         /// Gets the temporary message to display on the title-bar
@@ -79,6 +80,20 @@ namespace NewTimer
             {
                 if ((DateTime.Now - _lastBroadcastStartTime) < MicroBroadcastTimeout)
                     return _currentMicroBroadcastMessage;
+
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// Gets the temporary message to display in the micro-view when in long view
+        /// </summary>
+        public static string CurrentLongMicroBroadcastMessage
+        {
+            get
+            {
+                if ((DateTime.Now - _lastBroadcastStartTime) < MicroBroadcastTimeout)
+                    return _currentLongMicroBroadcastMessage;
 
                 return null;
             }
@@ -303,18 +318,32 @@ namespace NewTimer
         }
 
         /// <summary>
+        /// Broadcasts the provided messages to the timer window's title-bar and micro-view. MicroMessage must be at most four characters, and longMicroMessage at most five.
+        /// </summary>
+        /// <param name="titleMessage"></param>
+        /// <param name="microMessage"></param>
+        public static void Broadcast(string titleMessage, string microMessage, string longMicroMessage)
+        {
+            if ((microMessage?.Length ?? 0) > 4)
+                throw new ArgumentException("MicroMessage must be <= 4 chars");
+
+            if ((microMessage?.Length ?? 0) > 5)
+                throw new ArgumentException("LongMicroMessage must be <= 5 chars");
+
+            _currentBroadcastMessage = titleMessage;
+            _currentMicroBroadcastMessage = microMessage;
+            _currentLongMicroBroadcastMessage = longMicroMessage;
+            _lastBroadcastStartTime = DateTime.Now;
+        }
+
+        /// <summary>
         /// Broadcasts the provided messages to the timer window's title-bar and micro-view. MicroMessage must be at most four characters
         /// </summary>
         /// <param name="titleMessage"></param>
         /// <param name="microMessage"></param>
         public static void Broadcast(string titleMessage, string microMessage)
         {
-            if ((microMessage?.Length ?? 0) > 4)
-                throw new ArgumentException("MicroMessage must be <= 4 chars");
-
-            _currentBroadcastMessage = titleMessage;
-            _currentMicroBroadcastMessage = microMessage;
-            _lastBroadcastStartTime = DateTime.Now;
+            Broadcast(titleMessage, microMessage, microMessage);
         }
 
         /// <summary>
@@ -333,7 +362,11 @@ namespace NewTimer
                     if (adjustToToday)
                         PrimaryTimer.Target = DateTime.Today.Add(PrimaryTimer.Target.TimeOfDay);
 
-                    Broadcast("Loaded: " + PrimaryTimer.Target.ToString(), PrimaryTimer.Target.ToString("HHmm"));
+                    Broadcast(
+                        "Loaded: " + PrimaryTimer.Target.ToString(), 
+                        PrimaryTimer.Target.ToString("HHmm"), 
+                        " " + PrimaryTimer.Target.ToString("HHmm")
+                    );
                 }
                 catch (Exception)
                 {
@@ -354,7 +387,11 @@ namespace NewTimer
             try
             {
                 PrimaryTimer.Serialize().ToFile(GetSaveSlotName(slot));
-                Broadcast("Saved quick-slot " + (slot + 1), "SA" + (slot + 1).ToString("00", CultureInfo.InvariantCulture));
+                Broadcast(
+                    "Saved quick-slot " + (slot + 1), 
+                    "SA"  + (slot + 1).ToString("00", CultureInfo.InvariantCulture),
+                    "SAV" + (slot + 1).ToString("00", CultureInfo.InvariantCulture)
+                );
             }
             catch (Exception)
             {

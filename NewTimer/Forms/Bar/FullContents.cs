@@ -14,10 +14,10 @@ namespace NewTimer.Forms.Bar
     public partial class FullContents : UserControl, ICountdown
     {
         private Point _secondaryHourDefaultPosition;
-        private Point _secondaryHourAlternatePosition = new Point(71, 131);
+        private Point _secondaryHourAlternatePosition = new Point(74, 131);
 
         private Point _secondaryDayDefaultPosition;
-        private Point _secondaryDayAlternatePosition = new Point(50, 128);
+        private Point _secondaryDayAlternatePosition = new Point(45, 128);
 
         public FullContents()
         {
@@ -154,7 +154,7 @@ namespace NewTimer.Forms.Bar
              * Sets the text
              */
             //Main days
-            FullD.Text = span.Days.ToString("00");
+            FullD.Text = span.Days >= 1000 ? "  ---" : span.Days.ToString("000");
             FullH.RenderLeadingZeros = true;
 
             //Main hours
@@ -206,7 +206,7 @@ namespace NewTimer.Forms.Bar
                 
 
                 //2nd days
-                Full2ndD.Text = Globals.SecondaryTimer.TimeLeft.Days.ToString("00");
+                Full2ndD.Text = Globals.SecondaryTimer.TimeLeft.Days.ToString("000");
                 Full2ndH.RenderLeadingZeros = false;
 
                 //2nd hours
@@ -230,19 +230,19 @@ namespace NewTimer.Forms.Bar
             }
 
             //Total hours
-            FullTotalH.Text = Math.Floor(span.TotalHours) >= 100 ? "BIG" : Math.Floor(span.TotalHours).ToString("00");
             FullTotalH.RenderLeadingZeros = false;
-            FullFracH.Text = Globals.GetDecimals(span.TotalHours, 3).ToString("000");
+            FullTotalH.Text = Math.Floor(span.TotalHours) >= 10000 ? "----" : Math.Floor(span.TotalHours).ToString("0000");
+            FullFracH.Text  = Math.Floor(span.TotalHours) >= 10000 ? "---"  : Globals.GetDecimals(span.TotalHours, 3).ToString("000");
             FullFracH.RenderLeadingZeros = span.TotalHours >= 1;
 
             //Total minutes
-            FullTotalM.Text = Math.Floor(span.TotalMinutes) >= 1000 ? "BIG" : Math.Floor(span.TotalMinutes).ToString("000");
             FullTotalM.RenderLeadingZeros = false;
-            FullFracM.Text = Globals.GetDecimals(span.TotalMinutes, 2).ToString("00");
+            FullTotalM.Text = Math.Floor(span.TotalMinutes) >= 10000 ? "   ----" : Math.Floor(span.TotalMinutes).ToString("0000");
+            FullFracM.Text  = Math.Floor(span.TotalMinutes) >= 10000 ? "  --"    : Globals.GetDecimals(span.TotalMinutes, 2).ToString("00");
             FullFracM.RenderLeadingZeros = span.TotalMinutes >= 1;
 
             //Total seconds
-            FullTotalS.Text = Math.Floor(span.TotalSeconds).ToString("0000000");
+            FullTotalS.Text = Math.Floor(span.TotalSeconds) >= 10000000 ? "-----------" : Math.Floor(span.TotalSeconds).ToString("0000000");
             FullTotalS.RenderLeadingZeros = false;
 
             /*

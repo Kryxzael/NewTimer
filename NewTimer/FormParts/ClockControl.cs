@@ -873,8 +873,8 @@ namespace NewTimer.FormParts
         protected static PointF GetPointAtAngle(Point origin, float length, float angle)
         {
             return new PointF(
-                x: origin.X + (float)Math.Cos(ToRadiants(angle)) * length,
-                y: origin.Y + (float)Math.Sin(ToRadiants(angle)) * length
+                x: origin.X + (float)Math.Cos(ToRadians(angle)) * length,
+                y: origin.Y + (float)Math.Sin(ToRadians(angle)) * length
             );
         }
 
@@ -883,7 +883,7 @@ namespace NewTimer.FormParts
         /// </summary>
         /// <param name="angle"></param>
         /// <returns></returns>
-        protected static float ToRadiants(double angle)
+        protected static float ToRadians(double angle)
         {
             return (float)((Math.PI / 180) * angle);
         }

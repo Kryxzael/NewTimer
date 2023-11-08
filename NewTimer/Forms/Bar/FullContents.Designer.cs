@@ -31,6 +31,9 @@
             this.lblTotalMinutes = new System.Windows.Forms.Label();
             this.lblTotalHours = new System.Windows.Forms.Label();
             this.lblTotalSeconds = new System.Windows.Forms.Label();
+            this.Full2ndD = new NewTimer.FormParts.LabelGrayedLeadingZeros();
+            this.Full2ndS = new NewTimer.FormParts.LabelGrayedLeadingZeros();
+            this.Full2ndH = new NewTimer.FormParts.LabelGrayedLeadingZeros();
             this.Full2ndM = new NewTimer.FormParts.LabelGrayedLeadingZeros();
             this.timerBar1 = new NewTimer.FormParts.TimerBar();
             this.FullD = new NewTimer.FormParts.LabelGrayedLeadingZeros();
@@ -43,9 +46,6 @@
             this.FullTotalH = new NewTimer.FormParts.LabelGrayedLeadingZeros();
             this.FullM = new NewTimer.FormParts.LabelGrayedLeadingZeros();
             this.FullTotalS = new NewTimer.FormParts.LabelGrayedLeadingZeros();
-            this.Full2ndH = new NewTimer.FormParts.LabelGrayedLeadingZeros();
-            this.Full2ndS = new NewTimer.FormParts.LabelGrayedLeadingZeros();
-            this.Full2ndD = new NewTimer.FormParts.LabelGrayedLeadingZeros();
             this.SuspendLayout();
             // 
             // lblTotalMinutes
@@ -72,11 +72,68 @@
             // 
             this.lblTotalSeconds.AutoSize = true;
             this.lblTotalSeconds.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(221)))), ((int)(((byte)(221)))), ((int)(((byte)(221)))));
-            this.lblTotalSeconds.Location = new System.Drawing.Point(131, 27);
+            this.lblTotalSeconds.Location = new System.Drawing.Point(129, 30);
             this.lblTotalSeconds.Name = "lblTotalSeconds";
             this.lblTotalSeconds.Size = new System.Drawing.Size(49, 13);
             this.lblTotalSeconds.TabIndex = 19;
             this.lblTotalSeconds.Text = "Seconds";
+            // 
+            // Full2ndD
+            // 
+            this.Full2ndD.AnimationTime = System.TimeSpan.Parse("00:00:03");
+            this.Full2ndD.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Full2ndD.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(221)))), ((int)(((byte)(221)))), ((int)(((byte)(221)))));
+            this.Full2ndD.HighlightColor = System.Drawing.Color.Empty;
+            this.Full2ndD.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.Full2ndD.LeadingZerosColor = System.Drawing.Color.Gray;
+            this.Full2ndD.Location = new System.Drawing.Point(88, 59);
+            this.Full2ndD.Name = "Full2ndD";
+            this.Full2ndD.Progress = 0F;
+            this.Full2ndD.RenderLeadingZeros = false;
+            this.Full2ndD.RollUp = false;
+            this.Full2ndD.Size = new System.Drawing.Size(24, 27);
+            this.Full2ndD.TabIndex = 31;
+            this.Full2ndD.Text = "000";
+            this.Full2ndD.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            this.Full2ndD.Visible = false;
+            // 
+            // Full2ndS
+            // 
+            this.Full2ndS.AnimationTime = System.TimeSpan.Parse("00:00:00.2500000");
+            this.Full2ndS.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Full2ndS.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(221)))), ((int)(((byte)(221)))), ((int)(((byte)(221)))));
+            this.Full2ndS.HighlightColor = System.Drawing.Color.Empty;
+            this.Full2ndS.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.Full2ndS.LeadingZerosColor = System.Drawing.Color.Gray;
+            this.Full2ndS.Location = new System.Drawing.Point(173, 64);
+            this.Full2ndS.Name = "Full2ndS";
+            this.Full2ndS.Progress = 0F;
+            this.Full2ndS.RenderLeadingZeros = false;
+            this.Full2ndS.RollUp = false;
+            this.Full2ndS.Size = new System.Drawing.Size(22, 20);
+            this.Full2ndS.TabIndex = 30;
+            this.Full2ndS.Text = "00";
+            this.Full2ndS.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            this.Full2ndS.Visible = false;
+            // 
+            // Full2ndH
+            // 
+            this.Full2ndH.AnimationTime = System.TimeSpan.Parse("00:00:01.5000000");
+            this.Full2ndH.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Full2ndH.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(221)))), ((int)(((byte)(221)))), ((int)(((byte)(221)))));
+            this.Full2ndH.HighlightColor = System.Drawing.Color.Empty;
+            this.Full2ndH.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.Full2ndH.LeadingZerosColor = System.Drawing.Color.Gray;
+            this.Full2ndH.Location = new System.Drawing.Point(114, 59);
+            this.Full2ndH.Name = "Full2ndH";
+            this.Full2ndH.Progress = 0F;
+            this.Full2ndH.RenderLeadingZeros = false;
+            this.Full2ndH.RollUp = false;
+            this.Full2ndH.Size = new System.Drawing.Size(22, 27);
+            this.Full2ndH.TabIndex = 29;
+            this.Full2ndH.Text = "00";
+            this.Full2ndH.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            this.Full2ndH.Visible = false;
             // 
             // Full2ndM
             // 
@@ -86,7 +143,7 @@
             this.Full2ndM.HighlightColor = System.Drawing.Color.Empty;
             this.Full2ndM.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.Full2ndM.LeadingZerosColor = System.Drawing.Color.Gray;
-            this.Full2ndM.Location = new System.Drawing.Point(137, 57);
+            this.Full2ndM.Location = new System.Drawing.Point(139, 57);
             this.Full2ndM.Name = "Full2ndM";
             this.Full2ndM.Progress = 0F;
             this.Full2ndM.RenderLeadingZeros = false;
@@ -123,14 +180,14 @@
             this.FullD.HighlightColor = System.Drawing.Color.Empty;
             this.FullD.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.FullD.LeadingZerosColor = System.Drawing.Color.Gray;
-            this.FullD.Location = new System.Drawing.Point(8, 87);
+            this.FullD.Location = new System.Drawing.Point(-2, 87);
             this.FullD.Name = "FullD";
             this.FullD.Progress = 0F;
             this.FullD.RenderLeadingZeros = false;
             this.FullD.RollUp = false;
-            this.FullD.Size = new System.Drawing.Size(29, 35);
+            this.FullD.Size = new System.Drawing.Size(44, 35);
             this.FullD.TabIndex = 24;
-            this.FullD.Text = "00";
+            this.FullD.Text = "000";
             this.FullD.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
             // overwatchBar2
@@ -153,7 +210,7 @@
             // 
             // FullS
             // 
-            this.FullS.AnimationTime = System.TimeSpan.Parse("00:00:00.20000");
+            this.FullS.AnimationTime = System.TimeSpan.Parse("00:00:00.2000000");
             this.FullS.Font = new System.Drawing.Font("Microsoft Sans Serif", 36F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.FullS.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(221)))), ((int)(((byte)(221)))), ((int)(((byte)(221)))));
             this.FullS.HighlightColor = System.Drawing.Color.Empty;
@@ -177,12 +234,12 @@
             this.FullH.HighlightColor = System.Drawing.Color.Empty;
             this.FullH.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.FullH.LeadingZerosColor = System.Drawing.Color.Gray;
-            this.FullH.Location = new System.Drawing.Point(41, 83);
+            this.FullH.Location = new System.Drawing.Point(44, 83);
             this.FullH.Name = "FullH";
             this.FullH.Progress = 0F;
             this.FullH.RenderLeadingZeros = false;
             this.FullH.RollUp = false;
-            this.FullH.Size = new System.Drawing.Size(58, 54);
+            this.FullH.Size = new System.Drawing.Size(56, 54);
             this.FullH.TabIndex = 22;
             this.FullH.Text = "00";
             this.FullH.TextAlign = System.Drawing.ContentAlignment.TopRight;
@@ -234,14 +291,14 @@
             this.FullTotalM.HighlightColor = System.Drawing.Color.Empty;
             this.FullTotalM.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.FullTotalM.LeadingZerosColor = System.Drawing.Color.Gray;
-            this.FullTotalM.Location = new System.Drawing.Point(249, 0);
+            this.FullTotalM.Location = new System.Drawing.Point(230, 1);
             this.FullTotalM.Name = "FullTotalM";
             this.FullTotalM.Progress = 0F;
             this.FullTotalM.RenderLeadingZeros = false;
             this.FullTotalM.RollUp = false;
-            this.FullTotalM.Size = new System.Drawing.Size(77, 39);
+            this.FullTotalM.Size = new System.Drawing.Size(97, 39);
             this.FullTotalM.TabIndex = 15;
-            this.FullTotalM.Text = "000";
+            this.FullTotalM.Text = "0000";
             this.FullTotalM.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // FullTotalH
@@ -258,9 +315,9 @@
             this.FullTotalH.Progress = 0F;
             this.FullTotalH.RenderLeadingZeros = false;
             this.FullTotalH.RollUp = false;
-            this.FullTotalH.Size = new System.Drawing.Size(57, 39);
+            this.FullTotalH.Size = new System.Drawing.Size(97, 39);
             this.FullTotalH.TabIndex = 14;
-            this.FullTotalH.Text = "00";
+            this.FullTotalH.Text = "0000";
             this.FullTotalH.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // FullM
@@ -283,78 +340,21 @@
             // 
             // FullTotalS
             // 
-            this.FullTotalS.AnimationTime = System.TimeSpan.Parse("00:00:00.2000");
+            this.FullTotalS.AnimationTime = System.TimeSpan.Parse("00:00:00.2000000");
             this.FullTotalS.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.FullTotalS.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(221)))), ((int)(((byte)(221)))), ((int)(((byte)(221)))));
             this.FullTotalS.HighlightColor = System.Drawing.Color.Empty;
             this.FullTotalS.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.FullTotalS.LeadingZerosColor = System.Drawing.Color.Gray;
-            this.FullTotalS.Location = new System.Drawing.Point(102, 0);
+            this.FullTotalS.Location = new System.Drawing.Point(104, 3);
             this.FullTotalS.Name = "FullTotalS";
             this.FullTotalS.Progress = 0F;
             this.FullTotalS.RenderLeadingZeros = false;
             this.FullTotalS.RollUp = false;
-            this.FullTotalS.Size = new System.Drawing.Size(136, 27);
+            this.FullTotalS.Size = new System.Drawing.Size(103, 27);
             this.FullTotalS.TabIndex = 16;
             this.FullTotalS.Text = "0000000";
             this.FullTotalS.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // Full2ndH
-            // 
-            this.Full2ndH.AnimationTime = System.TimeSpan.Parse("00:00:01.5000000");
-            this.Full2ndH.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.Full2ndH.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(221)))), ((int)(((byte)(221)))), ((int)(((byte)(221)))));
-            this.Full2ndH.HighlightColor = System.Drawing.Color.Empty;
-            this.Full2ndH.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.Full2ndH.LeadingZerosColor = System.Drawing.Color.Gray;
-            this.Full2ndH.Location = new System.Drawing.Point(112, 59);
-            this.Full2ndH.Name = "Full2ndH";
-            this.Full2ndH.Progress = 0F;
-            this.Full2ndH.RenderLeadingZeros = false;
-            this.Full2ndH.RollUp = false;
-            this.Full2ndH.Size = new System.Drawing.Size(22, 27);
-            this.Full2ndH.TabIndex = 29;
-            this.Full2ndH.Text = "00";
-            this.Full2ndH.TextAlign = System.Drawing.ContentAlignment.TopRight;
-            this.Full2ndH.Visible = false;
-            // 
-            // Full2ndS
-            // 
-            this.Full2ndS.AnimationTime = System.TimeSpan.Parse("00:00:00.2500000");
-            this.Full2ndS.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.Full2ndS.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(221)))), ((int)(((byte)(221)))), ((int)(((byte)(221)))));
-            this.Full2ndS.HighlightColor = System.Drawing.Color.Empty;
-            this.Full2ndS.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.Full2ndS.LeadingZerosColor = System.Drawing.Color.Gray;
-            this.Full2ndS.Location = new System.Drawing.Point(171, 64);
-            this.Full2ndS.Name = "Full2ndS";
-            this.Full2ndS.Progress = 0F;
-            this.Full2ndS.RenderLeadingZeros = false;
-            this.Full2ndS.RollUp = false;
-            this.Full2ndS.Size = new System.Drawing.Size(22, 20);
-            this.Full2ndS.TabIndex = 30;
-            this.Full2ndS.Text = "00";
-            this.Full2ndS.TextAlign = System.Drawing.ContentAlignment.TopRight;
-            this.Full2ndS.Visible = false;
-            // 
-            // Full2ndD
-            // 
-            this.Full2ndD.AnimationTime = System.TimeSpan.Parse("00:00:03");
-            this.Full2ndD.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.Full2ndD.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(221)))), ((int)(((byte)(221)))), ((int)(((byte)(221)))));
-            this.Full2ndD.HighlightColor = System.Drawing.Color.Empty;
-            this.Full2ndD.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.Full2ndD.LeadingZerosColor = System.Drawing.Color.Gray;
-            this.Full2ndD.Location = new System.Drawing.Point(93, 59);
-            this.Full2ndD.Name = "Full2ndD";
-            this.Full2ndD.Progress = 0F;
-            this.Full2ndD.RenderLeadingZeros = false;
-            this.Full2ndD.RollUp = false;
-            this.Full2ndD.Size = new System.Drawing.Size(17, 27);
-            this.Full2ndD.TabIndex = 31;
-            this.Full2ndD.Text = "00";
-            this.Full2ndD.TextAlign = System.Drawing.ContentAlignment.TopRight;
-            this.Full2ndD.Visible = false;
             // 
             // FullContents
             // 

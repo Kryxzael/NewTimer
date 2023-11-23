@@ -770,6 +770,7 @@ namespace NewTimer.Forms
                             FormBorderStyle = FormBorderStyle.Sizable;
                             tabs.SelectedIndex = 0;
                             Location = _macroViewPosition;
+                            tabs.Focus();
 
                             Globals.Broadcast("Disable Micro View", null);
                         }

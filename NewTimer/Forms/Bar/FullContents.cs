@@ -203,10 +203,10 @@ namespace NewTimer.Forms.Bar
                     Full2ndH.Location = _secondaryHourDefaultPosition;
                     Full2ndD.Location = _secondaryDayDefaultPosition;
                 }
-                
+
 
                 //2nd days
-                Full2ndD.Text = Globals.SecondaryTimer.TimeLeft.Days.ToString("000");
+                Full2ndD.Text = Globals.SecondaryTimer.TimeLeft.Days >= 1000 ? "  ---" : Globals.SecondaryTimer.TimeLeft.Days.ToString("000");
                 Full2ndH.RenderLeadingZeros = false;
 
                 //2nd hours

@@ -268,11 +268,11 @@ namespace NewTimer.FormParts
             base.OnPaint(e);
 
             //Let's try to not create a recursive Refresh call, mmmk
-            if ((Timer.InFreeMode || TrackSecondaryTimer) && !DrawHatched)
+            if (Timer.InFreeMode && !DrawHatched)
             {
                 DrawHatchedOverflow = DrawHatched = true;
             }
-            else if (!(Timer.InFreeMode || TrackSecondaryTimer) && DrawHatched)
+            else if (!Timer.InFreeMode && DrawHatched)
             {
                 DrawHatchedOverflow = DrawHatched = false;
             }

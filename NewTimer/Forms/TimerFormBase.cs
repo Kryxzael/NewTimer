@@ -94,7 +94,7 @@ namespace NewTimer.Forms
             tabs.BackColor = Color.Transparent;
 
             //Position window to the bottom right corner of the screen
-            const int POS_OFFSET_X = 58;
+            const int POS_OFFSET_X = 9;
             const int POS_OFFSET_Y = 9;
             StartPosition = FormStartPosition.Manual;
             Location = new Point(Screen.FromControl(this).WorkingArea.Right - Size.Width + POS_OFFSET_X, Screen.FromControl(this).WorkingArea.Bottom - Size.Height + POS_OFFSET_Y);
@@ -180,6 +180,20 @@ namespace NewTimer.Forms
             TextOnlySecond.GetText = () => TaskbarUtility.NumberToWord(Globals.PrimaryTimer.TimeLeft.Seconds, true);
             TextOnlyMinute.ForeThemedColor = Globals.TextOnlyColor;
             TextOnlySecond.ForeThemedColor = Globals.TextOnlyColor;
+
+            //'Roll' panel
+            rollHour1.GetValue = i => i.TotalHours % 24 / 10;
+            rollHour2.GetValue = i => i.TotalHours % 24 % 10;
+
+            rollMinute1.GetValue = i => i.TotalMinutes % 60 / 10;
+            rollMinute2.GetValue = i => i.TotalMinutes % 10;
+
+            rollSecond1.GetValue = i => i.TotalSeconds % 60 / 10;
+            rollSecond2.GetValue = i => i.TotalSeconds % 10;
+
+            rollDay1.GetValue = i => i.TotalDays / 100;
+            rollDay2.GetValue = i => i.TotalDays / 10 % 10;
+            rollDay3.GetValue = i => i.TotalDays % 10;
         }
 
         /// <summary>

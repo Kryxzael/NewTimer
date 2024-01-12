@@ -259,4 +259,52 @@
   <data name="clrUpper" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\clrUpper.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="from0to0" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\from0to0.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="from0to1" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\from0to1.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="from0to1to1" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\from0to1to1.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="from0to2" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\from0to2.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="from0to3" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\from0to3.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="from0to3to1" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\from0to3to1.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="from0to6" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\from0to6.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="from0to9" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\from0to9.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="from0to0Dark" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\from0to0Dark.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="from0to1dark" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\from0to1dark.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="from0to1to1dark" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\from0to1to1dark.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="from0to2dark" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\from0to2dark.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="from0to3dark" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\from0to3dark.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="from0to3to1dark" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\from0to3to1dark.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="from0to6dark" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\from0to6dark.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="from0to9dark" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\from0to9dark.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
 </root>

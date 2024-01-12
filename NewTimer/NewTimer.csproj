@@ -71,6 +71,9 @@
     <Compile Include="FormParts\MicroView.cs">
       <SubType>UserControl</SubType>
     </Compile>
+    <Compile Include="FormParts\RollingDigitControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="FormParts\Setup\KnobDual.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -193,6 +196,7 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\TimerFormBase.resx">
       <DependentUpon>TimerFormBase.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Setup.resx">
       <DependentUpon>Setup.cs</DependentUpon>
@@ -340,6 +344,22 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Clock.ico" />
+    <None Include="Resources\from0to0Dark.png" />
+    <None Include="Resources\from0to9dark.png" />
+    <None Include="Resources\from0to6dark.png" />
+    <None Include="Resources\from0to3to1dark.png" />
+    <None Include="Resources\from0to3dark.png" />
+    <None Include="Resources\from0to2dark.png" />
+    <None Include="Resources\from0to1to1dark.png" />
+    <None Include="Resources\from0to1dark.png" />
+    <None Include="Resources\from0to1.png" />
+    <None Include="Resources\from0to0.png" />
+    <None Include="Resources\from0to9.png" />
+    <None Include="Resources\from0to6.png" />
+    <None Include="Resources\from0to3to1.png" />
+    <None Include="Resources\from0to3.png" />
+    <None Include="Resources\from0to2.png" />
+    <None Include="Resources\from0to1to1.png" />
     <None Include="Resources\clrToRed.png" />
     <None Include="Resources\clrToGreen.png" />
     <None Include="Resources\clrUpper.png" />

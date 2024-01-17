@@ -797,7 +797,7 @@ namespace NewTimer.Forms
 
                         Rectangle initialBounds = DesktopBounds;
 
-                        if (tabs.SelectedIndex == 4)
+                        if (tabs.SelectedIndex == 5)
                         {
                             //Abusing the fact that tab 0 forces a certain size
                             int lastHeigh = Height;
@@ -807,14 +807,14 @@ namespace NewTimer.Forms
 
                             //Found this solution on stack
                             tabs.Appearance = TabAppearance.Normal;
-                            tabs.ItemSize = new Size(30, 18);
+                            tabs.ItemSize = new Size(25, 18);
                             _secondaryFullscreenBar.Height = 50;
 
                             Globals.Broadcast("Uncollapse", null);
                         }
                         else
                         {
-                            tabs.SelectedIndex = 4;
+                            tabs.SelectedIndex = 5;
                             FormBorderStyle = FormBorderStyle.None;
                             DesktopBounds = Rectangle.FromLTRB(
                                 initialBounds.Left,

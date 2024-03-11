@@ -190,7 +190,7 @@ namespace NewTimer.FormParts
             const char OFFSET_BACKGROUND = 'Η';
             e.Graphics.DrawString(LongView ? "@@@" : "@@", DEFAULT_FONT, bgBrush, new Point(0, 0));
             e.Graphics.DrawString("@", SMALL_FONT, bgBrush, new Point(BigDigitsWidth, PANEL_HEIGHT - 25));
-            e.Graphics.DrawString(OFFSET_BACKGROUND.ToString(), SMALL_FONT, bgBrush, new Point(BigDigitsWidth, 5));
+            e.Graphics.DrawString(OFFSET_BACKGROUND.ToString(), SMALL_FONT, bgBrush, new Point(BigDigitsWidth + 2, 5));
             e.Graphics.DrawString(".", DEFAULT_FONT, bgBrush, new Point(19, 0));
             if (LongView) e.Graphics.DrawString(".", DEFAULT_FONT, bgBrush, new Point(64, 0));
             e.Graphics.DrawString(".", SMALL_FONT, bgBrush, new PointF(BigDigitsWidth, 9.5f));
@@ -216,7 +216,7 @@ namespace NewTimer.FormParts
             //Draw number
             e.Graphics.DrawString(numDisplay, DEFAULT_FONT, primaryBrush, new Point(0, 0));
 
-            e.Graphics.DrawString(offset.ToString(), SMALL_FONT, secondaryBrush, new Point(BigDigitsWidth, 5));
+            e.Graphics.DrawString(offset.ToString(), SMALL_FONT, secondaryBrush, new Point(BigDigitsWidth + 2, 5));
             e.Graphics.DrawString(unit.ToString(),  SMALL_FONT, secondaryBrush, new Point(BigDigitsWidth, PANEL_HEIGHT - 25));
 
 
@@ -397,11 +397,11 @@ namespace NewTimer.FormParts
                         continue;
 
                     RectangleF fillArea = new RectangleF(
-                    x: area.X,
-                    y: area.Y + (float)i / segments.Length * area.Height,
-                    width: area.Width,
-                    height: 1f / segments.Length * area.Height
-                );
+                        x: area.X,
+                        y: area.Y + (float)i / segments.Length * area.Height,
+                        width: area.Width,
+                        height: 1f / segments.Length * area.Height
+                    );
 
                     fillArea.Inflate(-MARGIN, -MARGIN);
 

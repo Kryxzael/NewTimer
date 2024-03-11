@@ -187,8 +187,10 @@ namespace NewTimer.FormParts
                 }
             }
 
+            const char OFFSET_BACKGROUND = 'Η';
             e.Graphics.DrawString(LongView ? "@@@" : "@@", DEFAULT_FONT, bgBrush, new Point(0, 0));
             e.Graphics.DrawString("@", SMALL_FONT, bgBrush, new Point(BigDigitsWidth, PANEL_HEIGHT - 25));
+            e.Graphics.DrawString(OFFSET_BACKGROUND.ToString(), SMALL_FONT, bgBrush, new Point(BigDigitsWidth, 5));
             e.Graphics.DrawString(".", DEFAULT_FONT, bgBrush, new Point(19, 0));
             if (LongView) e.Graphics.DrawString(".", DEFAULT_FONT, bgBrush, new Point(64, 0));
             e.Graphics.DrawString(".", SMALL_FONT, bgBrush, new PointF(BigDigitsWidth, 9.5f));
@@ -214,7 +216,7 @@ namespace NewTimer.FormParts
             //Draw number
             e.Graphics.DrawString(numDisplay, DEFAULT_FONT, primaryBrush, new Point(0, 0));
 
-            e.Graphics.DrawString(offset.ToString(),  SMALL_FONT, secondaryBrush, new Point(BigDigitsWidth, 5));
+            e.Graphics.DrawString(offset.ToString(), SMALL_FONT, secondaryBrush, new Point(BigDigitsWidth, 5));
             e.Graphics.DrawString(unit.ToString(),  SMALL_FONT, secondaryBrush, new Point(BigDigitsWidth, PANEL_HEIGHT - 25));
 
 
@@ -233,15 +235,23 @@ namespace NewTimer.FormParts
 
             char getOffsetMarker(double d)
             {
+                const char BLANK  = ' ';
+                const char UP     = 'Δ';
+                const char MIDDLE = 'Η';
+                const char DOWN   = 'Ε';
+
                 d %= 1.0;
 
+                if (d <= 1.0 / 60.0)
+                    return BLANK;
+
                 if (d < 1.0 / 3.0)
-                    return 'v';
+                    return DOWN;
 
                 if (d < 2.0 / 3.0)
-                    return '-';
+                    return MIDDLE;
 
-                return '^';
+                return UP;
             }
 
             void getDisplaySettings(double input, bool allowDecimals, bool longView, out string output, out DecimalSeparatorPosition separatorPos, out char offsetOutput)

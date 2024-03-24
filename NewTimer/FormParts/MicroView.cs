@@ -37,16 +37,6 @@ namespace NewTimer.FormParts
         public bool LongView { get; set; } = true;
 
         /// <summary>
-        /// Gets or sets the information that is currently being rendered
-        /// </summary>
-        public MicroViewCommand CurrentCommand { get; set; }
-
-        /// <summary>
-        /// Gets or sets the information that is currently being rendered as a secondary command
-        /// </summary>
-        public MicroViewCommand SecondaryCommand { get; set; }
-
-        /// <summary>
         /// <inheritdoc />
         /// </summary>
         public override Size MinimumSize
@@ -124,258 +114,91 @@ namespace NewTimer.FormParts
             Brush secondaryBrush;
             Brush bgBrush = new SolidBrush(Color.FromArgb(0x5F, new ThemedColor(Color.Silver, Color.Black)));
 
-            //Create brush that's used to fade between secondary timer and unit
-            if (SecondaryCommand.IsValid && Globals.CurrentMicroBroadcastMessage == null)
+            //Set background colors
+            if (Globals.PrimaryTimer.InFreeMode)
+                BackColor = Globals.GlobalFreeModeBackColor;
+
+            else if (Globals.PrimaryTimer.Overtime)
+                BackColor = Globals.GlobalOvertimeColor;
+
+            else
+                BackColor = Globals.GlobalBackColor;
+
+            //Broadcast milestones
+            if (!Globals.PrimaryTimer.Paused)
             {
-                Color baseColor;
-
-                if (DateTime.Now.Second % 10 >= 5 || Globals.PrimaryTimer.InFreeMode)
-                    baseColor = Globals.PrimaryTimer.MicroViewColor;
-
-                else
-                    baseColor = Globals.SecondaryTimer.MicroViewColor;
-
-                if (DateTime.Now.Second % 5 == 4)
-                    secondaryBrush = new SolidBrush(Color.FromArgb((int)((1000 - DateTime.Now.Millisecond) / 1000f * 255), baseColor));
-
-                else if (DateTime.Now.Second % 5 == 0)
-                    secondaryBrush = new SolidBrush(Color.FromArgb((int)(DateTime.Now.Millisecond / 1000f * 255), baseColor));
-
-                else
-                    secondaryBrush = new SolidBrush(baseColor);
+                BroadcastMilestones(Globals.PrimaryTimer);
             }
+
+            //Get secondary timer brush if applicable
+            if (!Globals.SecondaryTimer.InFreeMode && !Globals.PrimaryTimer.InFreeMode && Globals.CurrentMicroBroadcastMessage == null)
+                secondaryBrush = CreateSecondaryTimerFadeBrush();
+
             else
                 secondaryBrush = new SolidBrush(Globals.PrimaryTimer.MicroViewColor);
 
-            string numDisplay;
-            DecimalSeparatorPosition primarySeparatorPos;
-            DecimalSeparatorPosition secondarySeparatorPos = DecimalSeparatorPosition.NoDecimalSeparator;
-            char offset;
-            char unit = CurrentCommand.Unit;
+            /*
+             * Render
+             */
 
-            if (Globals.CurrentMicroBroadcastMessage != null)
-            {
-                primarySeparatorPos = DecimalSeparatorPosition.NoDecimalSeparator;
+            MicroViewCommand command = CreateCommand();
 
-                if (LongView)
-                {
-                    string paddedMessage = Globals.CurrentLongMicroBroadcastMessage.PadRight(5);
-                    numDisplay = paddedMessage.Substring(0, 3);
-                    offset = paddedMessage[3];
-                    unit = paddedMessage[4];
-                }
-                else
-                {
-                    string paddedMessage = Globals.CurrentMicroBroadcastMessage.PadRight(4);
-                    numDisplay = paddedMessage.Substring(0, 2);
-                    offset = paddedMessage[2];
-                    unit = paddedMessage[3];
-                }
-
-            }
-            else
-            {
-                getDisplaySettings(CurrentCommand.Number, CurrentCommand.AllowDecimals, LongView, out numDisplay, out primarySeparatorPos, out offset);
-
-                if (DateTime.Now.Second % 10 < 5 && SecondaryCommand.IsValid)
-                {
-                    string secondaryTimerDisplay;
-                    getDisplaySettings(SecondaryCommand.Number, SecondaryCommand.AllowDecimals, false, out secondaryTimerDisplay, out secondarySeparatorPos, out _);
-
-                    offset = secondaryTimerDisplay[0];
-                    unit = secondaryTimerDisplay[1];
-                }
-            }
-
-            const char OFFSET_BACKGROUND = 'Η';
-            e.Graphics.DrawString(LongView ? "@@@" : "@@", DEFAULT_FONT, bgBrush, new Point(0, 0));
-            e.Graphics.DrawString("@", SMALL_FONT, bgBrush, new Point(BigDigitsWidth, PANEL_HEIGHT - 25));
-            e.Graphics.DrawString(OFFSET_BACKGROUND.ToString(), SMALL_FONT, bgBrush, new Point(BigDigitsWidth + 2, 5));
-            e.Graphics.DrawString(".", DEFAULT_FONT, bgBrush, new Point(19, 0));
-            if (LongView) e.Graphics.DrawString(".", DEFAULT_FONT, bgBrush, new Point(64, 0));
-            e.Graphics.DrawString(".", SMALL_FONT, bgBrush, new PointF(BigDigitsWidth, 9.5f));
-
-            //Binary
-            {
-                int digitCount = LongView ? 3 : 2;
-                int binaryWidth = (BigDigitsWidth / digitCount) + 2;
-                int[] digitXs =
-                {
-                    6,
-                    binaryWidth + 4,
-                    2 * binaryWidth
-                };
-
-                drawBinaryDigit(fadedPrimaryBrush, new Rectangle(digitXs[0], 0, binaryWidth - 2, PANEL_HEIGHT), numDisplay[0]);
-                drawBinaryDigit(fadedPrimaryBrush, new Rectangle(digitXs[1], 0, binaryWidth - 4, PANEL_HEIGHT), numDisplay[1]);
-
-                if (LongView)
-                    drawBinaryDigit(fadedPrimaryBrush, new Rectangle(digitXs[2], 0, binaryWidth - 2, PANEL_HEIGHT), numDisplay[2]);
-            }
-
-            //Draw number
-            e.Graphics.DrawString(numDisplay, DEFAULT_FONT, primaryBrush, new Point(0, 0));
-
-            e.Graphics.DrawString(offset.ToString(), SMALL_FONT, secondaryBrush, new Point(BigDigitsWidth + 2, 5));
-            e.Graphics.DrawString(unit.ToString(),  SMALL_FONT, secondaryBrush, new Point(BigDigitsWidth, PANEL_HEIGHT - 25));
-
-
-            if (primarySeparatorPos == DecimalSeparatorPosition.HundredsTens || (primarySeparatorPos == DecimalSeparatorPosition.TensUnits && !LongView))
-                e.Graphics.DrawString(".", DEFAULT_FONT, primaryBrush, new Point(19, 0));
-
-            else if (primarySeparatorPos == DecimalSeparatorPosition.TensUnits)
-                e.Graphics.DrawString(".", DEFAULT_FONT, primaryBrush, new Point(64, 0));
-
-            if (secondarySeparatorPos == DecimalSeparatorPosition.TensUnits)
-                e.Graphics.DrawString(".", SMALL_FONT, secondaryBrush, new PointF((LongView ? PANEL_LONG_WIDTH : PANEL_WIDTH) - 19, 9.5f));
+            RenderBackgrounds(e.Graphics, bgBrush);
+            RenderBinaryBackground(command, e.Graphics, fadedPrimaryBrush);
+            RenderCommand(command, e.Graphics, primaryBrush, secondaryBrush);
 
             primaryBrush.Dispose();
             bgBrush.Dispose();
+            secondaryBrush.Dispose();
             fadedPrimaryBrush.Dispose();
+        }
 
-            char getOffsetMarker(double d)
-            {
-                const char BLANK  = ' ';
-                const char UP     = 'Δ';
-                const char MIDDLE = 'Η';
-                const char DOWN   = 'Ε';
+        /// <summary>
+        /// Draws the number backgrounds on the micro-view area
+        /// </summary>
+        /// <param name="graphics"></param>
+        /// <param name="backgroundBrush"></param>
+        private void RenderBackgrounds(Graphics graphics, Brush backgroundBrush)
+        {
+            const char OFFSET_BACKGROUND = 'Η';
 
-                d %= 1.0;
+            //Text background
+            graphics.DrawString(LongView ? "@@@" : "@@", DEFAULT_FONT, backgroundBrush, new Point(0, 0));
 
-                if (d <= 1.0 / 60.0)
-                    return BLANK;
+            //Offset background
+            graphics.DrawString(OFFSET_BACKGROUND.ToString(), SMALL_FONT, backgroundBrush, new Point(BigDigitsWidth + 2, 5));
 
-                if (d < 1.0 / 3.0)
-                    return DOWN;
+            //Unit background
+            graphics.DrawString("@", SMALL_FONT, backgroundBrush, new Point(BigDigitsWidth, PANEL_HEIGHT - 25));
 
-                if (d < 2.0 / 3.0)
-                    return MIDDLE;
+            //Left Dot Background
+            graphics.DrawString(".", DEFAULT_FONT, backgroundBrush, new Point(19, 0));
 
-                return UP;
-            }
+            //Right dot background
+            if (LongView)
+                graphics.DrawString(".", DEFAULT_FONT, backgroundBrush, new Point(64, 0));
 
-            void getDisplaySettings(double input, bool allowDecimals, bool longView, out string output, out DecimalSeparatorPosition separatorPos, out char offsetOutput)
-            {
-                if (longView)
-                {
-                    if (input >= 1000)
-                    {
-                        output = "---";
-                        separatorPos = DecimalSeparatorPosition.NoDecimalSeparator;
-                        offsetOutput = ' ';
-                    }
-                    else if (input >= 100)
-                    {
-                        output = Math.Floor(input).ToString("000", CultureInfo.InvariantCulture);
-                        separatorPos = DecimalSeparatorPosition.NoDecimalSeparator;
-                        offsetOutput = getOffsetMarker(input);
-                    }
-                    else if (allowDecimals)
-                    {
-                        if (input >= 10)
-                        {
-                            //ToString was annoying with rounding instead of flooring, so doing this instead
-                            int num = (int)(input * 10);
+            //Secondary dot background
+            graphics.DrawString(".", SMALL_FONT, backgroundBrush, new PointF(BigDigitsWidth, 9.5f));
+        }
 
-                            //Number is divisible by ten and should not have a decimal part
-                            if (num % 10 == 0)
-                            {
-                                output = " " + (num / 10).ToString("00", CultureInfo.InvariantCulture);
-                                separatorPos = DecimalSeparatorPosition.NoDecimalSeparator;
-                            }
+        /// <summary>
+        /// Draws the binary digits on the micro-view area
+        /// </summary>
+        /// <param name="command"></param>
+        /// <param name="graphics"></param>
+        /// <param name="brush"></param>
+        private void RenderBinaryBackground(MicroViewCommand command, Graphics graphics, Brush brush)
+        {
+            int digitCount = LongView ? 3 : 2;
+            int binaryWidth = (BigDigitsWidth / digitCount) + 2;
+            int[] digitXs = { 6, binaryWidth + 4, 2 * binaryWidth };
 
-                            //Number needs a decimal part
-                            else
-                            {
-                                output = num.ToString("000", CultureInfo.InvariantCulture);
-                                separatorPos = DecimalSeparatorPosition.TensUnits;
-                            }
+            drawBinaryDigit(brush, new Rectangle(digitXs[0], 0, binaryWidth - 2, PANEL_HEIGHT), command.MainText[0]);
+            drawBinaryDigit(brush, new Rectangle(digitXs[1], 0, binaryWidth - 4, PANEL_HEIGHT), command.MainText[1]);
 
-
-                            offsetOutput = getOffsetMarker(input * 10);
-                        }
-                        else
-                        {
-                            //ToString was annoying with rounding instead of flooring, so doing this instead
-                            int num = (int)(input * 100);
-
-                            //Number is divisible by one hundred and should not have a decimal part
-                            if (num % 100 == 0)
-                            {
-                                output = "  " + (num / 100).ToString("0", CultureInfo.InvariantCulture);
-                                separatorPos = DecimalSeparatorPosition.NoDecimalSeparator;
-                            }
-
-                            //Number is divisible by ten and should have a decimal part
-                            else if (num % 10 == 0)
-                            {
-                                output = " " + (num / 10).ToString("00", CultureInfo.InvariantCulture);
-                                separatorPos = DecimalSeparatorPosition.TensUnits;
-                            }
-
-                            //Number needs a decimal part
-                            else
-                            {
-                                output = num.ToString("000", CultureInfo.InvariantCulture);
-                                separatorPos = DecimalSeparatorPosition.HundredsTens;
-                            }
-
-                            offsetOutput = getOffsetMarker(input * 100);
-                        }
-                        
-                    }
-                    else
-                    {
-                        output = Math.Floor(input).ToString("0", CultureInfo.InvariantCulture).PadLeft(3);
-                        separatorPos = DecimalSeparatorPosition.NoDecimalSeparator;
-                        offsetOutput = getOffsetMarker(input);
-                    }
-                }
-                else
-                {
-                    if (input >= 100)
-                    {
-                        output = "--";
-                        separatorPos = DecimalSeparatorPosition.NoDecimalSeparator;
-                        offsetOutput = ' ';
-                    }
-                    else if (input >= 10)
-                    {
-                        output = Math.Floor(input).ToString("00", CultureInfo.InvariantCulture);
-                        separatorPos = DecimalSeparatorPosition.NoDecimalSeparator;
-                        offsetOutput = getOffsetMarker(input);
-                    }
-                    else if (allowDecimals)
-                    {
-                        //ToString was annoying with rounding instead of flooring, so doing this instead
-                        int num = (int)(input * 10);
-
-                        //Number is divisible by ten and should not have a decimal part
-                        if (num % 10 == 0)
-                        {
-                            output = " " + (num / 10).ToString("0", CultureInfo.InvariantCulture);
-                            separatorPos = DecimalSeparatorPosition.NoDecimalSeparator;
-                        }
-
-                        //Number needs a decimal part
-                        else
-                        {
-                            output = num.ToString("00", CultureInfo.InvariantCulture);
-                            separatorPos = DecimalSeparatorPosition.TensUnits;
-
-                        }
-
-
-                        offsetOutput = getOffsetMarker(input * 10);
-                    }
-                    else
-                    {
-                        output = " " + Math.Floor(input).ToString("0", CultureInfo.InvariantCulture);
-                        separatorPos = DecimalSeparatorPosition.NoDecimalSeparator;
-                        offsetOutput = getOffsetMarker(input);
-                    }
-                }
-            }
+            if (LongView)
+                drawBinaryDigit(brush, new Rectangle(digitXs[2], 0, binaryWidth - 2, PANEL_HEIGHT), command.MainText[2]);
 
             void drawBinaryDigit(Brush color, Rectangle area, char digit)
             {
@@ -405,11 +228,169 @@ namespace NewTimer.FormParts
 
                     fillArea.Inflate(-MARGIN, -MARGIN);
 
-                    e.Graphics.FillRectangle(color, fillArea);
+                    graphics.FillRectangle(color, fillArea);
                 }
             }
         }
 
+        /// <summary>
+        /// Draws the text on the micro-view area
+        /// </summary>
+        /// <param name="command"></param>
+        /// <param name="graphics"></param>
+        /// <param name="foregroundBrush"></param>
+        /// <param name="secondaryForegroundBrush"></param>
+        private void RenderCommand(MicroViewCommand command, Graphics graphics, Brush foregroundBrush, Brush secondaryForegroundBrush)
+        {
+            //Draw number, offset and unit
+            graphics.DrawString(command.MainText, DEFAULT_FONT, foregroundBrush, new Point(0, 0));
+            graphics.DrawString(command.Offset.ToString(), SMALL_FONT, secondaryForegroundBrush, new Point(BigDigitsWidth + 2, 5));
+            graphics.DrawString(command.Unit.ToString(), SMALL_FONT, secondaryForegroundBrush, new Point(BigDigitsWidth, PANEL_HEIGHT - 25));
+
+            //Draw decimal separators
+            if (command.SeparatorPosition == DecimalSeparatorPosition.HundredsTens || (command.SeparatorPosition == DecimalSeparatorPosition.TensUnits && !LongView))
+                graphics.DrawString(".", DEFAULT_FONT, foregroundBrush, new Point(19, 0));
+
+            else if (command.SeparatorPosition == DecimalSeparatorPosition.TensUnits)
+                graphics.DrawString(".", DEFAULT_FONT, foregroundBrush, new Point(64, 0));
+
+            if (command.ShowSecondaryDecimalSeparator)
+                graphics.DrawString(".", SMALL_FONT, secondaryForegroundBrush, new PointF((LongView ? PANEL_LONG_WIDTH : PANEL_WIDTH) - 19, 9.5f));
+        }
+        
+        /// <summary>
+        /// Create the MicroViewCommand for the current configuration
+        /// </summary>
+        /// <returns></returns>
+        private MicroViewCommand CreateCommand()
+        {
+            if (Globals.CurrentMicroBroadcastMessage != null)
+            {
+                if (LongView)
+                    return new MicroViewCommand(Globals.CurrentLongMicroBroadcastMessage, true);
+
+                else
+                    return new MicroViewCommand(Globals.CurrentMicroBroadcastMessage, false);
+            }
+            else if (Globals.PrimaryTimer.InFreeMode)
+            {
+                string minute = DateTime.Now.Minute.ToString("00");
+
+                return new MicroViewCommand(
+                    mainText: DateTime.Now.Hour.ToString(), 
+                    offset: minute[0], 
+                    unit: minute[1], 
+                    decimalSeparator: DecimalSeparatorPosition.NoDecimalSeparator, 
+                    showSecondaryDecimalSeparator: false, 
+                    longView: LongView
+                );
+            }
+            else if (Globals.PrimaryTimer.StopAtZero && Globals.PrimaryTimer.Overtime && Globals.PrimaryTimer.RealTimeLeft.Milliseconds < -500)
+            {
+                return new MicroViewCommand("", false);
+            }
+            else
+            {
+                MicroViewCommand command = Globals.PrimaryTimer.MicroViewUnit.Selector(Globals.PrimaryTimer.TimeLeft, LongView);
+
+                //Override to show the secondary timer
+                if (!Globals.SecondaryTimer.InFreeMode && DateTime.Now.Second % 10 < 5)
+                {
+                    MicroViewCommand secondaryCommand = Globals.SecondaryTimer.MicroViewUnit.Selector(Globals.SecondaryTimer.TimeLeft, false);
+                    string secondaryText = secondaryCommand.MainText;
+
+                    //Override the unit and offset of the primary command with the main text of the secondary command
+                    command = new MicroViewCommand(
+                        offset: secondaryText[0], 
+                        unit: secondaryText[1], 
+                        showSecondaryDecimalSeparator: secondaryCommand.SeparatorPosition != DecimalSeparatorPosition.NoDecimalSeparator,
+
+                        mainText: command.MainText, 
+                        decimalSeparator: command.SeparatorPosition, 
+                        longView: LongView
+                    );
+                }
+
+                return command;
+            }
+        }
+
+        /// <summary>
+        /// Creates milestone broadcasts when applicable
+        /// </summary>
+        /// <param name="timer"></param>
+        private static void BroadcastMilestones(TimerConfig timer)
+        {
+            broadcastAt("DAY ", "DAY ", 24, 0, false);
+            broadcastAt("HOUR", "HOUR",  1, 0, false);
+            broadcastAt("HALF", "HALF",  0, 30, false);
+            broadcastAt("QUAT", "QUAT",  0, 15, false);
+            broadcastAt("MIN ", "MIN",   0, 1, false);
+
+            if (!timer.StopAtZero)
+                broadcastAt("ZERO", "ZERO", 0, 0, true);
+
+            /*
+             * Broadcasts (to micro-view only) the provided message at the given amount of time on the clock
+             */
+            void broadcastAt(string msg, string longMsg, int hours, int minutes, bool overtimeOnly)
+            {
+                //Do not override "real" broadcasts
+                if (Globals.CurrentBroadcastMessage != null)
+                    return;
+
+                if (!timer.Overtime && overtimeOnly)
+                    return;
+
+                if (timer.TimeLeft.Days != 0)
+                    return;
+
+                TimeSpan target = new TimeSpan(hours, minutes, 0);
+
+                if (!timer.Overtime)
+                    target -= new TimeSpan(0, 0, 1);
+
+                if (timer.TimeLeft.Days       == target.Days 
+                    && timer.TimeLeft.Hours   == target.Hours 
+                    && timer.TimeLeft.Minutes == target.Minutes 
+                    && timer.TimeLeft.Seconds == target.Seconds)
+                {
+                    if (timer.Overtime && timer.TimeLeft.Milliseconds > 100)
+                        return;
+
+                    if (!timer.Overtime && timer.TimeLeft.Milliseconds < 900)
+                        return;
+
+                    Globals.Broadcast(null, msg, longMsg);
+                }
+            }
+        }
+        
+        /// <summary>
+        /// Creates the brush that will be used to fade between primary and secondary colors for the secondary timer
+        /// </summary>
+        /// <returns></returns>
+        private static Brush CreateSecondaryTimerFadeBrush()
+        {
+            Brush secondaryBrush;
+            Color baseColor;
+
+            if (DateTime.Now.Second % 10 >= 5 || Globals.PrimaryTimer.InFreeMode)
+                baseColor = Globals.PrimaryTimer.MicroViewColor;
+
+            else
+                baseColor = Globals.SecondaryTimer.MicroViewColor;
+
+            if (DateTime.Now.Second % 5 == 4)
+                secondaryBrush = new SolidBrush(Color.FromArgb((int)((1000 - DateTime.Now.Millisecond) / 1000f * 255), baseColor));
+
+            else if (DateTime.Now.Second % 5 == 0)
+                secondaryBrush = new SolidBrush(Color.FromArgb((int)(DateTime.Now.Millisecond / 1000f * 255), baseColor));
+
+            else
+                secondaryBrush = new SolidBrush(baseColor);
+            return secondaryBrush;
+        }
 
         /// <summary>
         /// <inheritdoc />
@@ -419,106 +400,6 @@ namespace NewTimer.FormParts
         /// <param name="isOvertime"></param>
         public void OnCountdownTick(TimeSpan span, TimeSpan secondarySpan, bool isOvertime)
         {
-            if (Globals.PrimaryTimer.InFreeMode)
-            {
-                char amPm = DateTime.Now.Hour < 12 ? 'A' : 'P';
-                int  hour = DateTime.Now.Hour;
-
-                if (DateTime.Now.Second % 10 >= 5)
-                {
-                    hour %= 12;
-
-                    if (hour == 0)
-                        hour = 12;
-                }
-
-                //                                                        v Cheat to make offset display work
-                CurrentCommand   = new MicroViewCommand(hour + DateTime.Now.Second / 60f, amPm, false);
-                SecondaryCommand = new MicroViewCommand(DateTime.Now.Minute, amPm, false);
-
-                BackColor = Globals.GlobalFreeModeBackColor;
-
-                Invalidate();
-                return;
-            }
-
-            /*
-             * Primary timer is NOT in free mode
-             */
-
-            //Set commands
-            CurrentCommand = Globals.PrimaryTimer.MicroViewUnit.Selector(Globals.PrimaryTimer.TimeLeft, LongView);
-
-            if (!Globals.SecondaryTimer.InFreeMode)
-                SecondaryCommand = Globals.SecondaryTimer.MicroViewUnit.Selector(Globals.SecondaryTimer.TimeLeft, false);
-
-            else
-                SecondaryCommand = MicroViewCommand.INVALID;
-
-            //Blink when stopped at zero
-            if (Globals.CurrentBroadcastMessage == null)
-            {
-                if (Globals.PrimaryTimer.StopAtZero && isOvertime)
-                {
-                    if (Globals.PrimaryTimer.RealTimeLeft.Milliseconds < -500)
-                        Globals.Broadcast(null, "");
-                    else
-                        Globals.Broadcast(null, null);
-                }
-            }
-
-            //Set background color
-            if (isOvertime)
-                BackColor = Globals.GlobalOvertimeColor;
-
-            else
-                BackColor = Globals.GlobalBackColor;
-
-            //Broadcast milestones
-            if (!Globals.PrimaryTimer.Paused)
-            {
-                broadcastAt("DAY ", "DAY ", 24,  0, false);
-                broadcastAt("HOUR", "HOUR",  1,  0, false);
-                broadcastAt("HALF", "HALF",  0, 30, false);
-                broadcastAt("QUAT", "QUAT",  0, 15, false);
-                broadcastAt("MIN ", "MIN",   0,  1, false);
-
-                if (!Globals.PrimaryTimer.StopAtZero)
-                    broadcastAt("ZERO", "ZERO", 0, 0, true);
-
-                /*
-                 * Broadcasts (to micro-view only) the provided message at the given amount of time on the clock
-                 */
-                void broadcastAt(string msg, string longMsg, int hours, int minutes, bool overtimeOnly)
-                {
-                    //Do not override "real" broadcasts
-                    if (Globals.CurrentBroadcastMessage != null)
-                        return;
-
-                    if (!isOvertime && overtimeOnly)
-                        return;
-
-                    if (span.Days != 0)
-                        return;
-
-                    TimeSpan target = new TimeSpan(hours, minutes, 0);
-
-                    if (!isOvertime)
-                        target -= new TimeSpan(0, 0, 1);
-
-                    if (span.Days == target.Days && span.Hours == target.Hours && span.Minutes == target.Minutes && span.Seconds == target.Seconds)
-                    {
-                        if (isOvertime && span.Milliseconds > 100)
-                            return;
-
-                        if (!isOvertime && span.Milliseconds < 900)
-                            return;
-
-                        Globals.Broadcast(null, msg, longMsg);
-                    }
-                }
-            }
-
             Invalidate();
         }
 
@@ -528,14 +409,14 @@ namespace NewTimer.FormParts
         public struct MicroViewCommand
         {
             /// <summary>
-            /// A command that will show up as two dashes in primary, and not show up at all as secondary
+            /// Gets the number to display.
             /// </summary>
-            public static readonly MicroViewCommand INVALID = new MicroViewCommand(100, ' ', false);
+            public string MainText { get; }
 
             /// <summary>
-            /// Gets the number to display. This number is always non-negative
+            /// Gets the offset marker to use
             /// </summary>
-            public double Number { get; }
+            public char Offset { get; }
 
             /// <summary>
             /// Gets the character to display in the unit section. This field is unused for secondary commands
@@ -543,20 +424,14 @@ namespace NewTimer.FormParts
             public char Unit { get; }
 
             /// <summary>
-            /// Gets whether decimals are trimmed or kept when the number is less than ten
+            /// Gets the position to display the decimal separator
             /// </summary>
-            public bool AllowDecimals { get; }
+            public DecimalSeparatorPosition SeparatorPosition { get; }
 
             /// <summary>
-            /// Gets whether this command has valid data
+            /// Gets whether the decimal separator between the offset and unit indicator should be lit
             /// </summary>
-            public bool IsValid
-            {
-                get
-                {
-                    return Number < 100;
-                }
-            }
+            public bool ShowSecondaryDecimalSeparator { get; }
 
             /// <summary>
             /// Creates a new command
@@ -564,11 +439,35 @@ namespace NewTimer.FormParts
             /// <param name="number"></param>
             /// <param name="unit"></param>
             /// <param name="allowDecimals"></param>
-            public MicroViewCommand(double number, char unit, bool allowDecimals)
+            public MicroViewCommand(string mainText, char offset, char unit, DecimalSeparatorPosition decimalSeparator, bool showSecondaryDecimalSeparator, bool longView)
             {
-                Number = Math.Abs(number);
+                int digitCount = longView ? 3 : 2;
+
+                MainText = mainText.PadLeft(digitCount).Substring(0, digitCount);
+                Offset = offset;
                 Unit = unit;
-                AllowDecimals = allowDecimals;
+                SeparatorPosition = decimalSeparator;
+                ShowSecondaryDecimalSeparator = showSecondaryDecimalSeparator;
+            }
+
+            /// <summary>
+            /// Automatically assembles a micro-view command from a broadcast message
+            /// </summary>
+            /// <param name="broadcastText"></param>
+            /// <param name="longView"></param>
+            public MicroViewCommand(string broadcastText, bool longView)
+            {
+                int digitCount = longView ? 3 : 2;
+                int maxLength  = digitCount + 2;
+
+                broadcastText = broadcastText.PadRight(maxLength);
+
+                MainText = broadcastText.Substring(0, digitCount);
+                Offset   = broadcastText[digitCount];
+                Unit     = broadcastText[digitCount + 1];
+
+                SeparatorPosition = DecimalSeparatorPosition.NoDecimalSeparator;
+                ShowSecondaryDecimalSeparator = false;
             }
         }
 
@@ -617,30 +516,30 @@ namespace NewTimer.FormParts
                 if (longView)
                 {
                     if (span.TotalSeconds < 1000)
-                        return new MicroViewCommand(span.TotalSeconds, ' ', false);
+                        return FromSeconds(span, longView);
 
                     else if (span.TotalMinutes < 1000)
-                        return new MicroViewCommand(span.TotalMinutes, 'M', true);
+                        return FromMinutes(span, longView);
 
                     else if (span.TotalHours < 1000)
-                        return new MicroViewCommand(span.TotalHours, 'H', true);
+                        return FromHours(span, longView);
 
                     else
-                        return new MicroViewCommand(span.TotalDays, 'D', true);
+                        return FromDays(span, longView);
                 }
                 else
                 {
                     if (span.TotalSeconds < 100)
-                        return new MicroViewCommand(span.TotalSeconds, ' ', false);
+                        return FromSeconds(span, longView);
 
                     else if (span.TotalMinutes < 100)
-                        return new MicroViewCommand(span.TotalMinutes, 'M', true);
+                        return FromMinutes(span, longView);
 
                     else if (span.TotalHours < 100)
-                        return new MicroViewCommand(span.TotalHours, 'H', true);
+                        return FromHours(span, longView);
 
                     else
-                        return new MicroViewCommand(span.TotalDays, 'D', true);
+                        return FromDays(span, longView);
                 }
             });
 
@@ -650,49 +549,37 @@ namespace NewTimer.FormParts
             public static readonly MicroViewUnitSelector MostNatural = new MicroViewUnitSelector("natural", "N ", (span, longView) =>
             {
                 if (span.TotalSeconds < 60)
-                    return new MicroViewCommand(span.TotalSeconds, ' ', false);
+                    return FromSeconds(span, longView);
 
                 else if (span.TotalMinutes < 60)
-                    return new MicroViewCommand(span.TotalMinutes, 'M', true);
+                    return FromMinutes(span, longView);
 
                 else if (span.TotalHours < 24)
-                    return new MicroViewCommand(span.TotalHours, 'H', true);
+                    return FromHours(span, longView);
 
                 else
-                    return new MicroViewCommand(span.TotalDays, 'D', true);
+                    return FromDays(span, longView);
             });
 
             /// <summary>
             /// Always displays time using seconds
             /// </summary>
-            public static readonly MicroViewUnitSelector AlwaysSeconds = new MicroViewUnitSelector("seconds", "S ", (span, longView) =>
-            {
-                return new MicroViewCommand(span.TotalSeconds, ' ', true);
-            });
+            public static readonly MicroViewUnitSelector AlwaysSeconds = new MicroViewUnitSelector("seconds", "S ", FromSeconds);
 
             /// <summary>
             /// Always displays time using seconds
             /// </summary>
-            public static readonly MicroViewUnitSelector AlwaysMinutes = new MicroViewUnitSelector("minutes", "M ", (span, longView) =>
-            {
-                return new MicroViewCommand(span.TotalMinutes, 'M', true);
-            });
+            public static readonly MicroViewUnitSelector AlwaysMinutes = new MicroViewUnitSelector("minutes", "M ", FromMinutes);
 
             /// <summary>
             /// Always displays time using seconds
             /// </summary>
-            public static readonly MicroViewUnitSelector AlwaysHours = new MicroViewUnitSelector("hours", "H ", (span, longView) =>
-            {
-                return new MicroViewCommand(span.TotalHours, 'H', true);
-            });
+            public static readonly MicroViewUnitSelector AlwaysHours = new MicroViewUnitSelector("hours", "H ", FromHours);
 
             /// <summary>
             /// Always displays time using seconds
             /// </summary>
-            public static readonly MicroViewUnitSelector AlwaysDays = new MicroViewUnitSelector("days", "D ", (span, longView) =>
-            {
-                return new MicroViewCommand(span.TotalDays, 'D', true);
-            });
+            public static readonly MicroViewUnitSelector AlwaysDays = new MicroViewUnitSelector("days", "D ", FromDays);
 
             /// <summary>
             /// Always displays time using seconds
@@ -700,13 +587,13 @@ namespace NewTimer.FormParts
             public static readonly MicroViewUnitSelector MinimumMinutes = new MicroViewUnitSelector("min-minutes", "MM", (span, longView) =>
             {
                 if (span.TotalMinutes < 60)
-                    return new MicroViewCommand(span.TotalMinutes, 'M', true);
+                    return FromMinutes(span, longView);
 
                 else if (span.TotalHours < 24)
-                    return new MicroViewCommand(span.TotalHours, 'H', true);
+                    return FromHours(span, longView);
 
                 else
-                    return new MicroViewCommand(span.TotalDays, 'D', true);
+                    return FromDays(span, longView);
             });
 
             /// <summary>
@@ -715,17 +602,223 @@ namespace NewTimer.FormParts
             public static readonly MicroViewUnitSelector MinimumHours = new MicroViewUnitSelector("min-hours", "MH", (span, longView) =>
             {
                 if (span.TotalHours < 24)
-                    return new MicroViewCommand(span.TotalHours, 'H', true);
+                    return FromHours(span, longView);
 
                 else
-                    return new MicroViewCommand(span.TotalDays, 'D', true);
+                    return FromDays(span, longView);
             });
+        }
+
+        /// <summary>
+        /// Creates a micro-view command based on the amount of seconds in a time-span
+        /// </summary>
+        /// <param name="span"></param>
+        /// <param name="longView"></param>
+        /// <returns></returns>
+        private static MicroViewCommand FromSeconds(TimeSpan span, bool longView)
+        {
+            return FromNumber(span.TotalSeconds, false, ' ', longView);
+        }
+
+        /// <summary>
+        /// Creates a micro-view command based on the amount of minutes in a time-span
+        /// </summary>
+        /// <param name="span"></param>
+        /// <param name="longView"></param>
+        /// <returns></returns>
+        private static MicroViewCommand FromMinutes(TimeSpan span, bool longView)
+        {
+            return FromNumber(span.TotalMinutes, true, 'M', longView);
+        }
+
+        /// <summary>
+        /// Creates a micro-view command based on the amount of hours in a time-span
+        /// </summary>
+        /// <param name="span"></param>
+        /// <param name="longView"></param>
+        /// <returns></returns>
+        private static MicroViewCommand FromHours(TimeSpan span, bool longView)
+        {
+            return FromNumber(span.TotalHours, true, 'H', longView);
+        }
+
+        /// <summary>
+        /// Creates a micro-view command based on the amount of days in a time-span
+        /// </summary>
+        /// <param name="span"></param>
+        /// <param name="longView"></param>
+        /// <returns></returns>
+        private static MicroViewCommand FromDays(TimeSpan span, bool longView)
+        {
+            return FromNumber(span.TotalDays, true, 'D', longView);
+        }
+
+        /// <summary>
+        /// Creates a micro-view command dynamically based on the provided input value
+        /// </summary>
+        /// <param name="input"></param>
+        /// <param name="allowDecimals"></param>
+        /// <param name="unit"></param>
+        /// <param name="longView"></param>
+        /// <returns></returns>
+        private static MicroViewCommand FromNumber(double input, bool allowDecimals, char unit, bool longView)
+        {
+            string mainText;
+            DecimalSeparatorPosition separator;
+            char offset;
+
+            if (longView)
+            {
+                if (input >= 1000)
+                {
+                    mainText = "---";
+                    separator = DecimalSeparatorPosition.NoDecimalSeparator;
+                    offset = ' ';
+                }
+                else if (input >= 100)
+                {
+                    mainText = Math.Floor(input).ToString("000", CultureInfo.InvariantCulture);
+                    separator = DecimalSeparatorPosition.NoDecimalSeparator;
+                    offset = GetOffsetMarker(input);
+                }
+                else if (allowDecimals)
+                {
+                    if (input >= 10)
+                    {
+                        //ToString was annoying with rounding instead of flooring, so doing this instead
+                        int num = (int)(input * 10);
+
+                        //Number is divisible by ten and should not have a decimal part
+                        if (num % 10 == 0)
+                        {
+                            mainText = " " + (num / 10).ToString("00", CultureInfo.InvariantCulture);
+                            separator = DecimalSeparatorPosition.NoDecimalSeparator;
+                        }
+
+                        //Number needs a decimal part
+                        else
+                        {
+                            mainText = num.ToString("000", CultureInfo.InvariantCulture);
+                            separator = DecimalSeparatorPosition.TensUnits;
+                        }
+
+
+                        offset = GetOffsetMarker(input * 10);
+                    }
+                    else
+                    {
+                        //ToString was annoying with rounding instead of flooring, so doing this instead
+                        int num = (int)(input * 100);
+
+                        //Number is divisible by one hundred and should not have a decimal part
+                        if (num % 100 == 0)
+                        {
+                            mainText = "  " + (num / 100).ToString("0", CultureInfo.InvariantCulture);
+                            separator = DecimalSeparatorPosition.NoDecimalSeparator;
+                        }
+
+                        //Number is divisible by ten and should have a decimal part
+                        else if (num % 10 == 0)
+                        {
+                            mainText = " " + (num / 10).ToString("00", CultureInfo.InvariantCulture);
+                            separator = DecimalSeparatorPosition.TensUnits;
+                        }
+
+                        //Number needs a decimal part
+                        else
+                        {
+                            mainText = num.ToString("000", CultureInfo.InvariantCulture);
+                            separator = DecimalSeparatorPosition.HundredsTens;
+                        }
+
+                        offset = GetOffsetMarker(input * 100);
+                    }
+                }
+                else
+                {
+                    mainText = Math.Floor(input).ToString("0", CultureInfo.InvariantCulture);
+                    separator = DecimalSeparatorPosition.NoDecimalSeparator;
+                    offset = GetOffsetMarker(input);
+                }
+            }
+            else
+            {
+                if (input >= 100)
+                {
+                    mainText = "--";
+                    separator = DecimalSeparatorPosition.NoDecimalSeparator;
+                    offset = ' ';
+                }
+                else if (input >= 10)
+                {
+                    mainText = Math.Floor(input).ToString("00", CultureInfo.InvariantCulture);
+                    separator = DecimalSeparatorPosition.NoDecimalSeparator;
+                    offset = GetOffsetMarker(input);
+                }
+                else if (allowDecimals)
+                {
+                    //ToString was annoying with rounding instead of flooring, so doing this instead
+                    int num = (int)(input * 10);
+
+                    //Number is divisible by ten and should not have a decimal part
+                    if (num % 10 == 0)
+                    {
+                        mainText = " " + (num / 10).ToString("0", CultureInfo.InvariantCulture);
+                        separator = DecimalSeparatorPosition.NoDecimalSeparator;
+                    }
+
+                    //Number needs a decimal part
+                    else
+                    {
+                        mainText = num.ToString("00", CultureInfo.InvariantCulture);
+                        separator = DecimalSeparatorPosition.TensUnits;
+
+                    }
+
+
+                    offset = GetOffsetMarker(input * 10);
+                }
+                else
+                {
+                    mainText = " " + Math.Floor(input).ToString("0", CultureInfo.InvariantCulture);
+                    separator = DecimalSeparatorPosition.NoDecimalSeparator;
+                    offset = GetOffsetMarker(input);
+                }
+            }
+
+            return new MicroViewCommand(mainText, offset, unit, separator, false, longView);
+        }
+
+        /// <summary>
+        /// Gets an offset marker for the provided number's decimal section
+        /// </summary>
+        /// <param name="d"></param>
+        /// <returns></returns>
+        private static char GetOffsetMarker(double d)
+        {
+            const char BLANK  = ' ';
+            const char UP     = 'Δ';
+            const char MIDDLE = 'Η';
+            const char DOWN   = 'Ε';
+
+            d %= 1.0;
+
+            if (d <= 1.0 / 60.0)
+                return BLANK;
+
+            if (d < 1.0 / 3.0)
+                return DOWN;
+
+            if (d < 2.0 / 3.0)
+                return MIDDLE;
+
+            return UP;
         }
 
         /// <summary>
         /// Specifies the location to draw the decimal separator
         /// </summary>
-        private enum DecimalSeparatorPosition
+        public enum DecimalSeparatorPosition
         {
             /// <summary>
             /// No separator should be displayed

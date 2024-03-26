@@ -38,7 +38,7 @@ namespace NewTimer
             Command.Register<Commands.SaveTimer>();
             Command.Register<Commands.LoadTimer>();
 
-            //If there is an argument, treat is as a file path and open it
+            //If there is an argument, treat it as a file path and open it
             if (args.Length > 0)
             {
                 setupForm.LoadFile(args[0]);

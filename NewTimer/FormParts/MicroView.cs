@@ -67,6 +67,17 @@ namespace NewTimer.FormParts
         }
 
         /// <summary>
+        /// Gets whether the micro view is currently displaying the secondary timer
+        /// </summary>
+        public bool CurrentlyShowingSecondaryTimer
+        {
+            get
+            {
+                return !Globals.SecondaryTimer.InFreeMode && DateTime.Now.Second % 10 < 5;
+            }
+        }
+
+        /// <summary>
         /// Loads the custom font into RAM
         /// </summary>
         static MicroView()
@@ -131,7 +142,7 @@ namespace NewTimer.FormParts
             }
 
             //Get secondary timer brush if applicable
-            if (!Globals.SecondaryTimer.InFreeMode && !Globals.PrimaryTimer.InFreeMode && Globals.CurrentMicroBroadcastMessage == null)
+            if (!Globals.SecondaryTimer.InFreeMode && Globals.CurrentMicroBroadcastMessage == null)
                 secondaryBrush = CreateSecondaryTimerFadeBrush();
 
             else
@@ -160,16 +171,59 @@ namespace NewTimer.FormParts
         /// <param name="backgroundBrush"></param>
         private void RenderBackgrounds(Graphics graphics, Brush backgroundBrush)
         {
-            const char OFFSET_BACKGROUND = 'Η';
+            const char OFFSET_BACKGROUND  = 'Η';
+            const char DEFAULT_BACKGROUND = '@';
+            const char ANALOG_BACKGROUND  = 'ν';
+
+            char primaryBackgroundSymbol = Globals.PrimaryTimer.MicroViewUnit == MicroViewUnitSelector.Analog 
+                ? ANALOG_BACKGROUND 
+                : DEFAULT_BACKGROUND;
+
+            //Get the backgrounds for the right section
+            char offsetBackgroundSymbol;
+            char unitBackgroundSymbol;
+
+            if (CurrentlyShowingSecondaryTimer) 
+            {
+                //Analog secondary timer
+                if (Globals.SecondaryTimer.MicroViewUnit == MicroViewUnitSelector.Analog)
+                {
+                    offsetBackgroundSymbol = ANALOG_BACKGROUND;
+                    unitBackgroundSymbol   = ANALOG_BACKGROUND;
+                }
+
+                //Digital secondary timer
+                else
+                {
+                    offsetBackgroundSymbol = DEFAULT_BACKGROUND;
+                    unitBackgroundSymbol   = DEFAULT_BACKGROUND;
+                }
+            }
+            else
+            {
+                //Analog (with number as offset) or in free mode since they use the same backgrounds
+                if (Globals.PrimaryTimer.MicroViewUnit == MicroViewUnitSelector.Analog || Globals.PrimaryTimer.InFreeMode)
+                {
+                    offsetBackgroundSymbol = DEFAULT_BACKGROUND;
+                }
+
+                //Digital (with arrow as offset)
+                else
+                {
+                    offsetBackgroundSymbol = OFFSET_BACKGROUND;
+                }
+
+                unitBackgroundSymbol = DEFAULT_BACKGROUND;
+            }
 
             //Text background
-            graphics.DrawString(LongView ? "@@@" : "@@", DEFAULT_FONT, backgroundBrush, new Point(0, 0));
+            graphics.DrawString(new string(primaryBackgroundSymbol, LongView ? 3 : 2), DEFAULT_FONT, backgroundBrush, new Point(0, 0));
 
             //Offset background
-            graphics.DrawString(OFFSET_BACKGROUND.ToString(), SMALL_FONT, backgroundBrush, new Point(BigDigitsWidth + 2, 5));
+            graphics.DrawString(offsetBackgroundSymbol.ToString(), SMALL_FONT, backgroundBrush, new Point(BigDigitsWidth + 2, 5));
 
             //Unit background
-            graphics.DrawString("@", SMALL_FONT, backgroundBrush, new Point(BigDigitsWidth, PANEL_HEIGHT - 25));
+            graphics.DrawString(unitBackgroundSymbol.ToString(), SMALL_FONT, backgroundBrush, new Point(BigDigitsWidth, PANEL_HEIGHT - 25));
 
             //Left Dot Background
             graphics.DrawString(".", DEFAULT_FONT, backgroundBrush, new Point(19, 0));
@@ -267,23 +321,48 @@ namespace NewTimer.FormParts
             if (Globals.CurrentMicroBroadcastMessage != null)
             {
                 if (LongView)
-                    return new MicroViewCommand(Globals.CurrentLongMicroBroadcastMessage, true);
+                    return new MicroViewCommand(Globals.CurrentLongMicroBroadcastMessage, LongView);
 
                 else
                     return new MicroViewCommand(Globals.CurrentMicroBroadcastMessage, false);
             }
             else if (Globals.PrimaryTimer.InFreeMode)
             {
-                string minute = DateTime.Now.Minute.ToString("00");
+                MicroViewCommand command;
 
-                return new MicroViewCommand(
-                    mainText: DateTime.Now.Hour.ToString(), 
-                    offset: minute[0], 
-                    unit: minute[1], 
-                    decimalSeparator: DecimalSeparatorPosition.NoDecimalSeparator, 
-                    showSecondaryDecimalSeparator: false, 
-                    longView: LongView
-                );
+                //Hack to get analog support for free-mode
+                if (Globals.PrimaryTimer.MicroViewUnit == MicroViewUnitSelector.Analog)
+                {
+                    command = new MicroViewCommand(
+                        mainText: MicroViewUnitSelector.GetAnalogHandPosition(DateTime.Now.Hour) 
+                            + MicroViewUnitSelector.GetAnalogHandPosition(DateTime.Now.Minute / 5).ToString(),
+
+                        offset: (DateTime.Now.Minute % 5).ToString()[0],
+
+                        decimalSeparator: DateTime.Now.Hour >= 12 
+                            ? DecimalSeparatorPosition.TensUnits 
+                            : DecimalSeparatorPosition.NoDecimalSeparator,
+
+                        unit: ' ',
+                        showSecondaryDecimalSeparator: false,
+                        longView: LongView
+                    );
+                }
+                else
+                {
+                    string minute = DateTime.Now.Minute.ToString("00");
+
+                    command = new MicroViewCommand(
+                        mainText: DateTime.Now.Hour.ToString(),
+                        offset: minute[0],
+                        unit: minute[1],
+                        decimalSeparator: DecimalSeparatorPosition.NoDecimalSeparator,
+                        showSecondaryDecimalSeparator: false,
+                        longView: LongView
+                    );
+                }
+
+                return applySecondaryTimer(command);
             }
             else if (Globals.PrimaryTimer.StopAtZero && Globals.PrimaryTimer.Overtime && Globals.PrimaryTimer.RealTimeLeft.Milliseconds < -500)
             {
@@ -292,26 +371,31 @@ namespace NewTimer.FormParts
             else
             {
                 MicroViewCommand command = Globals.PrimaryTimer.MicroViewUnit.Selector(Globals.PrimaryTimer.TimeLeft, LongView);
+                return applySecondaryTimer(command);
+            }
+
+            MicroViewCommand applySecondaryTimer(MicroViewCommand source)
+            {
 
                 //Override to show the secondary timer
-                if (!Globals.SecondaryTimer.InFreeMode && DateTime.Now.Second % 10 < 5)
+                if (CurrentlyShowingSecondaryTimer)
                 {
                     MicroViewCommand secondaryCommand = Globals.SecondaryTimer.MicroViewUnit.Selector(Globals.SecondaryTimer.TimeLeft, false);
                     string secondaryText = secondaryCommand.MainText;
 
                     //Override the unit and offset of the primary command with the main text of the secondary command
-                    command = new MicroViewCommand(
-                        offset: secondaryText[0], 
-                        unit: secondaryText[1], 
+                    return new MicroViewCommand(
+                        offset: secondaryText[0],
+                        unit: secondaryText[1],
                         showSecondaryDecimalSeparator: secondaryCommand.SeparatorPosition != DecimalSeparatorPosition.NoDecimalSeparator,
 
-                        mainText: command.MainText, 
-                        decimalSeparator: command.SeparatorPosition, 
+                        mainText: source.MainText,
+                        decimalSeparator: source.SeparatorPosition,
                         longView: LongView
                     );
                 }
 
-                return command;
+                return source;
             }
         }
 
@@ -370,16 +454,16 @@ namespace NewTimer.FormParts
         /// Creates the brush that will be used to fade between primary and secondary colors for the secondary timer
         /// </summary>
         /// <returns></returns>
-        private static Brush CreateSecondaryTimerFadeBrush()
+        private Brush CreateSecondaryTimerFadeBrush()
         {
             Brush secondaryBrush;
             Color baseColor;
 
-            if (DateTime.Now.Second % 10 >= 5 || Globals.PrimaryTimer.InFreeMode)
-                baseColor = Globals.PrimaryTimer.MicroViewColor;
+            if (CurrentlyShowingSecondaryTimer)
+                baseColor = Globals.SecondaryTimer.MicroViewColor;
 
             else
-                baseColor = Globals.SecondaryTimer.MicroViewColor;
+                baseColor = Globals.PrimaryTimer.MicroViewColor;
 
             if (DateTime.Now.Second % 5 == 4)
                 secondaryBrush = new SolidBrush(Color.FromArgb((int)((1000 - DateTime.Now.Millisecond) / 1000f * 255), baseColor));
@@ -607,6 +691,75 @@ namespace NewTimer.FormParts
                 else
                     return FromDays(span, longView);
             });
+
+            /// <summary>
+            /// Displays a semi-analog interface
+            /// </summary>
+            public static readonly MicroViewUnitSelector Analog = new MicroViewUnitSelector("analog", "A ", (span, longView) => 
+            {
+                int primaryValue;
+                int secondaryValue;
+                bool showDot;
+                int offset;
+                char unit;
+
+                if (span.TotalMinutes < 1)
+                {
+                    primaryValue = span.Seconds / 5;
+                    secondaryValue = (int)(span.Milliseconds / 1000f * 12);
+                    offset = span.Seconds % 5;
+                    showDot = false;
+                    unit = ' ';
+                }
+                else if (span.TotalHours < 1)
+                {
+                    primaryValue = span.Minutes / 5;
+                    secondaryValue = span.Seconds / 5;
+                    offset = span.Minutes % 5;
+                    showDot = false;
+                    unit = 'M';
+                }
+                else if (span.TotalHours <= 24)
+                {
+                    primaryValue = span.Hours % 12;
+                    secondaryValue = span.Minutes / 5;
+                    offset = span.Minutes % 5;
+                    showDot = span.Hours >= 12;
+                    unit = 'H';
+                }
+                else if (span.TotalDays <= 12)
+                {
+                    primaryValue = span.Days;
+                    secondaryValue = span.Hours % 12;
+                    offset = (int)(span.TotalHours % 1 * 10);
+                    showDot = span.Hours >= 12;
+                    unit = 'D';
+                }
+                else
+                {
+                    return new MicroViewCommand("--", ' ', ' ', DecimalSeparatorPosition.NoDecimalSeparator, false, longView);
+                }
+
+                return new MicroViewCommand(
+                    mainText: GetAnalogHandPosition(primaryValue).ToString() + GetAnalogHandPosition(secondaryValue),
+                    offset: offset.ToString()[0],
+                    unit:   unit,
+                    decimalSeparator: showDot ? DecimalSeparatorPosition.TensUnits : DecimalSeparatorPosition.NoDecimalSeparator,
+                    showSecondaryDecimalSeparator: false,
+                    longView: longView
+                );
+            });
+
+            /// <summary>
+            /// Creates an analog hand position symbol from the provided hour number
+            /// </summary>
+            /// <param name="hour"></param>
+            /// <returns></returns>
+            public static char GetAnalogHandPosition(int hour)
+            {
+                const char TWELVE_POSITION = 'α';
+                return (char)((TWELVE_POSITION + hour % 12));
+            }
         }
 
         /// <summary>

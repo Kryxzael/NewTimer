@@ -699,52 +699,92 @@ namespace NewTimer.FormParts
             {
                 int primaryValue;
                 int secondaryValue;
-                bool showDot;
+                int tertiaryValue;
+                DecimalSeparatorPosition dot;
                 int offset;
                 char unit;
 
-                if (span.TotalMinutes < 1)
+                if (longView && span.TotalMinutes <= 12)
                 {
-                    primaryValue = span.Seconds / 5;
-                    secondaryValue = (int)(span.Milliseconds / 1000f * 12);
+                    primaryValue = span.Minutes;
+                    secondaryValue = span.Seconds / 5;
+                    tertiaryValue = (int)(span.Milliseconds / 1000f * 12);
+
                     offset = span.Seconds % 5;
-                    showDot = false;
+                    dot = DecimalSeparatorPosition.NoDecimalSeparator;
                     unit = ' ';
                 }
-                else if (span.TotalHours < 1)
+                else if (span.TotalMinutes < 1)
                 {
                     primaryValue = span.Minutes / 5;
                     secondaryValue = span.Seconds / 5;
+                    tertiaryValue = (int)(span.Milliseconds / 1000f * 12);
+
+                    offset = span.Seconds % 5;
+                    dot = DecimalSeparatorPosition.NoDecimalSeparator;
+                    unit = ' ';
+                }
+                else if (span.TotalHours < 1 && !longView)
+                {
+                    primaryValue = span.Minutes / 5;
+                    secondaryValue = span.Seconds / 5;
+                    tertiaryValue = 0; // N/A
+
                     offset = span.Minutes % 5;
-                    showDot = false;
+                    dot = DecimalSeparatorPosition.NoDecimalSeparator;
                     unit = 'M';
                 }
                 else if (span.TotalHours <= 24)
                 {
                     primaryValue = span.Hours % 12;
                     secondaryValue = span.Minutes / 5;
+                    tertiaryValue = span.Seconds / 5;
+
                     offset = span.Minutes % 5;
-                    showDot = span.Hours >= 12;
                     unit = 'H';
+
+                    if (span.Hours >= 12)
+                    {
+                        if (longView)
+                            dot = DecimalSeparatorPosition.HundredsTens;
+
+                        else
+                            dot = DecimalSeparatorPosition.TensUnits;
+                    }
+                    else
+                    {
+                        dot = DecimalSeparatorPosition.NoDecimalSeparator;
+                    }
                 }
                 else if (span.TotalDays <= 12)
                 {
                     primaryValue = span.Days;
                     secondaryValue = span.Hours % 12;
-                    offset = (int)(span.TotalHours % 1 * 10);
-                    showDot = span.Hours >= 12;
+                    tertiaryValue = span.Minutes / 5;
+
+                    offset = longView 
+                        ? span.Minutes % 5
+                        : (int)(span.TotalHours % 1 * 10);
+
+                    dot = span.Hours >= 12 
+                        ? DecimalSeparatorPosition.TensUnits 
+                        : DecimalSeparatorPosition.NoDecimalSeparator;
+
                     unit = 'D';
                 }
                 else
                 {
-                    return new MicroViewCommand("--", ' ', ' ', DecimalSeparatorPosition.NoDecimalSeparator, false, longView);
+                    return new MicroViewCommand(longView ? "---" : "--", ' ', ' ', DecimalSeparatorPosition.NoDecimalSeparator, false, longView);
                 }
 
                 return new MicroViewCommand(
-                    mainText: GetAnalogHandPosition(primaryValue).ToString() + GetAnalogHandPosition(secondaryValue),
+                    mainText: longView 
+                        ? GetAnalogHandPosition(primaryValue).ToString() + GetAnalogHandPosition(secondaryValue) + GetAnalogHandPosition(tertiaryValue)
+                        : GetAnalogHandPosition(primaryValue).ToString() + GetAnalogHandPosition(secondaryValue),
+                    
                     offset: offset.ToString()[0],
                     unit:   unit,
-                    decimalSeparator: showDot ? DecimalSeparatorPosition.TensUnits : DecimalSeparatorPosition.NoDecimalSeparator,
+                    decimalSeparator: dot,
                     showSecondaryDecimalSeparator: false,
                     longView: longView
                 );

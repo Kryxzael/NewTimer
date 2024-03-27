@@ -333,15 +333,33 @@ namespace NewTimer.FormParts
                 //Hack to get analog support for free-mode
                 if (Globals.PrimaryTimer.MicroViewUnit == MicroViewUnitSelector.Analog)
                 {
+                    string mainText;
+                    DecimalSeparatorPosition decimalPosition;
+
+                    if (LongView)
+                    {
+                        mainText = MicroViewUnitSelector.GetAnalogHandPosition(DateTime.Now.Hour).ToString()
+                            + MicroViewUnitSelector.GetAnalogHandPosition(DateTime.Now.Minute / 5).ToString()
+                            + MicroViewUnitSelector.GetAnalogHandPosition(DateTime.Now.Second / 5).ToString();
+
+                        decimalPosition = DateTime.Now.Hour >= 12
+                            ? DecimalSeparatorPosition.HundredsTens
+                            : DecimalSeparatorPosition.NoDecimalSeparator;
+                    }
+                    else
+                    {
+                        mainText = MicroViewUnitSelector.GetAnalogHandPosition(DateTime.Now.Hour).ToString()
+                            + MicroViewUnitSelector.GetAnalogHandPosition(DateTime.Now.Minute / 5).ToString();
+
+                        decimalPosition = DateTime.Now.Hour >= 12
+                            ? DecimalSeparatorPosition.TensUnits
+                            : DecimalSeparatorPosition.NoDecimalSeparator;
+                    }
+
                     command = new MicroViewCommand(
-                        mainText: MicroViewUnitSelector.GetAnalogHandPosition(DateTime.Now.Hour) 
-                            + MicroViewUnitSelector.GetAnalogHandPosition(DateTime.Now.Minute / 5).ToString(),
-
+                        mainText: mainText,
                         offset: (DateTime.Now.Minute % 5).ToString()[0],
-
-                        decimalSeparator: DateTime.Now.Hour >= 12 
-                            ? DecimalSeparatorPosition.TensUnits 
-                            : DecimalSeparatorPosition.NoDecimalSeparator,
+                        decimalSeparator: decimalPosition,
 
                         unit: ' ',
                         showSecondaryDecimalSeparator: false,
@@ -376,7 +394,6 @@ namespace NewTimer.FormParts
 
             MicroViewCommand applySecondaryTimer(MicroViewCommand source)
             {
-
                 //Override to show the secondary timer
                 if (CurrentlyShowingSecondaryTimer)
                 {
@@ -695,93 +712,131 @@ namespace NewTimer.FormParts
             /// <summary>
             /// Displays a semi-analog interface
             /// </summary>
-            public static readonly MicroViewUnitSelector Analog = new MicroViewUnitSelector("analog", "A ", (span, longView) => 
+            public static readonly MicroViewUnitSelector Analog = new MicroViewUnitSelector("analog", "A ", (span, longView) =>
             {
-                int primaryValue;
-                int secondaryValue;
-                int tertiaryValue;
+                string mainText;
                 DecimalSeparatorPosition dot;
                 int offset;
                 char unit;
 
-                if (longView && span.TotalMinutes <= 12)
+                if (longView)
                 {
-                    primaryValue = span.Minutes;
-                    secondaryValue = span.Seconds / 5;
-                    tertiaryValue = (int)(span.Milliseconds / 1000f * 12);
+                    int primaryValue;
+                    int secondaryValue;
+                    int tertiaryValue;
 
-                    offset = span.Seconds % 5;
-                    dot = DecimalSeparatorPosition.NoDecimalSeparator;
-                    unit = ' ';
-                }
-                else if (span.TotalMinutes < 1)
-                {
-                    primaryValue = span.Minutes / 5;
-                    secondaryValue = span.Seconds / 5;
-                    tertiaryValue = (int)(span.Milliseconds / 1000f * 12);
-
-                    offset = span.Seconds % 5;
-                    dot = DecimalSeparatorPosition.NoDecimalSeparator;
-                    unit = ' ';
-                }
-                else if (span.TotalHours < 1 && !longView)
-                {
-                    primaryValue = span.Minutes / 5;
-                    secondaryValue = span.Seconds / 5;
-                    tertiaryValue = 0; // N/A
-
-                    offset = span.Minutes % 5;
-                    dot = DecimalSeparatorPosition.NoDecimalSeparator;
-                    unit = 'M';
-                }
-                else if (span.TotalHours <= 24)
-                {
-                    primaryValue = span.Hours % 12;
-                    secondaryValue = span.Minutes / 5;
-                    tertiaryValue = span.Seconds / 5;
-
-                    offset = span.Minutes % 5;
-                    unit = 'H';
-
-                    if (span.Hours >= 12)
+                    if (span.TotalMinutes <= 12)
                     {
-                        if (longView)
-                            dot = DecimalSeparatorPosition.HundredsTens;
+                        primaryValue = span.Minutes;
+                        secondaryValue = span.Seconds / 5;
+                        tertiaryValue = (int)(span.Milliseconds / 1000f * 12);
 
-                        else
-                            dot = DecimalSeparatorPosition.TensUnits;
+                        offset = span.Seconds % 5;
+                        unit = ' ';
+                        dot = DecimalSeparatorPosition.NoDecimalSeparator;
+                    }
+                    else if (span.TotalMinutes < 1)
+                    {
+                        primaryValue = span.Minutes / 5;
+                        secondaryValue = span.Seconds / 5;
+                        tertiaryValue = (int)(span.Milliseconds / 1000f * 12);
+
+                        offset = span.Seconds % 5;
+                        unit = ' ';
+                        dot = DecimalSeparatorPosition.NoDecimalSeparator;
+                    }
+                    else if (span.TotalHours <= 24)
+                    {
+                        primaryValue = span.Hours % 12;
+                        secondaryValue = span.Minutes / 5;
+                        tertiaryValue = span.Seconds / 5;
+
+                        offset = span.Minutes % 5;
+                        unit = 'H';
+
+                        dot = span.Hours >= 12
+                            ? DecimalSeparatorPosition.HundredsTens
+                            : DecimalSeparatorPosition.NoDecimalSeparator;
+                    }
+                    else if (span.TotalDays <= 12)
+                    {
+                        primaryValue = span.Days;
+                        secondaryValue = span.Hours % 12;
+                        tertiaryValue = span.Minutes / 5;
+
+                        offset = span.Minutes % 5;
+                        unit = 'D';
+
+                        dot = span.Hours >= 12
+                            ? DecimalSeparatorPosition.TensUnits
+                            : DecimalSeparatorPosition.NoDecimalSeparator;
                     }
                     else
                     {
-                        dot = DecimalSeparatorPosition.NoDecimalSeparator;
+                        return new MicroViewCommand("---", ' ', ' ', DecimalSeparatorPosition.NoDecimalSeparator, false, true);
                     }
+
+                    mainText = GetAnalogHandPosition(primaryValue).ToString() + GetAnalogHandPosition(secondaryValue) + GetAnalogHandPosition(tertiaryValue);
                 }
-                else if (span.TotalDays <= 12)
-                {
-                    primaryValue = span.Days;
-                    secondaryValue = span.Hours % 12;
-                    tertiaryValue = span.Minutes / 5;
 
-                    offset = longView 
-                        ? span.Minutes % 5
-                        : (int)(span.TotalHours % 1 * 10);
-
-                    dot = span.Hours >= 12 
-                        ? DecimalSeparatorPosition.TensUnits 
-                        : DecimalSeparatorPosition.NoDecimalSeparator;
-
-                    unit = 'D';
-                }
+                //Standard view
                 else
                 {
-                    return new MicroViewCommand(longView ? "---" : "--", ' ', ' ', DecimalSeparatorPosition.NoDecimalSeparator, false, longView);
+                    int primaryValue;
+                    int secondaryValue;
+
+                    if (span.TotalMinutes < 1)
+                    {
+                        primaryValue = span.Minutes / 5;
+                        secondaryValue = span.Seconds / 5;
+
+                        offset = span.Seconds % 5;
+                        unit = ' ';
+                        dot = DecimalSeparatorPosition.NoDecimalSeparator;
+                    }
+                    else if (span.TotalHours < 1)
+                    {
+                        primaryValue = span.Minutes / 5;
+                        secondaryValue = span.Seconds / 5;
+
+                        offset = span.Minutes % 5;
+                        unit = 'M';
+                        dot = DecimalSeparatorPosition.NoDecimalSeparator;
+                    }
+                    else if (span.TotalHours <= 24)
+                    {
+                        primaryValue = span.Hours % 12;
+                        secondaryValue = span.Minutes / 5;
+
+                        offset = span.Minutes % 5;
+                        unit = 'H';
+
+                        dot = span.Hours >= 12
+                            ? DecimalSeparatorPosition.TensUnits
+                            : DecimalSeparatorPosition.NoDecimalSeparator;
+                    }
+                    else if (span.TotalDays <= 12)
+                    {
+                        primaryValue = span.Days;
+                        secondaryValue = span.Hours % 12;
+
+                        offset = (int)(span.TotalHours % 1 * 10);
+                        unit = 'D';
+
+                        dot = span.Hours >= 12
+                            ? DecimalSeparatorPosition.TensUnits
+                            : DecimalSeparatorPosition.NoDecimalSeparator;
+                    }
+                    else
+                    {
+                        return new MicroViewCommand("--", ' ', ' ', DecimalSeparatorPosition.NoDecimalSeparator, false, false);
+                    }
+
+                    mainText = GetAnalogHandPosition(primaryValue).ToString() + GetAnalogHandPosition(secondaryValue);
                 }
 
                 return new MicroViewCommand(
-                    mainText: longView 
-                        ? GetAnalogHandPosition(primaryValue).ToString() + GetAnalogHandPosition(secondaryValue) + GetAnalogHandPosition(tertiaryValue)
-                        : GetAnalogHandPosition(primaryValue).ToString() + GetAnalogHandPosition(secondaryValue),
-                    
+                    mainText: mainText,
                     offset: offset.ToString()[0],
                     unit:   unit,
                     decimalSeparator: dot,

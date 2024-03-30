@@ -384,7 +384,7 @@ namespace NewTimer.FormParts
             }
             else if (Globals.PrimaryTimer.StopAtZero && Globals.PrimaryTimer.Overtime && Globals.PrimaryTimer.RealTimeLeft.Milliseconds < -500)
             {
-                return new MicroViewCommand("", false);
+                return new MicroViewCommand("", LongView);
             }
             else
             {

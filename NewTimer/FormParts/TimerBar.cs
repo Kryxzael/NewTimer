@@ -240,15 +240,15 @@ namespace NewTimer.FormParts
         /// <returns></returns>
         protected virtual int GetSubSegmentCount(TimeSpan span)
         {
-            if (span > new TimeSpan(365, 0, 0, 0)) return 12;
-            else if (span > new TimeSpan(30, 0, 0, 0)) return 4;
-            else if (span > new TimeSpan(7, 0, 0, 0)) return 7;
-            else if (span > new TimeSpan(1, 0, 0, 0)) return 8;
-            else if (span > new TimeSpan(1, 0, 0)) return 4;
-            else if (span > new TimeSpan(0, 30, 0)) return 6;
-            else if (span > new TimeSpan(0, 10, 0)) return 10;
-            else if (span > new TimeSpan(0, 1, 0)) return 6;
-            else if (span > new TimeSpan(0, 0, 10)) return 10;
+            if (span >= new TimeSpan(365, 0, 0, 0)) return 12;
+            else if (span >= new TimeSpan(30, 0, 0, 0)) return 4;
+            else if (span >= new TimeSpan(7, 0, 0, 0)) return 7;
+            else if (span >= new TimeSpan(1, 0, 0, 0)) return 8;
+            else if (span >= new TimeSpan(1, 0, 0)) return 4;
+            else if (span >= new TimeSpan(0, 30, 0)) return 6;
+            else if (span >= new TimeSpan(0, 10, 0)) return 10;
+            else if (span >= new TimeSpan(0, 1, 0)) return 6;
+            else if (span >= new TimeSpan(0, 0, 10)) return 10;
             else return 0;
         }
 

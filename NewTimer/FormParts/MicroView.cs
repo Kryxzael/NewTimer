@@ -31,6 +31,12 @@ namespace NewTimer.FormParts
         private const float FONT_SIZE       =  40f;
         private const float SMALL_FONT_SIZE =  14f;
 
+        const char OFFSET_BACKGROUND  = 'Η';
+        const char DEFAULT_BACKGROUND = '@';
+        const char SMALL_DEFAULT_BACKGROUND = '\x03A2';
+        const char ANALOG_BACKGROUND  = 'ν';
+        const char SMALL_ZERO = 'Θ';
+
         /// <summary>
         /// If set, three digits will be used instead of two
         /// </summary>
@@ -154,7 +160,7 @@ namespace NewTimer.FormParts
 
             MicroViewCommand command = CreateCommand();
 
-            RenderBackgrounds(e.Graphics, bgBrush);
+            RenderBackgrounds(e.Graphics, command, bgBrush);
             RenderBinaryBackground(command, e.Graphics, fadedPrimaryBrush);
             RenderCommand(command, e.Graphics, primaryBrush, secondaryBrush);
 
@@ -169,68 +175,23 @@ namespace NewTimer.FormParts
         /// </summary>
         /// <param name="graphics"></param>
         /// <param name="backgroundBrush"></param>
-        private void RenderBackgrounds(Graphics graphics, Brush backgroundBrush)
+        private void RenderBackgrounds(Graphics graphics, MicroViewCommand command, Brush backgroundBrush)
         {
-            const char OFFSET_BACKGROUND  = 'Η';
-            const char DEFAULT_BACKGROUND = '@';
-            const char ANALOG_BACKGROUND  = 'ν';
-
-            char primaryBackgroundSymbol = Globals.PrimaryTimer.MicroViewUnit == MicroViewUnitSelector.Analog 
-                ? ANALOG_BACKGROUND 
-                : DEFAULT_BACKGROUND;
-
-            //Get the backgrounds for the right section
-            char offsetBackgroundSymbol;
-            char unitBackgroundSymbol;
-
-            if (CurrentlyShowingSecondaryTimer) 
-            {
-                //Analog secondary timer
-                if (Globals.SecondaryTimer.MicroViewUnit == MicroViewUnitSelector.Analog)
-                {
-                    offsetBackgroundSymbol = ANALOG_BACKGROUND;
-                    unitBackgroundSymbol   = ANALOG_BACKGROUND;
-                }
-
-                //Digital secondary timer
-                else
-                {
-                    offsetBackgroundSymbol = DEFAULT_BACKGROUND;
-                    unitBackgroundSymbol   = DEFAULT_BACKGROUND;
-                }
-            }
-            else
-            {
-                //Analog (with number as offset) or in free mode since they use the same backgrounds
-                if (Globals.PrimaryTimer.MicroViewUnit == MicroViewUnitSelector.Analog || Globals.PrimaryTimer.InFreeMode)
-                {
-                    offsetBackgroundSymbol = DEFAULT_BACKGROUND;
-                }
-
-                //Digital (with arrow as offset)
-                else
-                {
-                    offsetBackgroundSymbol = OFFSET_BACKGROUND;
-                }
-
-                unitBackgroundSymbol = DEFAULT_BACKGROUND;
-            }
-
             //Text background
-            graphics.DrawString(new string(primaryBackgroundSymbol, LongView ? 3 : 2), DEFAULT_FONT, backgroundBrush, new Point(0, 0));
+            graphics.DrawString(command.BackgroundText, DEFAULT_FONT, backgroundBrush, new Point(0, 0));
 
             //Offset background
-            graphics.DrawString(offsetBackgroundSymbol.ToString(), SMALL_FONT, backgroundBrush, new Point(BigDigitsWidth + 2, 5));
+            graphics.DrawString(command.OffsetBackgroundChar.ToString(), SMALL_FONT, backgroundBrush, new Point(BigDigitsWidth + 2, 5));
 
             //Unit background
-            graphics.DrawString(unitBackgroundSymbol.ToString(), SMALL_FONT, backgroundBrush, new Point(BigDigitsWidth, PANEL_HEIGHT - 25));
+            graphics.DrawString(command.UnitBackgroundChar.ToString(), SMALL_FONT, backgroundBrush, new Point(BigDigitsWidth, PANEL_HEIGHT - 25));
 
             //Left Dot Background
-            graphics.DrawString(".", DEFAULT_FONT, backgroundBrush, new Point(19, 0));
+            graphics.DrawString(".", DEFAULT_FONT, backgroundBrush, new Point(20, 0));
 
             //Right dot background
             if (LongView)
-                graphics.DrawString(".", DEFAULT_FONT, backgroundBrush, new Point(64, 0));
+                graphics.DrawString(".", DEFAULT_FONT, backgroundBrush, new PointF(63f, 0));
 
             //Secondary dot background
             graphics.DrawString(".", SMALL_FONT, backgroundBrush, new PointF(BigDigitsWidth, 9.5f));
@@ -303,10 +264,10 @@ namespace NewTimer.FormParts
 
             //Draw decimal separators
             if (command.SeparatorPosition == DecimalSeparatorPosition.HundredsTens || (command.SeparatorPosition == DecimalSeparatorPosition.TensUnits && !LongView))
-                graphics.DrawString(".", DEFAULT_FONT, foregroundBrush, new Point(19, 0));
+                graphics.DrawString(".", DEFAULT_FONT, foregroundBrush, new Point(20, 0));
 
             else if (command.SeparatorPosition == DecimalSeparatorPosition.TensUnits)
-                graphics.DrawString(".", DEFAULT_FONT, foregroundBrush, new Point(64, 0));
+                graphics.DrawString(".", DEFAULT_FONT, foregroundBrush, new PointF(63f, 0));
 
             if (command.ShowSecondaryDecimalSeparator)
                 graphics.DrawString(".", SMALL_FONT, secondaryForegroundBrush, new PointF((LongView ? PANEL_LONG_WIDTH : PANEL_WIDTH) - 19, 9.5f));
@@ -358,10 +319,13 @@ namespace NewTimer.FormParts
 
                     command = new MicroViewCommand(
                         mainText: mainText,
+                        backgroundText: new string(ANALOG_BACKGROUND, LongView ? 3 : 2),
                         offset: (DateTime.Now.Minute % 5).ToString()[0],
                         decimalSeparator: decimalPosition,
 
                         unit: ' ',
+                        unitBackground: DEFAULT_BACKGROUND,
+                        offsetBackground: DEFAULT_BACKGROUND,
                         showSecondaryDecimalSeparator: false,
                         longView: LongView
                     );
@@ -372,8 +336,11 @@ namespace NewTimer.FormParts
 
                     command = new MicroViewCommand(
                         mainText: DateTime.Now.Hour.ToString(),
+                        backgroundText: new string(DEFAULT_BACKGROUND, LongView ? 3 : 2),
                         offset: minute[0],
                         unit: minute[1],
+                        unitBackground: DEFAULT_BACKGROUND,
+                        offsetBackground: DEFAULT_BACKGROUND,
                         decimalSeparator: DecimalSeparatorPosition.NoDecimalSeparator,
                         showSecondaryDecimalSeparator: false,
                         longView: LongView
@@ -399,14 +366,18 @@ namespace NewTimer.FormParts
                 {
                     MicroViewCommand secondaryCommand = Globals.SecondaryTimer.MicroViewUnit.Selector(Globals.SecondaryTimer.TimeLeft, false);
                     string secondaryText = secondaryCommand.MainText;
+                    string secondaryBackground = secondaryCommand.BackgroundText;
 
                     //Override the unit and offset of the primary command with the main text of the secondary command
                     return new MicroViewCommand(
                         offset: secondaryText[0],
                         unit: secondaryText[1],
+                        offsetBackground: secondaryBackground[0],
+                        unitBackground: secondaryBackground[1],
                         showSecondaryDecimalSeparator: secondaryCommand.SeparatorPosition != DecimalSeparatorPosition.NoDecimalSeparator,
 
                         mainText: source.MainText,
+                        backgroundText: source.BackgroundText,
                         decimalSeparator: source.SeparatorPosition,
                         longView: LongView
                     );
@@ -535,18 +506,45 @@ namespace NewTimer.FormParts
             public bool ShowSecondaryDecimalSeparator { get; }
 
             /// <summary>
+            /// Gets the text that is supposed to be drawn as the background
+            /// </summary>
+            public string BackgroundText { get; }
+
+            /// <summary>
+            /// Gets the character to use as the background of the offset marker
+            /// </summary>
+            public char OffsetBackgroundChar { get; }
+
+            /// <summary>
+            /// Gets the character to use as the background of the unit marker
+            /// </summary>
+            public char UnitBackgroundChar { get; }
+
+            /// <summary>
             /// Creates a new command
             /// </summary>
             /// <param name="number"></param>
             /// <param name="unit"></param>
             /// <param name="allowDecimals"></param>
-            public MicroViewCommand(string mainText, char offset, char unit, DecimalSeparatorPosition decimalSeparator, bool showSecondaryDecimalSeparator, bool longView)
+            public MicroViewCommand(
+                string mainText, 
+                string backgroundText, 
+                char offset, 
+                char offsetBackground, 
+                char unit, 
+                char unitBackground, 
+                DecimalSeparatorPosition decimalSeparator, 
+                bool showSecondaryDecimalSeparator, 
+                bool longView)
             {
                 int digitCount = longView ? 3 : 2;
 
                 MainText = mainText.PadLeft(digitCount).Substring(0, digitCount);
+                BackgroundText = backgroundText.PadLeft(digitCount).Substring(0, digitCount);
                 Offset = offset;
+                OffsetBackgroundChar = offsetBackground;
                 Unit = unit;
+                UnitBackgroundChar = unitBackground;
                 SeparatorPosition = decimalSeparator;
                 ShowSecondaryDecimalSeparator = showSecondaryDecimalSeparator;
             }
@@ -563,9 +561,13 @@ namespace NewTimer.FormParts
 
                 broadcastText = broadcastText.PadRight(maxLength);
 
-                MainText = broadcastText.Substring(0, digitCount);
-                Offset   = broadcastText[digitCount];
-                Unit     = broadcastText[digitCount + 1];
+                MainText       = broadcastText.Substring(0, digitCount);
+                Offset         = broadcastText[digitCount];
+                Unit           = broadcastText[digitCount + 1];
+
+                BackgroundText       = new string(DEFAULT_BACKGROUND, digitCount);
+                OffsetBackgroundChar = DEFAULT_BACKGROUND;
+                UnitBackgroundChar   = DEFAULT_BACKGROUND;
 
                 SeparatorPosition = DecimalSeparatorPosition.NoDecimalSeparator;
                 ShowSecondaryDecimalSeparator = false;
@@ -663,53 +665,6 @@ namespace NewTimer.FormParts
             });
 
             /// <summary>
-            /// Always displays time using seconds
-            /// </summary>
-            public static readonly MicroViewUnitSelector AlwaysSeconds = new MicroViewUnitSelector("seconds", "S ", FromSeconds);
-
-            /// <summary>
-            /// Always displays time using seconds
-            /// </summary>
-            public static readonly MicroViewUnitSelector AlwaysMinutes = new MicroViewUnitSelector("minutes", "M ", FromMinutes);
-
-            /// <summary>
-            /// Always displays time using seconds
-            /// </summary>
-            public static readonly MicroViewUnitSelector AlwaysHours = new MicroViewUnitSelector("hours", "H ", FromHours);
-
-            /// <summary>
-            /// Always displays time using seconds
-            /// </summary>
-            public static readonly MicroViewUnitSelector AlwaysDays = new MicroViewUnitSelector("days", "D ", FromDays);
-
-            /// <summary>
-            /// Always displays time using seconds
-            /// </summary>
-            public static readonly MicroViewUnitSelector MinimumMinutes = new MicroViewUnitSelector("min-minutes", "MM", (span, longView) =>
-            {
-                if (span.TotalMinutes < 60)
-                    return FromMinutes(span, longView);
-
-                else if (span.TotalHours < 24)
-                    return FromHours(span, longView);
-
-                else
-                    return FromDays(span, longView);
-            });
-
-            /// <summary>
-            /// Always displays time using seconds
-            /// </summary>
-            public static readonly MicroViewUnitSelector MinimumHours = new MicroViewUnitSelector("min-hours", "MH", (span, longView) =>
-            {
-                if (span.TotalHours < 24)
-                    return FromHours(span, longView);
-
-                else
-                    return FromDays(span, longView);
-            });
-
-            /// <summary>
             /// Displays a semi-analog interface
             /// </summary>
             public static readonly MicroViewUnitSelector Analog = new MicroViewUnitSelector("analog", "A ", (span, longView) =>
@@ -773,7 +728,17 @@ namespace NewTimer.FormParts
                     }
                     else
                     {
-                        return new MicroViewCommand("---", ' ', ' ', DecimalSeparatorPosition.NoDecimalSeparator, false, true);
+                        return new MicroViewCommand(
+                            mainText: "   ", 
+                            backgroundText: new string(ANALOG_BACKGROUND, 3), 
+                            offset: ' ', 
+                            unit: ' ', 
+                            offsetBackground: DEFAULT_BACKGROUND,
+                            unitBackground: DEFAULT_BACKGROUND,
+                            decimalSeparator: DecimalSeparatorPosition.NoDecimalSeparator, 
+                            showSecondaryDecimalSeparator: false, 
+                            longView: true
+                        );
                     }
 
                     mainText = GetAnalogHandPosition(primaryValue).ToString() + GetAnalogHandPosition(secondaryValue) + GetAnalogHandPosition(tertiaryValue);
@@ -787,8 +752,8 @@ namespace NewTimer.FormParts
 
                     if (span.TotalMinutes < 1)
                     {
-                        primaryValue = span.Minutes / 5;
-                        secondaryValue = span.Seconds / 5;
+                        primaryValue = span.Seconds / 5;
+                        secondaryValue = (int)(span.Milliseconds / 1000f * 12);
 
                         offset = span.Seconds % 5;
                         unit = ' ';
@@ -829,7 +794,17 @@ namespace NewTimer.FormParts
                     }
                     else
                     {
-                        return new MicroViewCommand("--", ' ', ' ', DecimalSeparatorPosition.NoDecimalSeparator, false, false);
+                        return new MicroViewCommand(
+                            mainText: "  ",
+                            backgroundText: new string(ANALOG_BACKGROUND, 2),
+                            offset: ' ',
+                            unit: ' ',
+                            offsetBackground: DEFAULT_BACKGROUND,
+                            unitBackground: DEFAULT_BACKGROUND,
+                            decimalSeparator: DecimalSeparatorPosition.NoDecimalSeparator,
+                            showSecondaryDecimalSeparator: false,
+                            longView: true
+                        );
                     }
 
                     mainText = GetAnalogHandPosition(primaryValue).ToString() + GetAnalogHandPosition(secondaryValue);
@@ -837,12 +812,62 @@ namespace NewTimer.FormParts
 
                 return new MicroViewCommand(
                     mainText: mainText,
+                    backgroundText: new string(ANALOG_BACKGROUND, longView ? 3 : 2),
                     offset: offset.ToString()[0],
-                    unit:   unit,
+                    unit: unit,
+                    offsetBackground: DEFAULT_BACKGROUND,
+                    unitBackground: DEFAULT_BACKGROUND,
                     decimalSeparator: dot,
                     showSecondaryDecimalSeparator: false,
                     longView: longView
                 );
+            });
+
+            /// <summary>
+            /// Always displays time using seconds
+            /// </summary>
+            public static readonly MicroViewUnitSelector AlwaysSeconds = new MicroViewUnitSelector("seconds", "S ", FromSeconds);
+
+            /// <summary>
+            /// Always displays time using seconds
+            /// </summary>
+            public static readonly MicroViewUnitSelector AlwaysMinutes = new MicroViewUnitSelector("minutes", "M ", FromMinutes);
+
+            /// <summary>
+            /// Always displays time using seconds
+            /// </summary>
+            public static readonly MicroViewUnitSelector AlwaysHours = new MicroViewUnitSelector("hours", "H ", FromHours);
+
+            /// <summary>
+            /// Always displays time using seconds
+            /// </summary>
+            public static readonly MicroViewUnitSelector AlwaysDays = new MicroViewUnitSelector("days", "D ", FromDays);
+
+            /// <summary>
+            /// Always displays time using seconds
+            /// </summary>
+            public static readonly MicroViewUnitSelector MinimumMinutes = new MicroViewUnitSelector("min-minutes", "MM", (span, longView) =>
+            {
+                if (span.TotalMinutes < 60)
+                    return FromMinutes(span, longView);
+
+                else if (span.TotalHours < 24)
+                    return FromHours(span, longView);
+
+                else
+                    return FromDays(span, longView);
+            });
+
+            /// <summary>
+            /// Always displays time using seconds
+            /// </summary>
+            public static readonly MicroViewUnitSelector MinimumHours = new MicroViewUnitSelector("min-hours", "MH", (span, longView) =>
+            {
+                if (span.TotalHours < 24)
+                    return FromHours(span, longView);
+
+                else
+                    return FromDays(span, longView);
             });
 
             /// <summary>
@@ -911,7 +936,7 @@ namespace NewTimer.FormParts
         /// <returns></returns>
         private static MicroViewCommand FromNumber(double input, bool allowDecimals, char unit, bool longView)
         {
-            string mainText;
+            string mainText, backgroundText;
             DecimalSeparatorPosition separator;
             char offset;
 
@@ -920,12 +945,14 @@ namespace NewTimer.FormParts
                 if (input >= 1000)
                 {
                     mainText = "---";
+                    backgroundText = new string(DEFAULT_BACKGROUND, 3);
                     separator = DecimalSeparatorPosition.NoDecimalSeparator;
                     offset = ' ';
                 }
                 else if (input >= 100)
                 {
                     mainText = Math.Floor(input).ToString("000", CultureInfo.InvariantCulture);
+                    backgroundText = new string(DEFAULT_BACKGROUND, 3);
                     separator = DecimalSeparatorPosition.NoDecimalSeparator;
                     offset = GetOffsetMarker(input);
                 }
@@ -940,13 +967,15 @@ namespace NewTimer.FormParts
                         if (num % 10 == 0)
                         {
                             mainText = " " + (num / 10).ToString("00", CultureInfo.InvariantCulture);
+                            backgroundText = new string(DEFAULT_BACKGROUND, 3);
                             separator = DecimalSeparatorPosition.NoDecimalSeparator;
                         }
 
                         //Number needs a decimal part
                         else
                         {
-                            mainText = num.ToString("000", CultureInfo.InvariantCulture);
+                            mainText = createSmallNumbersForSubRange(num.ToString("000", CultureInfo.InvariantCulture), 2);
+                            backgroundText = new string(DEFAULT_BACKGROUND, 2) + SMALL_DEFAULT_BACKGROUND;
                             separator = DecimalSeparatorPosition.TensUnits;
                         }
 
@@ -962,20 +991,23 @@ namespace NewTimer.FormParts
                         if (num % 100 == 0)
                         {
                             mainText = "  " + (num / 100).ToString("0", CultureInfo.InvariantCulture);
+                            backgroundText = new string(DEFAULT_BACKGROUND, 3);
                             separator = DecimalSeparatorPosition.NoDecimalSeparator;
                         }
 
                         //Number is divisible by ten and should have a decimal part
                         else if (num % 10 == 0)
                         {
-                            mainText = " " + (num / 10).ToString("00", CultureInfo.InvariantCulture);
+                            mainText = " " + createSmallNumbersForSubRange((num / 10).ToString("00", CultureInfo.InvariantCulture), 1);
+                            backgroundText = new string(DEFAULT_BACKGROUND, 2) + SMALL_DEFAULT_BACKGROUND;
                             separator = DecimalSeparatorPosition.TensUnits;
                         }
 
                         //Number needs a decimal part
                         else
                         {
-                            mainText = num.ToString("000", CultureInfo.InvariantCulture);
+                            mainText = createSmallNumbersForSubRange(num.ToString("000", CultureInfo.InvariantCulture), 1);
+                            backgroundText = DEFAULT_BACKGROUND + new string(SMALL_DEFAULT_BACKGROUND, 2);
                             separator = DecimalSeparatorPosition.HundredsTens;
                         }
 
@@ -985,6 +1017,7 @@ namespace NewTimer.FormParts
                 else
                 {
                     mainText = Math.Floor(input).ToString("0", CultureInfo.InvariantCulture);
+                    backgroundText = new string(DEFAULT_BACKGROUND, 3);
                     separator = DecimalSeparatorPosition.NoDecimalSeparator;
                     offset = GetOffsetMarker(input);
                 }
@@ -994,12 +1027,14 @@ namespace NewTimer.FormParts
                 if (input >= 100)
                 {
                     mainText = "--";
+                    backgroundText = new string(DEFAULT_BACKGROUND, 2);
                     separator = DecimalSeparatorPosition.NoDecimalSeparator;
                     offset = ' ';
                 }
                 else if (input >= 10)
                 {
                     mainText = Math.Floor(input).ToString("00", CultureInfo.InvariantCulture);
+                    backgroundText = new string(DEFAULT_BACKGROUND, 2);
                     separator = DecimalSeparatorPosition.NoDecimalSeparator;
                     offset = GetOffsetMarker(input);
                 }
@@ -1012,29 +1047,40 @@ namespace NewTimer.FormParts
                     if (num % 10 == 0)
                     {
                         mainText = " " + (num / 10).ToString("0", CultureInfo.InvariantCulture);
+                        backgroundText = new string(DEFAULT_BACKGROUND, 2);
                         separator = DecimalSeparatorPosition.NoDecimalSeparator;
                     }
 
                     //Number needs a decimal part
                     else
                     {
-                        mainText = num.ToString("00", CultureInfo.InvariantCulture);
+                        mainText =  createSmallNumbersForSubRange(num.ToString("00", CultureInfo.InvariantCulture), 1);
+                        backgroundText = DEFAULT_BACKGROUND + SMALL_DEFAULT_BACKGROUND.ToString();
                         separator = DecimalSeparatorPosition.TensUnits;
-
                     }
-
 
                     offset = GetOffsetMarker(input * 10);
                 }
                 else
                 {
                     mainText = " " + Math.Floor(input).ToString("0", CultureInfo.InvariantCulture);
+                    backgroundText = new string(DEFAULT_BACKGROUND, 2);
                     separator = DecimalSeparatorPosition.NoDecimalSeparator;
                     offset = GetOffsetMarker(input);
                 }
             }
 
-            return new MicroViewCommand(mainText, offset, unit, separator, false, longView);
+            return new MicroViewCommand(mainText, backgroundText, offset, OFFSET_BACKGROUND, unit, DEFAULT_BACKGROUND, separator, false, longView);
+
+            string createSmallNumbersForSubRange(string numberString, int startingIndex) 
+            {
+                char[] chars = numberString.ToCharArray();
+
+                for (int i = startingIndex; i < chars.Length; i++)
+                    chars[i] = (char)(SMALL_ZERO + (chars[i] - '0'));
+
+                return new string(chars);
+            }
         }
 
         /// <summary>

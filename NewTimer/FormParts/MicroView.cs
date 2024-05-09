@@ -974,7 +974,7 @@ namespace NewTimer.FormParts
                         //Number needs a decimal part
                         else
                         {
-                            mainText = createSmallNumbersForSubRange(num.ToString("000", CultureInfo.InvariantCulture), 2);
+                            mainText = num.ToString("000", CultureInfo.InvariantCulture);
                             backgroundText = new string(DEFAULT_BACKGROUND, 2) + SMALL_DEFAULT_BACKGROUND;
                             separator = DecimalSeparatorPosition.TensUnits;
                         }
@@ -998,7 +998,7 @@ namespace NewTimer.FormParts
                         //Number is divisible by ten and should have a decimal part
                         else if (num % 10 == 0)
                         {
-                            mainText = " " + createSmallNumbersForSubRange((num / 10).ToString("00", CultureInfo.InvariantCulture), 1);
+                            mainText = " " + (num / 10).ToString("00", CultureInfo.InvariantCulture);
                             backgroundText = new string(DEFAULT_BACKGROUND, 2) + SMALL_DEFAULT_BACKGROUND;
                             separator = DecimalSeparatorPosition.TensUnits;
                         }
@@ -1006,7 +1006,7 @@ namespace NewTimer.FormParts
                         //Number needs a decimal part
                         else
                         {
-                            mainText = createSmallNumbersForSubRange(num.ToString("000", CultureInfo.InvariantCulture), 1);
+                            mainText = num.ToString("000", CultureInfo.InvariantCulture);
                             backgroundText = DEFAULT_BACKGROUND + new string(SMALL_DEFAULT_BACKGROUND, 2);
                             separator = DecimalSeparatorPosition.HundredsTens;
                         }
@@ -1054,7 +1054,7 @@ namespace NewTimer.FormParts
                     //Number needs a decimal part
                     else
                     {
-                        mainText =  createSmallNumbersForSubRange(num.ToString("00", CultureInfo.InvariantCulture), 1);
+                        mainText =  num.ToString("00", CultureInfo.InvariantCulture);
                         backgroundText = DEFAULT_BACKGROUND + SMALL_DEFAULT_BACKGROUND.ToString();
                         separator = DecimalSeparatorPosition.TensUnits;
                     }
@@ -1071,16 +1071,6 @@ namespace NewTimer.FormParts
             }
 
             return new MicroViewCommand(mainText, backgroundText, offset, OFFSET_BACKGROUND, unit, DEFAULT_BACKGROUND, separator, false, longView);
-
-            string createSmallNumbersForSubRange(string numberString, int startingIndex) 
-            {
-                char[] chars = numberString.ToCharArray();
-
-                for (int i = startingIndex; i < chars.Length; i++)
-                    chars[i] = (char)(SMALL_ZERO + (chars[i] - '0'));
-
-                return new string(chars);
-            }
         }
 
         /// <summary>

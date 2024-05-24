@@ -355,7 +355,7 @@ namespace NewTimer.FormParts
             }
             else
             {
-                MicroViewCommand command = Globals.PrimaryTimer.MicroViewUnit.Selector(Globals.PrimaryTimer.TimeLeft, LongView);
+                MicroViewCommand command = Globals.PrimaryTimer.MicroViewUnit.Selector(Globals.PrimaryTimer, LongView);
                 return applySecondaryTimer(command);
             }
 
@@ -364,7 +364,7 @@ namespace NewTimer.FormParts
                 //Override to show the secondary timer
                 if (CurrentlyShowingSecondaryTimer)
                 {
-                    MicroViewCommand secondaryCommand = Globals.SecondaryTimer.MicroViewUnit.Selector(Globals.SecondaryTimer.TimeLeft, false);
+                    MicroViewCommand secondaryCommand = Globals.SecondaryTimer.MicroViewUnit.Selector(Globals.SecondaryTimer, false);
                     string secondaryText = secondaryCommand.MainText;
                     string secondaryBackground = secondaryCommand.BackgroundText;
 
@@ -576,7 +576,7 @@ namespace NewTimer.FormParts
 
         public class MicroViewUnitSelector
         {
-            public delegate MicroViewCommand MicroViewSelector(TimeSpan remainingTime, bool longView);
+            public delegate MicroViewCommand MicroViewSelector(TimerConfig timer, bool longView);
 
             /// <summary>
             /// The identifier of the unit selector
@@ -614,61 +614,63 @@ namespace NewTimer.FormParts
             /// <summary>
             /// Displays time using the most accurate unit available. This is default
             /// </summary>
-            public static readonly MicroViewUnitSelector MostAccurate = new MicroViewUnitSelector("default", "- ", (span, longView) =>
+            public static readonly MicroViewUnitSelector MostAccurate = new MicroViewUnitSelector("default", "- ", (timer, longView) =>
             {
                 if (longView)
                 {
-                    if (span.TotalSeconds < 1000)
-                        return FromSeconds(span, longView);
+                    if (timer.TimeLeft.TotalSeconds < 1000)
+                        return FromSeconds(timer.TimeLeft, longView);
 
-                    else if (span.TotalMinutes < 1000)
-                        return FromMinutes(span, longView);
+                    else if (timer.TimeLeft.TotalMinutes < 1000)
+                        return FromMinutes(timer.TimeLeft, longView);
 
-                    else if (span.TotalHours < 1000)
-                        return FromHours(span, longView);
+                    else if (timer.TimeLeft.TotalHours < 1000)
+                        return FromHours(timer.TimeLeft, longView);
 
                     else
-                        return FromDays(span, longView);
+                        return FromDays(timer.TimeLeft, longView);
                 }
                 else
                 {
-                    if (span.TotalSeconds < 100)
-                        return FromSeconds(span, longView);
+                    if (timer.TimeLeft.TotalSeconds < 100)
+                        return FromSeconds(timer.TimeLeft, longView);
 
-                    else if (span.TotalMinutes < 100)
-                        return FromMinutes(span, longView);
+                    else if (timer.TimeLeft.TotalMinutes < 100)
+                        return FromMinutes(timer.TimeLeft, longView);
 
-                    else if (span.TotalHours < 100)
-                        return FromHours(span, longView);
+                    else if (timer.TimeLeft.TotalHours < 100)
+                        return FromHours(timer.TimeLeft, longView);
 
                     else
-                        return FromDays(span, longView);
+                        return FromDays(timer.TimeLeft, longView);
                 }
             });
 
             /// <summary>
             /// Displays time using days, hours, minutes and seconds. Switching units when the current unit drops below 1
             /// </summary>
-            public static readonly MicroViewUnitSelector MostNatural = new MicroViewUnitSelector("natural", "N ", (span, longView) =>
+            public static readonly MicroViewUnitSelector MostNatural = new MicroViewUnitSelector("natural", "N ", (timer, longView) =>
             {
-                if (span.TotalSeconds < 60)
-                    return FromSeconds(span, longView);
+                if (timer.TimeLeft.TotalSeconds < 60)
+                    return FromSeconds(timer.TimeLeft, longView);
 
-                else if (span.TotalMinutes < 60)
-                    return FromMinutes(span, longView);
+                else if (timer.TimeLeft.TotalMinutes < 60)
+                    return FromMinutes(timer.TimeLeft, longView);
 
-                else if (span.TotalHours < 24)
-                    return FromHours(span, longView);
+                else if (timer.TimeLeft.TotalHours < 24)
+                    return FromHours(timer.TimeLeft, longView);
 
                 else
-                    return FromDays(span, longView);
+                    return FromDays(timer.TimeLeft, longView);
             });
 
             /// <summary>
             /// Displays a semi-analog interface
             /// </summary>
-            public static readonly MicroViewUnitSelector Analog = new MicroViewUnitSelector("analog", "A ", (span, longView) =>
+            public static readonly MicroViewUnitSelector Analog = new MicroViewUnitSelector("analog", "A ", (timer, longView) =>
             {
+                TimeSpan span = timer.TimeLeft;
+
                 string mainText;
                 DecimalSeparatorPosition dot;
                 int offset;
@@ -680,6 +682,7 @@ namespace NewTimer.FormParts
                     int secondaryValue;
                     int tertiaryValue;
 
+                    //M(1/12):S:MS
                     if (span.TotalMinutes <= 12)
                     {
                         primaryValue = span.Minutes;
@@ -690,16 +693,8 @@ namespace NewTimer.FormParts
                         unit = ' ';
                         dot = DecimalSeparatorPosition.NoDecimalSeparator;
                     }
-                    else if (span.TotalMinutes < 1)
-                    {
-                        primaryValue = span.Minutes / 5;
-                        secondaryValue = span.Seconds / 5;
-                        tertiaryValue = (int)(span.Milliseconds / 1000f * 12);
 
-                        offset = span.Seconds % 5;
-                        unit = ' ';
-                        dot = DecimalSeparatorPosition.NoDecimalSeparator;
-                    }
+                    //H:M:S
                     else if (span.TotalHours <= 24)
                     {
                         primaryValue = span.Hours % 12;
@@ -713,6 +708,8 @@ namespace NewTimer.FormParts
                             ? DecimalSeparatorPosition.HundredsTens
                             : DecimalSeparatorPosition.NoDecimalSeparator;
                     }
+
+                    //D:H:M
                     else if (span.TotalDays <= 12)
                     {
                         primaryValue = span.Days;
@@ -726,6 +723,8 @@ namespace NewTimer.FormParts
                             ? DecimalSeparatorPosition.TensUnits
                             : DecimalSeparatorPosition.NoDecimalSeparator;
                     }
+
+                    //-:-:-
                     else
                     {
                         return new MicroViewCommand(
@@ -749,29 +748,38 @@ namespace NewTimer.FormParts
                 {
                     int primaryValue;
                     int secondaryValue;
+                    bool showOffsetForSecondaryTimer;
 
+                    //S:MS
                     if (span.TotalMinutes < 1)
                     {
                         primaryValue = span.Seconds / 5;
                         secondaryValue = (int)(span.Milliseconds / 1000f * 12);
+                        showOffsetForSecondaryTimer = true;
 
                         offset = span.Seconds % 5;
                         unit = ' ';
                         dot = DecimalSeparatorPosition.NoDecimalSeparator;
                     }
+
+                    //M:S
                     else if (span.TotalHours < 1)
                     {
                         primaryValue = span.Minutes / 5;
                         secondaryValue = span.Seconds / 5;
+                        showOffsetForSecondaryTimer = true;
 
                         offset = span.Minutes % 5;
                         unit = 'M';
                         dot = DecimalSeparatorPosition.NoDecimalSeparator;
                     }
+
+                    //H:M
                     else if (span.TotalHours <= 24)
                     {
                         primaryValue = span.Hours % 12;
                         secondaryValue = span.Minutes / 5;
+                        showOffsetForSecondaryTimer = false;
 
                         offset = span.Minutes % 5;
                         unit = 'H';
@@ -780,10 +788,13 @@ namespace NewTimer.FormParts
                             ? DecimalSeparatorPosition.TensUnits
                             : DecimalSeparatorPosition.NoDecimalSeparator;
                     }
+
+                    //D:H
                     else if (span.TotalDays <= 12)
                     {
                         primaryValue = span.Days;
                         secondaryValue = span.Hours % 12;
+                        showOffsetForSecondaryTimer = false;
 
                         offset = (int)(span.TotalHours % 1 * 10);
                         unit = 'D';
@@ -792,6 +803,8 @@ namespace NewTimer.FormParts
                             ? DecimalSeparatorPosition.TensUnits
                             : DecimalSeparatorPosition.NoDecimalSeparator;
                     }
+
+                    //-:-
                     else
                     {
                         return new MicroViewCommand(
@@ -807,7 +820,11 @@ namespace NewTimer.FormParts
                         );
                     }
 
-                    mainText = GetAnalogHandPosition(primaryValue).ToString() + GetAnalogHandPosition(secondaryValue);
+                    if (showOffsetForSecondaryTimer && timer == Globals.SecondaryTimer)
+                        mainText = GetAnalogHandPosition(primaryValue).ToString() + offset;
+
+                    else
+                        mainText = GetAnalogHandPosition(primaryValue).ToString() + GetAnalogHandPosition(secondaryValue);
                 }
 
                 return new MicroViewCommand(
@@ -826,48 +843,48 @@ namespace NewTimer.FormParts
             /// <summary>
             /// Always displays time using seconds
             /// </summary>
-            public static readonly MicroViewUnitSelector AlwaysSeconds = new MicroViewUnitSelector("seconds", "S ", FromSeconds);
+            public static readonly MicroViewUnitSelector AlwaysSeconds = new MicroViewUnitSelector("seconds", "S ", (timer, longView) => FromSeconds(timer.TimeLeft, longView));
 
             /// <summary>
             /// Always displays time using seconds
             /// </summary>
-            public static readonly MicroViewUnitSelector AlwaysMinutes = new MicroViewUnitSelector("minutes", "M ", FromMinutes);
+            public static readonly MicroViewUnitSelector AlwaysMinutes = new MicroViewUnitSelector("minutes", "M ", (timer, longView) => FromMinutes(timer.TimeLeft, longView));
 
             /// <summary>
             /// Always displays time using seconds
             /// </summary>
-            public static readonly MicroViewUnitSelector AlwaysHours = new MicroViewUnitSelector("hours", "H ", FromHours);
+            public static readonly MicroViewUnitSelector AlwaysHours = new MicroViewUnitSelector("hours", "H ", (timer, longView) => FromHours(timer.TimeLeft, longView));
 
             /// <summary>
             /// Always displays time using seconds
             /// </summary>
-            public static readonly MicroViewUnitSelector AlwaysDays = new MicroViewUnitSelector("days", "D ", FromDays);
+            public static readonly MicroViewUnitSelector AlwaysDays = new MicroViewUnitSelector("days", "D ", (timer, longView) => FromDays(timer.TimeLeft, longView));
 
             /// <summary>
             /// Always displays time using seconds
             /// </summary>
-            public static readonly MicroViewUnitSelector MinimumMinutes = new MicroViewUnitSelector("min-minutes", "MM", (span, longView) =>
+            public static readonly MicroViewUnitSelector MinimumMinutes = new MicroViewUnitSelector("min-minutes", "MM", (timer, longView) =>
             {
-                if (span.TotalMinutes < 60)
-                    return FromMinutes(span, longView);
+                if (timer.TimeLeft.TotalMinutes < 60)
+                    return FromMinutes(timer.TimeLeft, longView);
 
-                else if (span.TotalHours < 24)
-                    return FromHours(span, longView);
+                else if (timer.TimeLeft.TotalHours < 24)
+                    return FromHours(timer.TimeLeft, longView);
 
                 else
-                    return FromDays(span, longView);
+                    return FromDays(timer.TimeLeft, longView);
             });
 
             /// <summary>
             /// Always displays time using seconds
             /// </summary>
-            public static readonly MicroViewUnitSelector MinimumHours = new MicroViewUnitSelector("min-hours", "MH", (span, longView) =>
+            public static readonly MicroViewUnitSelector MinimumHours = new MicroViewUnitSelector("min-hours", "MH", (timer, longView) =>
             {
-                if (span.TotalHours < 24)
-                    return FromHours(span, longView);
+                if (timer.TimeLeft.TotalHours < 24)
+                    return FromHours(timer.TimeLeft, longView);
 
                 else
-                    return FromDays(span, longView);
+                    return FromDays(timer.TimeLeft, longView);
             });
 
             /// <summary>

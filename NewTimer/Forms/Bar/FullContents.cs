@@ -154,7 +154,11 @@ namespace NewTimer.Forms.Bar
              * Sets the text
              */
             //Main days
-            FullD.Text = span.Days >= 1000 ? "  ---" : span.Days.ToString("000");
+            if (Globals.PrimaryTimer.InFreeMode)
+                FullD.Text = DateTime.Now.Day.ToString("000");
+            else
+                FullD.Text = span.Days >= 1000 ? "  ---" : span.Days.ToString("000");
+
             FullH.RenderLeadingZeros = true;
 
             //Main hours

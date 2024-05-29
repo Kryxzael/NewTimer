@@ -556,8 +556,17 @@ namespace NewTimer.Forms
                     break;
 
                 case Keys.Delete:
-                    Globals.PrimaryTimer.Target = DateTime.Now;
-                    Globals.Broadcast("Reset", "RSET", "RESET");
+                    if (e.Modifiers.HasFlag(Keys.Shift))
+                    {
+                        Globals.ResetPrimaryTimer();
+                        Globals.Broadcast("Reset", "RSET", "RESET");
+                    }
+                    else
+                    {
+                        Globals.Broadcast("Restart", "RSRT", "RSTRT");
+                        Globals.PrimaryTimer.Target = DateTime.Now;
+                    }
+                    
                     return;
 
                 case Keys.Pause:
@@ -692,6 +701,7 @@ namespace NewTimer.Forms
                         "Pause/P: Pause/Unpause",
                         "--------",
                         "Del: Reset to zero",
+                        "Shift + Del: Reset primary timer settings",
                         "0930: Set target to 09:30 (Must be in 24h format)",
                         "Shift + 0930: Set countdown to 9 minutes and 30 seconds",
                         "Alt + 0930: Set countdown to 9 hours and 30 minutes",

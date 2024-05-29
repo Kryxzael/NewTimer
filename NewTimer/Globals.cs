@@ -419,5 +419,19 @@ namespace NewTimer
         {
             return (int)((value - Math.Truncate(value)) * Math.Pow(10, significantDigits));
         }
+
+        /// <summary>
+        /// Resets the primary timer back to its default configuration
+        /// </summary>
+        public static void ResetPrimaryTimer()
+        {
+            PrimaryTimer = new TimerConfig
+            {
+                ColorScheme = ColorSchemes[0],
+                Target = DateTime.Now,
+            };
+            
+            PrimaryTimer.Recolorize();
+        }
     }
 }

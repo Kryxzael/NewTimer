@@ -30,25 +30,6 @@ namespace NewTimer.FormParts
             }
         }
 
-        /// <summary>
-        /// Gets the "time left" that is displayed at the bar. This is exceptional in free mode
-        /// </summary>
-        private TimeSpan DisplayedTimeLeft
-        {
-            get
-            {
-                if (Timer.InFreeMode)
-                {
-                    if (DateTime.Now.Minute >= 30)
-                        return DateTime.Today.AddHours(DateTime.Now.Hour + 1) - DateTime.Now;
-
-                    return DateTime.Now - DateTime.Today.AddHours(DateTime.Now.Hour);
-                }
-
-                return Timer.TimeLeft;
-            }
-        }
-
         private bool _trackSecondaryTimer;
 
         /// <summary>
@@ -83,18 +64,32 @@ namespace NewTimer.FormParts
                 Visible = true;
             }
 
-            //Sorry about this but
             if (Timer.InFreeMode)
-                span = DisplayedTimeLeft;
+            {
+                const int BASE_SCALE = 1200;
 
-            /*
-             * Sets the base value, This is the segment(s) that "stand out" at the left side of the bar
-             */
-            Value = GetNewValue(span);
+                span = Timer.TimeLeft;
+                Value = DateTime.Now.Minute / 60f * BASE_SCALE;
+                MaxValue = BASE_SCALE;
+
+                int hour = DateTime.Now.Hour % 12;
+
+                if (hour == 0)
+                    hour = 12;
+
+                Interval = (int)(1f / hour * BASE_SCALE);
+            }
+            else
+            {
+                /*
+                 * Sets the base value, This is the segment(s) that "stand out" at the left side of the bar
+                 */
+                Value = GetNewValue(span);
 
 
-            //Apply the correct bar settings for the current time left
-            ApplySettings(Timer.BarSettings.First(i => i.Key <= span).Value);
+                //Apply the correct bar settings for the current time left
+                ApplySettings(Timer.BarSettings.First(i => i.Key <= span).Value);
+            }
         }
 
         public static float GetNewValue(TimeSpan span)
@@ -140,7 +135,10 @@ namespace NewTimer.FormParts
         {
             string splitAsLines = string.Join(Environment.NewLine, (IEnumerable<char>)segmentValue.ToString());
 
-            if (DisplayedTimeLeft.TotalMinutes < 1)
+            if (Timer.InFreeMode)
+                return new string[0];
+
+            if (Timer.TimeLeft.TotalMinutes < 1)
             {
                 return new[]
                 {
@@ -155,7 +153,7 @@ namespace NewTimer.FormParts
                 };
             }
 
-            else if (DisplayedTimeLeft.TotalHours < 1)
+            else if (Timer.TimeLeft.TotalHours < 1)
             {
                 return new[] 
                 { 
@@ -170,7 +168,7 @@ namespace NewTimer.FormParts
                 };
             }
 
-            else if (DisplayedTimeLeft.TotalDays < 1)
+            else if (Timer.TimeLeft.TotalDays < 1)
             {
                 return new[] 
                 { 
@@ -185,7 +183,7 @@ namespace NewTimer.FormParts
                 };
             }
                 
-            else if (DisplayedTimeLeft.TotalDays < 365)
+            else if (Timer.TimeLeft.TotalDays < 365)
             {
                 return new[] 
                 { 
@@ -277,6 +275,9 @@ namespace NewTimer.FormParts
                 DrawHatchedOverflow = DrawHatched = false;
             }
 
+            if (Timer.InFreeMode)
+                return;
+
             Rectangle bounds = new Rectangle(BarMargin, BarMargin, Width - (2 * BarMargin), Height - (2 * BarMargin));
 
             //Do nothing else if the value of the bar is zero. To prevent DIV/0
@@ -299,7 +300,7 @@ namespace NewTimer.FormParts
                 //This code was originally designed to only draw sub-segments on the left-most part of the bar
                 //It has been hacked to draw segments over the entire bar. As a result, this code is ugly as fuck
                 //Please rewrite this at some point. Thank you, and good luck
-                int subSegmentCount = GetSubSegmentCount(DisplayedTimeLeft);
+                int subSegmentCount = GetSubSegmentCount(Timer.TimeLeft);
 
                 if (subSegmentCount == 0)
                     return;

@@ -68,9 +68,10 @@ namespace NewTimer.FormParts
             {
                 const int BASE_SCALE = 1200;
 
-                span = Timer.TimeLeft;
+                SuspendLayout();
                 Value = DateTime.Now.Minute / 60f * BASE_SCALE;
                 MaxValue = BASE_SCALE;
+                FillColor = Timer.MicroViewColor; //Just cause it's the easiest thing to do
 
                 int hour = DateTime.Now.Hour % 12;
 
@@ -78,6 +79,7 @@ namespace NewTimer.FormParts
                     hour = 12;
 
                 Interval = (int)(1f / hour * BASE_SCALE);
+                ResumeLayout();
             }
             else
             {
@@ -262,9 +264,6 @@ namespace NewTimer.FormParts
 
         protected override void OnPaint(PaintEventArgs e)
         {
-            //Draws the actual bar
-            base.OnPaint(e);
-
             //Let's try to not create a recursive Refresh call, mmmk
             if (Timer.InFreeMode && !DrawHatched)
             {
@@ -274,6 +273,9 @@ namespace NewTimer.FormParts
             {
                 DrawHatchedOverflow = DrawHatched = false;
             }
+
+            //Draws the actual bar
+            base.OnPaint(e);
 
             if (Timer.InFreeMode)
                 return;

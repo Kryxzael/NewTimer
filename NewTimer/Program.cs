@@ -106,6 +106,17 @@ namespace NewTimer
                     case "-2d":
                         currentTarget = ref secondaryTarget;
                         goto case "-d";
+
+                    case "--help":
+                    case "-h":
+                    case "-?":
+                        MessageBox.Show(@"Command line arguments:
+    --target|-t <target>: Set the target time
+    --duration|-d <duration>: Set the target time as a duration from now
+    -2: Subsequent arguments will apply to secondary timer
+    --no-setup|-n: Starts the timer in idle mode without showing setup
+    --help|-h|-?: Show this dialog", "Command line argument help", MessageBoxButtons.OK);
+                        return;
                     default:
                         startingFileName = currentArg;
                         break;

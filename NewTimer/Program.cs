@@ -38,11 +38,108 @@ namespace NewTimer
             Command.Register<Commands.SaveTimer>();
             Command.Register<Commands.LoadTimer>();
 
+            string startingFileName = null;
+            bool noSetup = false;
+            DateTime? primaryTarget = null;
+            DateTime? secondaryTarget = null;
+            ref DateTime? currentTarget = ref primaryTarget;
+
+            for (int i = 0; i < args.Length; i++)
+            {
+                string currentArg = args[i];
+
+                switch (currentArg)
+                {
+                    case "-n":
+                    case "--no-setup":
+                        noSetup = true;
+                        break;
+
+                    case "-t":
+                    case "--target":
+                        i++;
+
+                        if (i >= args.Length)
+                        {
+                            Console.WriteLine("Expected target time after -t or --target", "Argument error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            return;
+                        }
+                        currentArg = args[i];
+                        
+                        if (!DateTime.TryParse(currentArg, out DateTime parsedTarget))
+                        {
+                            MessageBox.Show("Could not parse target date", "Argument error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            return;
+                        }
+                        currentTarget = parsedTarget;
+
+                        break;
+
+                    case "--duration":
+                    case "-d":
+                        i++;
+
+                        if (i >= args.Length)
+                        {
+                            MessageBox.Show("Expected duration after -d or --duration", "Argument error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            return;
+                        }
+                        currentArg = args[i];
+
+                        if (!TimeSpan.TryParse(currentArg, out TimeSpan duration))
+                        {
+                            MessageBox.Show("Could not parse duration", "Argument error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            return;
+                        }
+
+                        currentTarget = DateTime.Now + duration;
+                        break;
+
+                    case "-2":
+                        currentTarget = ref secondaryTarget;
+                        break;
+
+                    case "-2t":
+                        currentTarget = ref secondaryTarget;
+                        goto case "-t";
+
+                    case "-2d":
+                        currentTarget = ref secondaryTarget;
+                        goto case "-d";
+                    default:
+                        startingFileName = currentArg;
+                        break;
+                }
+            }
+
             //If there is an argument, treat it as a file path and open it
-            if (args.Length > 0)
+            if (startingFileName != null)
             {
                 setupForm.LoadFile(args[0]);
                 setupForm.StartWithCurrentSettings();
+            }
+            else if (primaryTarget != null)
+            {
+                Globals.StartTimer(
+                    target: currentTarget ?? DateTime.Now,
+                    stopAtZero: false,
+                    colorScheme: Globals.ColorSchemes[0],
+                    freeMode: currentTarget == null,
+                    startedFromDuration: false,
+                    closingForm: null,
+                    secondaryTarget: secondaryTarget
+                );
+            }
+            else if (noSetup)
+            {
+                Globals.StartTimer(
+                    target: DateTime.Now,
+                    stopAtZero: false,
+                    colorScheme: Globals.ColorSchemes[0],
+                    freeMode: true,
+                    startedFromDuration: false,
+                    closingForm: null
+                );
             }
             else
             {

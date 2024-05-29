@@ -80,6 +80,7 @@ namespace NewTimer.FormParts.Setup
                 target: GetTarget(), 
                 colorScheme: (ParentForm as Forms.Setup).GetSelectedColorScheme(), 
                 stopAtZero: (ParentForm as Forms.Setup).chkStopAtZero.Checked,
+                freeMode: false,
                 startedFromDuration: RepresentsDuration,
                 closingForm: ParentForm
             );

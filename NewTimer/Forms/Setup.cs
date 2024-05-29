@@ -412,6 +412,7 @@ namespace NewTimer.Forms
                 Globals.StartTimer(
                     target: new DateTime((int)numYear.Value, (int)knbMonth.Value, (int)knbDay.Value, (int)knbHour.Value, (int)knbMin.Value, (int)knbSec.Value),
                     stopAtZero: chkStopAtZero.Checked,
+                    freeMode: false,
                     colorScheme: GetSelectedColorScheme(),
                     startedFromDuration: false,
                     closingForm: this
@@ -423,7 +424,8 @@ namespace NewTimer.Forms
             {
                 Globals.StartTimer(
                     target: DateTime.Now.Add(new TimeSpan((int)knbDurHour.Value, (int)knbDurMin.Value, (int)knbDurSec.Value)),
-                    stopAtZero: chkStopAtZero.Checked, 
+                    stopAtZero: chkStopAtZero.Checked,
+                    freeMode: false,
                     colorScheme: GetSelectedColorScheme(),
                     startedFromDuration: true,
                     closingForm: this

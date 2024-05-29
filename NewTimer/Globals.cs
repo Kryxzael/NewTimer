@@ -276,21 +276,21 @@ namespace NewTimer
         /// </summary>
         /// <param name="target">Target time</param>
         /// <param name="closingForm">Form that will be closed, this should be the settings form</param>
-        public static void StartTimer(DateTime target, ColorScheme colorScheme, bool stopAtZero, bool startedFromDuration, Form closingForm = null)
+        public static void StartTimer(DateTime target, ColorScheme colorScheme, bool stopAtZero, bool freeMode, bool startedFromDuration, Form closingForm = null, DateTime? secondaryTarget = null)
         {
             //Set target and color scheme
             PrimaryTimer.Target      = target;
             PrimaryTimer.StartTime   = DateTime.Now;
             PrimaryTimer.ColorScheme = colorScheme;
             PrimaryTimer.StopAtZero  = stopAtZero;
-            PrimaryTimer.InFreeMode  = false;
+            PrimaryTimer.InFreeMode  = freeMode;
             PrimaryTimer.LastInputWasDuration = startedFromDuration;
 
-            SecondaryTimer.Target = target;
+            SecondaryTimer.Target = secondaryTarget ?? target;
             SecondaryTimer.StartTime = DateTime.Now;
             SecondaryTimer.ColorScheme = ColorSchemes[0];
             SecondaryTimer.StopAtZero = false;
-            SecondaryTimer.InFreeMode = true;
+            SecondaryTimer.InFreeMode = secondaryTarget == null;
 
             //Close the closing form with a result of OK so that the application doesn't exit
             if (closingForm != null)

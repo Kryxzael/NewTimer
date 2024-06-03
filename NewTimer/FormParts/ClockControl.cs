@@ -551,7 +551,9 @@ namespace NewTimer.FormParts
             if (timer.TimeLeft.TotalDays >= 1)
             {
                 float dividend = 1f;
-                for (int i = 0; i < Math.Ceiling(timer.TimeLeft.TotalDays / 12); i++)
+
+                //Limiting this to 3 so that we don't draw unnecessarily outside the bounds of the wheel
+                for (int i = 0; i < Math.Min(Math.Ceiling(timer.TimeLeft.TotalDays / 12), 3); i++)
                 {
                     Color pieColor = colors[(i + 6) % colors.Length];
 
@@ -582,7 +584,7 @@ namespace NewTimer.FormParts
                         }
                     }
 
-                    dividend += DISC_INITAL_SCALE_HOURS;
+                    dividend += 0.3f; //Pulling this number straight out of my--
                 }
 
                 //Draw lines segmenting the bar

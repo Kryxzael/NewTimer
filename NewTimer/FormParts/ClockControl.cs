@@ -564,7 +564,7 @@ namespace NewTimer.FormParts
                                 color: pieFill,
                                 edge: null, //Creating an edge here looks weird due to overdrawing happening later
                                 startAngle: 0f,
-                                angle: (float)timer.TimeLeft.TotalDays % 12f * 360f / 12f,
+                                angle: (float)timer.RealTimeLeft.TotalDays % 12f * 360f / 12f,
                                 scale: DISC_INITAL_SCALE / dividend,
                                 centerOffset: DISC_INITAL_SCALE_HOURS
                             );

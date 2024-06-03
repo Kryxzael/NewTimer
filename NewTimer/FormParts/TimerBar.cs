@@ -69,8 +69,6 @@ namespace NewTimer.FormParts
                 const int BASE_SCALE = 1200;
 
                 SuspendLayout();
-                Value = DateTime.Now.Minute / 60f * BASE_SCALE;
-                MaxValue = BASE_SCALE;
                 FillColor = Timer.MicroViewColor; //Just cause it's the easiest thing to do
 
                 int hour = DateTime.Now.Hour % 12;
@@ -79,6 +77,9 @@ namespace NewTimer.FormParts
                     hour = 12;
 
                 Interval = (int)(1f / hour * BASE_SCALE);
+                Value = DateTime.Now.Minute / 60f * BASE_SCALE;
+                MaxValue = BASE_SCALE;
+                BarMargin = 3;
                 ResumeLayout();
             }
             else

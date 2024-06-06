@@ -150,7 +150,16 @@ namespace NewTimer.Forms
         private void InitializeAutoLabels()
         {
             //'Time' panel
-            TimeOnlyTime.GetText = () => Globals.PrimaryTimer.InFreeMode ? DateTime.Now.ToLongTimeString() : Globals.PrimaryTimer.RealTimeLeft.ToString("h':'mm':'ss");
+            TimeOnlyTime.GetText = () =>
+            {
+                if (Globals.PrimaryTimer.InFreeMode)
+                {
+                    string formatString = Properties.Settings.Default.use24h ? "HH:mm:ss" : "h:mm:ss tt";
+                    return DateTime.Now.ToString(formatString);
+                }
+
+                return Globals.PrimaryTimer.RealTimeLeft.ToString("h':'mm':'ss");
+            };
             TimeOnlyTime.ForeThemedColor = Globals.DaysColor;
 
             //'Hours' panel
@@ -676,6 +685,22 @@ namespace NewTimer.Forms
                     return;
 
                 case Keys.H:
+                    if (e.Shift)
+                    {
+                        if (Properties.Settings.Default.use24h)
+                        {
+                            Properties.Settings.Default.use24h = false;
+                            Globals.Broadcast("12-Hour Clock", "12HR");
+                        }
+                        else
+                        {
+                            Properties.Settings.Default.use24h = true;
+                            Globals.Broadcast("24-Hour Clock", "24HR");
+                        }
+
+                        return;
+                    }
+
                     Globals.Broadcast("Help!", "HELP");
                     MessageBox.Show(string.Join(Environment.NewLine, 
                         "H: Help",
@@ -688,6 +713,7 @@ namespace NewTimer.Forms
                         "Shift + C: Previous color scheme",
                         "U: Next micro-view unit types",
                         "Shift + U: Previous micro-view unit types",
+                        "Shift + H: Change between 12- and 24-hour mode",
                         "--------",
                         "M: Toggle Micro Mode",
                         "Shift + M: Toggle 3-digit Micro Mode",

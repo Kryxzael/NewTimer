@@ -88,10 +88,6 @@ namespace NewTimer.Forms
             {
                 i.ValueChanged += (s, e) => CreateSuggestions();
             }
-            foreach (FormParts.Setup.Knob i in tabTime.Controls.Cast<Control>().OfType<FormParts.Setup.Knob>())
-            {
-                i.ValueChanged += (s, e) => CreateSuggestions();
-            }
 
             //Create initial suggestions and load user data
             CreateSuggestions();

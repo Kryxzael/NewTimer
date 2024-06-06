@@ -162,15 +162,46 @@ namespace NewTimer.Forms.Bar
             FullH.RenderLeadingZeros = true;
 
             //Main hours
-            FullH.Text = Globals.PrimaryTimer.InFreeMode ? DateTime.Now.Hour.ToString("00") : span.Hours.ToString("00");
-            FullH.RenderLeadingZeros = Globals.PrimaryTimer.InFreeMode || span.TotalDays >= 1;
+            string hourText;
+            string minuteText;
+            string secondText;
+
+            if (Globals.PrimaryTimer.InFreeMode)
+            {
+                if (Properties.Settings.Default.use24h)
+                {
+                    hourText = DateTime.Now.Hour.ToString("00");
+                    secondText = DateTime.Now.Second.ToString("00");
+                }
+                else
+                {
+                    int hourInt = DateTime.Now.Hour % 12;
+
+                    if (hourInt == 0)
+                        hourInt = 12;
+
+                    hourText = hourInt.ToString("00");
+                    secondText = DateTime.Now.Second.ToString("00") + (DateTime.Now.Hour < 12 ? "A" : "P");
+                }
+
+                minuteText = DateTime.Now.Minute.ToString("00");
+            }
+            else
+            {
+                hourText = span.Hours.ToString("00");
+                minuteText = span.Minutes.ToString("00");
+                secondText = span.Seconds.ToString("00");
+            }
+
+            FullH.Text = hourText;
+            FullH.RenderLeadingZeros = (Globals.PrimaryTimer.InFreeMode && Properties.Settings.Default.use24h) || (!Globals.PrimaryTimer.InFreeMode && span.TotalDays >= 1);
 
             //Main minutes
-            FullM.Text = Globals.PrimaryTimer.InFreeMode ? DateTime.Now.Minute.ToString("00") : span.Minutes.ToString("00");
+            FullM.Text = minuteText;
             FullM.RenderLeadingZeros = Globals.PrimaryTimer.InFreeMode || span.TotalHours >= 1;
 
             //Main seconds
-            FullS.Text = Globals.PrimaryTimer.InFreeMode ? DateTime.Now.Second.ToString("00") : span.Seconds.ToString("00");
+            FullS.Text = secondText;
             FullS.RenderLeadingZeros = Globals.PrimaryTimer.InFreeMode || span.TotalMinutes >= 1;
 
             

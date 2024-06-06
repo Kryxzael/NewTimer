@@ -332,10 +332,35 @@ namespace NewTimer.FormParts
                 }
                 else
                 {
+                    string hour;
                     string minute = DateTime.Now.Minute.ToString("00");
 
+                    if (Properties.Settings.Default.use24h)
+                    {
+                        hour = DateTime.Now.Hour.ToString("00");
+                    }
+                    else
+                    {
+                        int hourInt = DateTime.Now.Hour % 12;
+
+                        if (hourInt == 0)
+                            hourInt = 12;
+
+                        hour = hourInt.ToString();
+                        char amPmChar = DateTime.Now.Hour < 12 ? 'A' : 'P';
+
+                        if (LongView || hourInt < 10)
+                        {
+                            hour = amPmChar + hour;
+                        }
+                        else if (DateTime.Now.Minute < 10)
+                        {
+                            minute = (DateTime.Now.Hour < 12 ? "A" : "P") + DateTime.Now.Minute.ToString("0");
+                        }
+                    }
+
                     command = new MicroViewCommand(
-                        mainText: DateTime.Now.Hour.ToString(),
+                        mainText: hour,
                         backgroundText: new string(DEFAULT_BACKGROUND, LongView ? 3 : 2),
                         offset: minute[0],
                         unit: minute[1],

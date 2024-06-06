@@ -72,7 +72,20 @@ namespace NewTimer.FormParts
                     double value;
 
                     if ((!TrackSecondaryTimer && Globals.PrimaryTimer.InFreeMode) || (TrackSecondaryTimer && Globals.SecondaryTimer.InFreeMode))
-                        value = GetValue(DateTime.Now.TimeOfDay);
+                    {
+                        if (Properties.Settings.Default.use24h)
+                            value = GetValue(DateTime.Now.TimeOfDay.Add(new TimeSpan(DateTime.Now.Day, 0, 0, 0)));
+                        else
+                        {
+                            TimeSpan now = DateTime.Now.TimeOfDay;
+                            int hourInt = now.Hours % 12;
+
+                            if (hourInt == 0)
+                                hourInt = 12;
+
+                            value = GetValue(new TimeSpan(DateTime.Now.Day, hourInt, now.Minutes, now.Seconds, now.Milliseconds));
+                        }
+                    }
 
                     else if (!TrackSecondaryTimer)
                         value = GetValue(Globals.PrimaryTimer.TimeLeft);

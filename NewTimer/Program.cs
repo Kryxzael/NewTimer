@@ -124,6 +124,8 @@ namespace NewTimer
                 }
             }
 
+            setupForm.Show(); //This is stupid, but micro-view font doesn't anti-alias for some reason unless this form is initialized
+
             //If there is an argument, treat it as a file path and open it
             if (startingFileName != null)
             {
@@ -138,7 +140,7 @@ namespace NewTimer
                     colorScheme: Globals.ColorSchemes[0],
                     freeMode: currentTarget == null,
                     startedFromDuration: false,
-                    closingForm: null,
+                    closingForm: setupForm,
                     secondaryTarget: secondaryTarget
                 );
             }
@@ -150,13 +152,8 @@ namespace NewTimer
                     colorScheme: Globals.ColorSchemes[0],
                     freeMode: true,
                     startedFromDuration: false,
-                    closingForm: null
+                    closingForm: setupForm
                 );
-            }
-            else
-            {
-                //Show window and run message pump
-                setupForm.Show();
             }
 
             Application.Run();

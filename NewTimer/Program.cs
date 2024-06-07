@@ -37,6 +37,7 @@ namespace NewTimer
             Command.Register<Commands.Unit>();
             Command.Register<Commands.SaveTimer>();
             Command.Register<Commands.LoadTimer>();
+            Command.Register<Commands.HourMode>();
 
             string startingFileName = null;
             bool noSetup = false;

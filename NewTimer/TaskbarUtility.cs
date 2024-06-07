@@ -31,7 +31,11 @@ namespace NewTimer
             //Free mode, show current date and time
             if (Globals.PrimaryTimer.InFreeMode)
             {
-                title = DateTime.Now.ToString();
+                string format = Properties.Settings.Default.use24h
+                    ? "yyyy-MM-dd HH:mm:ss"
+                    : "yyyy-MM-dd h:mm:ss tt";
+
+                title = DateTime.Now.ToString(format);
             }
 
             //Stop at zero is enabled and timer is done

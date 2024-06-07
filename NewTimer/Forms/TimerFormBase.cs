@@ -448,18 +448,26 @@ namespace NewTimer.Forms
         {
             ConsoleInterface nullOutput = new ConsoleInterface();
 
+            string fullBroadcastTimeFormat = Properties.Settings.Default.use24h
+                        ? "yyyy-MM-dd HH:mm:ss"
+                        : "yyyy-MM-dd h:mm:ss tt";
+
+            string microBroadcastTimeFormat = Properties.Settings.Default.use24h
+                        ? "HH''mm"
+                        : "hh''mm";
+
             base.OnKeyDown(e);
 
             void broadcastInvisibleInput()
             {
                 //Used by the broadcaster when using invisible input numbers
-                Func<string, string, string> modifierDescription = (h, m) => "Set Target: " + h + ":" + m;
+                Func<string, string, string, string> modifierDescription = (h, m, t) => "Set Target: " + h + ":" + m + " " + t;
 
                 if (e.Shift)
-                    modifierDescription = modifierDescription = (m, s) => "Set Duration: " + m + " mins, " + s + " secs";
+                    modifierDescription = modifierDescription = (m, s, _) => "Set Duration: " + m + " mins, " + s + " secs";
 
                 else if (e.Alt)
-                    modifierDescription = modifierDescription = (h, m) => "Set Duration: " + h + " hrs, " + m + " mins";
+                    modifierDescription = modifierDescription = (h, m, _) => "Set Duration: " + h + " hrs, " + m + " mins";
 
                 char longMicroMessagePrefix = '=';
 
@@ -469,10 +477,38 @@ namespace NewTimer.Forms
                 if (e.Alt)
                     longMicroMessagePrefix = '^';
 
+                string hourText = InvisibleInputText.PadRight(4, '?').Substring(0, 2);
+                string microHourText = InvisibleInputText.PadRight(4, ' ').Substring(0, 2);
+
+                string minText = InvisibleInputText.PadRight(4, '?').Substring(2, 2);
+                string microMinText = InvisibleInputText.PadRight(4, ' ').Substring(2, 2);
+                string suffixText = "";
+
+                //This is to do conversion to 12 time if enabled
+                if (InvisibleInputText.Length == 4 && !Properties.Settings.Default.use24h && !(e.Shift || e.Alt))
+                {
+                    int hourInt24 = int.Parse(hourText, NumberStyles.Integer);
+                    int hourInt12 = hourInt24 % 12;
+
+                    if (hourInt12 == 0)
+                        hourInt12 = 12;
+
+                    if (hourInt12 < 10)
+                        microHourText = (hourInt24 < 12 ? "A" : "P") + hourInt12;
+                    else
+                        microHourText = hourInt12.ToString("00");
+
+                    hourText = hourInt12.ToString("00");
+
+                    suffixText = hourInt24 < 12
+                        ? CultureInfo.CurrentCulture.DateTimeFormat.AMDesignator
+                        : CultureInfo.CurrentCulture.DateTimeFormat.PMDesignator;
+                }
+
                 Globals.Broadcast(
-                    modifierDescription(InvisibleInputText.PadRight(4, '?').Substring(0, 2), InvisibleInputText.PadRight(4, '?').Substring(2, 2)),
-                    InvisibleInputText,
-                    longMicroMessagePrefix + InvisibleInputText
+                    modifierDescription(hourText, minText, suffixText),
+                    microHourText + microMinText,
+                    longMicroMessagePrefix + microHourText + microMinText
                 );
 
             }
@@ -698,6 +734,7 @@ namespace NewTimer.Forms
                             Globals.Broadcast("24-Hour Clock", "24HR");
                         }
 
+                        Properties.Settings.Default.Save();
                         return;
                     }
 
@@ -955,9 +992,9 @@ namespace NewTimer.Forms
                         Globals.PrimaryTimer.Target = Globals.PrimaryTimer.Target.AddMinutes(1);
 
                     Globals.Broadcast(
-                        "Shift To: " + Globals.PrimaryTimer.Target, 
-                        Globals.PrimaryTimer.Target.ToString("HH''mm"), 
-                        " " + Globals.PrimaryTimer.Target.ToString("HH''mm")
+                        "Shift To: " + Globals.PrimaryTimer.Target.ToString(fullBroadcastTimeFormat), 
+                        Globals.PrimaryTimer.Target.ToString(microBroadcastTimeFormat), 
+                        " " + Globals.PrimaryTimer.Target.ToString(microBroadcastTimeFormat)
                     );
                     break;
 
@@ -975,9 +1012,9 @@ namespace NewTimer.Forms
                         Globals.PrimaryTimer.Target = Globals.PrimaryTimer.Target.AddMinutes(-1);
 
                     Globals.Broadcast(
-                        "Shift To: " + Globals.PrimaryTimer.Target,
-                        Globals.PrimaryTimer.Target.ToString("HH''mm"),
-                        " " + Globals.PrimaryTimer.Target.ToString("HH''mm")
+                        "Shift To: " + Globals.PrimaryTimer.Target.ToString(fullBroadcastTimeFormat),
+                        Globals.PrimaryTimer.Target.ToString(microBroadcastTimeFormat),
+                        " " + Globals.PrimaryTimer.Target.ToString(microBroadcastTimeFormat)
                     );
                     break;
             }

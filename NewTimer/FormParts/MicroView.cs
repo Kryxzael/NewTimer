@@ -349,13 +349,22 @@ namespace NewTimer.FormParts
                         hour = hourInt.ToString();
                         char amPmChar = DateTime.Now.Hour < 12 ? 'A' : 'P';
 
-                        if (LongView || hourInt < 10)
+                        if (LongView)
                         {
-                            hour = amPmChar + hour;
+                            if (hourInt < 10)
+                                hour = (DateTime.Now.Hour < 12 ? "AM" : "PM") + hour;
+
+                            else
+                                hour = amPmChar + hour;
                         }
-                        else if (DateTime.Now.Minute < 10)
+                        else
                         {
-                            minute = (DateTime.Now.Hour < 12 ? "A" : "P") + DateTime.Now.Minute.ToString("0");
+
+                            if (hourInt < 10)
+                                hour = amPmChar + hour;
+
+                            else if (DateTime.Now.Minute < 10)
+                                minute = amPmChar + DateTime.Now.Minute.ToString("0");
                         }
                     }
 

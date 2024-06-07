@@ -127,7 +127,7 @@ namespace NewTimer
             //If there is an argument, treat it as a file path and open it
             if (startingFileName != null)
             {
-                setupForm.LoadFile(args[0]);
+                setupForm.LoadFile(startingFileName);
                 setupForm.StartWithCurrentSettings();
             }
             else if (primaryTarget != null)

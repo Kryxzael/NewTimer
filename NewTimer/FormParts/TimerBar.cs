@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -266,7 +267,11 @@ namespace NewTimer.FormParts
             Timer.Recolorize();
         }
 
-        protected override void OnPaint(PaintEventArgs e)
+        /// <summary>
+        /// <inheritdoc />
+        /// </summary>
+        /// <param name="e"></param>
+        protected override void DrawOnBar(PaintEventArgs e)
         {
             //Let's try to not create a recursive Refresh call, mmmk
             if (Timer.InFreeMode && !DrawHatched)
@@ -278,9 +283,6 @@ namespace NewTimer.FormParts
                 DrawHatchedOverflow = DrawHatched = false;
             }
 
-            //Draws the actual bar
-            base.OnPaint(e);
-
             if (Timer.InFreeMode)
                 return;
 
@@ -291,16 +293,19 @@ namespace NewTimer.FormParts
                 return;
 
             //Calculate the area to draw the subsegments in
-            float overflowWidth = MaxValue / Value * bounds.Width;
-            const float MARGIN_MULTIPLIER = 0.06f;
-            const int MARGIN_MAX = 10;
+            float overflowScale = MaxValue / Value; //TODO: Name is stupid. It's the scale of the area that isn't overflown
+            float overflowWidth = overflowScale * bounds.Width;
 
             //Do nothing if there is less than one second left of the timer (overflow is higher that the width of the control)
             if (overflowWidth >= e.ClipRectangle.Width)
                 return;
 
-            //Set pen's transparency based on how big the subsegment area is
-            using (Pen transparentPen = new Pen(Color.FromArgb((int)(overflowWidth / bounds.Width * 0x8F), Color.White)) { DashStyle = System.Drawing.Drawing2D.DashStyle.Dash })
+            //Set pen's properties based on how big the subsegment area is
+            float subSegmentPenSize = Lerp(1f, 4f, (overflowScale - 0.75f) * 4f);
+            float subSegmentMarginScale = Lerp(0.04f, 0f, (overflowScale - 0.5f) * 2f);
+            const int subSegmentMarginMax = 10;
+
+            using (Pen transparentPen = new Pen(Color.FromArgb((int)(overflowWidth / bounds.Width * 0x8F), Color.White), subSegmentPenSize))
             {
                 //Draw subsegments
                 //This code was originally designed to only draw sub-segments on the left-most part of the bar
@@ -317,17 +322,19 @@ namespace NewTimer.FormParts
                 if (fullSubSegmentCount > 50)
                     return;
 
-                for (int i = 0; i <= fullSubSegmentCount; i++)
+                for (int i = 1; i <= fullSubSegmentCount; i++)
                 {
                     e.Graphics.DrawLine(
                         pen: transparentPen,
                         x1: bounds.Left + (float)i / subSegmentCount * overflowWidth,
-                        y1: bounds.Top + Math.Min(bounds.Height * MARGIN_MULTIPLIER, MARGIN_MAX),
+                        y1: bounds.Top + Math.Min(bounds.Height * subSegmentMarginScale, subSegmentMarginMax),
                         x2: bounds.Left + (float)i / subSegmentCount * overflowWidth,
-                        y2: bounds.Bottom - Math.Min(bounds.Height * MARGIN_MULTIPLIER, MARGIN_MAX)
+                        y2: bounds.Bottom - Math.Min(bounds.Height * subSegmentMarginScale, subSegmentMarginMax)
                     );
                 }
             }
         }
+
+        public static float Lerp(float a, float b, float t) => a * (1 - t) + b * t;
     }
 }

@@ -18,6 +18,11 @@ namespace NewTimer.FormParts
     public class TimerBar : SegmentedBar, ICountdown
     {
         /// <summary>
+        /// The color that will fade in on the left side of the bar when a resolution switch is coming up
+        /// </summary>
+        private Color _leftSideFadeInColor = Color.Transparent;
+
+        /// <summary>
         /// Gets the timer that the bar is rendering for
         /// </summary>
         private TimerConfig Timer
@@ -92,7 +97,14 @@ namespace NewTimer.FormParts
 
 
                 //Apply the correct bar settings for the current time left
-                ApplySettings(Timer.BarSettings.First(i => i.Key <= span).Value);
+                int settingIndex = Timer.BarSettings.TakeWhile(i => i.Key > span).Count();
+
+                if (settingIndex + 1 >= Timer.BarSettings.Count)
+                    _leftSideFadeInColor = Color.Transparent;
+                else
+                    _leftSideFadeInColor = Timer.BarSettings.ElementAt(settingIndex + 1).Value.FillColor;
+
+                ApplySettings(Timer.BarSettings.ElementAt(settingIndex).Value);
             }
         }
 
@@ -240,21 +252,21 @@ namespace NewTimer.FormParts
         /// </summary>
         /// <param name="span"></param>
         /// <returns></returns>
-        protected virtual int GetSubSegmentCount(TimeSpan span)
+        private SubSegmentInfo GetSubSegmentCount(TimeSpan span)
         {
-            if      (span >= new TimeSpan(365, 00, 00, 00)) return 12;
-            else if (span >= new TimeSpan( 50, 00, 00, 00)) return  4; //Roughly one week
-            else if (span >= new TimeSpan( 30, 00, 00, 00)) return 30;
-            else if (span >= new TimeSpan(  7, 00, 00, 00)) return  7;
-            else if (span >= new TimeSpan(  4, 00, 00, 00)) return  6;
-            else if (span >= new TimeSpan(  2, 00, 00, 00)) return 12;
-            else if (span >= new TimeSpan(  1, 00, 00, 00)) return 24;
-            else if (span >= new TimeSpan(  0, 01, 00, 00)) return  4;
-            else if (span >= new TimeSpan(  0, 00, 30, 00)) return  6;
-            else if (span >= new TimeSpan(  0, 00, 10, 00)) return 10;
-            else if (span >= new TimeSpan(  0, 00, 01, 00)) return  6;
-            else if (span >= new TimeSpan(  0, 00, 00, 10)) return 10;
-            else                                            return  0;
+            if      (span >= new TimeSpan(365, 00, 00, 00)) return new SubSegmentInfo(12, 1);
+            else if (span >= new TimeSpan( 50, 00, 00, 00)) return new SubSegmentInfo( 4, 1); //Roughly one week
+            else if (span >= new TimeSpan( 30, 00, 00, 00)) return new SubSegmentInfo(30, 7);
+            else if (span >= new TimeSpan(  7, 00, 00, 00)) return new SubSegmentInfo( 7, 1);
+            else if (span >= new TimeSpan(  4, 00, 00, 00)) return new SubSegmentInfo( 6, 1);
+            else if (span >= new TimeSpan(  2, 00, 00, 00)) return new SubSegmentInfo(12, 1);
+            else if (span >= new TimeSpan(  1, 00, 00, 00)) return new SubSegmentInfo(24, 1);
+            else if (span >= new TimeSpan(  0, 01, 00, 00)) return new SubSegmentInfo( 4, 2);
+            else if (span >= new TimeSpan(  0, 00, 30, 00)) return new SubSegmentInfo( 6, 2);
+            else if (span >= new TimeSpan(  0, 00, 10, 00)) return new SubSegmentInfo(10, 1);
+            else if (span >= new TimeSpan(  0, 00, 01, 00)) return new SubSegmentInfo( 6, 1);
+            else if (span >= new TimeSpan(  0, 00, 00, 10)) return new SubSegmentInfo(10, 1);
+            else                                            return new SubSegmentInfo( 0, 0);
         }
 
         /// <summary>
@@ -306,17 +318,30 @@ namespace NewTimer.FormParts
             const int subSegmentMarginMax = 10;
 
             using (Pen transparentPen = new Pen(Color.FromArgb((int)(overflowWidth / bounds.Width * 0x8F), Color.White), subSegmentPenSize))
+            using (SolidBrush leftSideFadeInBrush = new SolidBrush(Color.FromArgb((int)Lerp(0x00, 0xFF, Math.Max(0f, Math.Min(1f, (overflowScale - 0.5f) * 2f))), _leftSideFadeInColor)))
             {
+                SubSegmentInfo subSegmentCount = GetSubSegmentCount(Timer.TimeLeft);
+
+                //Draw the left side fade-in animation when about to switch resolutions
+                e.Graphics.FillRectangle(
+                    leftSideFadeInBrush, 
+                    new RectangleF(
+                        bounds.Left, 
+                        bounds.Top,
+                        (float)subSegmentCount.SubSegmentCountBelongingToNextResolution / subSegmentCount.SubSegmentCount * overflowWidth,
+                        bounds.Height
+                    )
+                );
+
                 //Draw subsegments
                 //This code was originally designed to only draw sub-segments on the left-most part of the bar
                 //It has been hacked to draw segments over the entire bar. As a result, this code is ugly as fuck
                 //Please rewrite this at some point. Thank you, and good luck
-                int subSegmentCount = GetSubSegmentCount(Timer.TimeLeft);
 
-                if (subSegmentCount == 0)
+                if (subSegmentCount.SubSegmentCount == 0)
                     return;
 
-                float widthPerSubSegement = overflowWidth / subSegmentCount;
+                float widthPerSubSegement = overflowWidth / subSegmentCount.SubSegmentCount;
                 int fullSubSegmentCount = (int)(bounds.Width / widthPerSubSegement);
 
                 if (fullSubSegmentCount > 50)
@@ -326,15 +351,41 @@ namespace NewTimer.FormParts
                 {
                     e.Graphics.DrawLine(
                         pen: transparentPen,
-                        x1: bounds.Left + (float)i / subSegmentCount * overflowWidth,
+                        x1: bounds.Left + (float)i / subSegmentCount.SubSegmentCount * overflowWidth,
                         y1: bounds.Top + Math.Min(bounds.Height * subSegmentMarginScale, subSegmentMarginMax),
-                        x2: bounds.Left + (float)i / subSegmentCount * overflowWidth,
+                        x2: bounds.Left + (float)i / subSegmentCount.SubSegmentCount * overflowWidth,
                         y2: bounds.Bottom - Math.Min(bounds.Height * subSegmentMarginScale, subSegmentMarginMax)
                     );
                 }
+
             }
         }
 
         public static float Lerp(float a, float b, float t) => a * (1 - t) + b * t;
+
+        private struct SubSegmentInfo
+        {
+            /// <summary>
+            /// Gets the total amount of sub-segments to draw per segment in the current resolution
+            /// </summary>
+            public int SubSegmentCount { get; }
+
+            /// <summary>
+            /// Gets the total amount of sub-segments that will eventually become real segments 
+            /// when a descending timer reaches the next threshold to switch resolution
+            /// </summary>
+            public int SubSegmentCountBelongingToNextResolution { get; }
+
+            /// <summary>
+            /// Creates a new sub-segment info object
+            /// </summary>
+            /// <param name="subSegmentCount"></param>
+            /// <param name="subSegmentCountBelongingToNextResolution"></param>
+            public SubSegmentInfo(int subSegmentCount, int subSegmentCountBelongingToNextResolution)
+            {
+                SubSegmentCount = subSegmentCount;
+                SubSegmentCountBelongingToNextResolution = subSegmentCountBelongingToNextResolution;
+            }
+        }
     }
 }

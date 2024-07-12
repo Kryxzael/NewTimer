@@ -315,38 +315,38 @@ namespace NewTimer
                 switch ((a / 100) % 100)
                 {
                     case 1:
-                        output += "One hundred and";
+                        output += "One hundred and ";
                         break;
                     case 2:
-                        output += "Two hundred and";
+                        output += "Two hundred and ";
                         break;
                     case 3:
-                        output += "Three hundred and";
+                        output += "Three hundred and ";
                         break;
                     case 4:
-                        output += "Four hundred and";
+                        output += "Four hundred and ";
                         break;
                     case 5:
-                        output += "Five hundred and";
+                        output += "Five hundred and ";
                         break;
                     case 6:
-                        output += "Six hundred and";
+                        output += "Six hundred and ";
                         break;
                     case 7:
-                        output += "Seven hundred and";
+                        output += "Seven hundred and ";
                         break;
                     case 8:
-                        output += "Eight hundred and";
+                        output += "Eight hundred and ";
                         break;
                     case 9:
-                        output += "Nine hundred and";
+                        output += "Nine hundred and ";
                         break;
                 }
 
                 switch ((a / 10) % 10)
                 {
                     case 0:
-                        output = output.TrimEnd(' ', 'a', 'n', 'd');
+                        output = output.TrimEnd(' ', 'a', 'n', 'd') + 'd';
                         break;
                     case 2:
                         output += "Twenty";

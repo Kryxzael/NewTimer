@@ -1,4 +1,6 @@
-﻿using System;
+﻿// #define USE_WRITTEN_NUMBERS_ON_BAR
+
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
@@ -99,10 +101,18 @@ namespace NewTimer.FormParts
                 //Apply the correct bar settings for the current time left
                 int settingIndex = Timer.BarSettings.TakeWhile(i => i.Key > span).Count();
 
-                if (settingIndex + 1 >= Timer.BarSettings.Count)
-                    _leftSideFadeInColor = Color.Transparent;
+                if (!Timer.Overtime)
+                {
+                    if (settingIndex + 1 >= Timer.BarSettings.Count)
+                        _leftSideFadeInColor = Color.Transparent;
+                    else
+                        _leftSideFadeInColor = Timer.BarSettings.ElementAt(settingIndex + 1).Value.FillColor;
+                }
                 else
-                    _leftSideFadeInColor = Timer.BarSettings.ElementAt(settingIndex + 1).Value.FillColor;
+                {
+                    _leftSideFadeInColor = Timer.BarSettings.ElementAt(settingIndex).Value.OverflowColor;
+                }
+                
 
                 ApplySettings(Timer.BarSettings.ElementAt(settingIndex).Value);
             }
@@ -158,6 +168,12 @@ namespace NewTimer.FormParts
             {
                 return new[]
                 {
+#if USE_WRITTEN_NUMBERS_ON_BAR
+                    createString(" second", " seconds", true),
+                    createString(" sec", " sec", true),
+                    createString("", "", true),
+#endif
+
                     createString(" second", " seconds"),
                     createString("second", "seconds"),
                     createString(" sec"),
@@ -172,7 +188,13 @@ namespace NewTimer.FormParts
             else if (Timer.TimeLeft.TotalHours < 1)
             {
                 return new[] 
-                { 
+                {
+#if USE_WRITTEN_NUMBERS_ON_BAR
+                    createString(" minute", " minutes", true),
+                    createString(" min", " min", true),
+                    createString("", "", true),
+#endif
+
                     createString(" minute", " minutes"), 
                     createString("minute", "minutes"), 
                     createString(" min"), 
@@ -187,7 +209,13 @@ namespace NewTimer.FormParts
             else if (Timer.TimeLeft.TotalDays < 1)
             {
                 return new[] 
-                { 
+                {
+#if USE_WRITTEN_NUMBERS_ON_BAR
+                    createString(" hour", " hours", true),
+                    createString(" hr", " hr", true),
+                    createString("", "", true),
+#endif
+
                     createString(" hour", " hours"), 
                     createString("hour", "hours"), 
                     createString(" hr"), 
@@ -202,7 +230,12 @@ namespace NewTimer.FormParts
             else if (Timer.TimeLeft.TotalDays < 365)
             {
                 return new[] 
-                { 
+                {
+#if USE_WRITTEN_NUMBERS_ON_BAR
+                    createString(" day", " days", true),
+                    createString("", "", true),
+#endif
+
                     createString(" day", " days"), 
                     createString("day", "days"), 
                     createString(" d"), 
@@ -215,7 +248,15 @@ namespace NewTimer.FormParts
             else
             {
                 return new[] 
-                { 
+                {
+#if USE_WRITTEN_NUMBERS_ON_BAR
+                    createString(" year", " years", true),
+                    createString(" yr", " yr", true),
+                    createString("", "", true),
+                    createString(""),
+                    splitAsLines
+
+#else
                     createString(" year", " years"), 
                     createString("year", "years"), 
                     createString(" yr"), 
@@ -224,6 +265,7 @@ namespace NewTimer.FormParts
                     createString("y"),
                     createString(""),
                     splitAsLines
+#endif
                 };
             }
 
@@ -252,21 +294,29 @@ namespace NewTimer.FormParts
         /// </summary>
         /// <param name="span"></param>
         /// <returns></returns>
-        private SubSegmentInfo GetSubSegmentCount(TimeSpan span)
+        private TimerBarResolutionInfo GetCustomTimerBarResolutionInfo(TimeSpan span)
         {
-            if      (span >= new TimeSpan(365, 00, 00, 00)) return new SubSegmentInfo(12, 1);
-            else if (span >= new TimeSpan( 50, 00, 00, 00)) return new SubSegmentInfo( 4, 1); //Roughly one week
-            else if (span >= new TimeSpan( 30, 00, 00, 00)) return new SubSegmentInfo(30, 7);
-            else if (span >= new TimeSpan(  7, 00, 00, 00)) return new SubSegmentInfo( 7, 1);
-            else if (span >= new TimeSpan(  4, 00, 00, 00)) return new SubSegmentInfo( 6, 1);
-            else if (span >= new TimeSpan(  2, 00, 00, 00)) return new SubSegmentInfo(12, 1);
-            else if (span >= new TimeSpan(  1, 00, 00, 00)) return new SubSegmentInfo(24, 1);
-            else if (span >= new TimeSpan(  0, 01, 00, 00)) return new SubSegmentInfo( 4, 2);
-            else if (span >= new TimeSpan(  0, 00, 30, 00)) return new SubSegmentInfo( 6, 2);
-            else if (span >= new TimeSpan(  0, 00, 10, 00)) return new SubSegmentInfo(10, 1);
-            else if (span >= new TimeSpan(  0, 00, 01, 00)) return new SubSegmentInfo( 6, 1);
-            else if (span >= new TimeSpan(  0, 00, 00, 10)) return new SubSegmentInfo(10, 1);
-            else                                            return new SubSegmentInfo( 0, 0);
+            /*
+             * Table legend:
+             * Column 1: Sub-segment count. This is how many sub-segments there are on the left side of the bar (Not necessarily a single segment
+             * Column 2: Sub-segment count belonging to the next resolution: This is how many sub-segments on the current bar that will become real segments when the resolution switches (for fade-in)
+             * Column 3: Left fade-out start value: This is the value the bar must have in overtime before the left side begins to fade away
+             * Column 4: Left fade-out end value: This is the value the bar must have in overtime before the left side should have faded away completely
+             */
+
+            if (span.Days    >= 365) return new TimerBarResolutionInfo(12, 1, 999f, 999f); // Shows year
+            if (span.Days    >=  50) return new TimerBarResolutionInfo( 4, 1, 300f, 365f); // v (Sub-segment count adjustments)
+            if (span.Days    >=  30) return new TimerBarResolutionInfo(30, 7, 300f, 365f); // Shows months (ish)
+            if (span.Days    >=   7) return new TimerBarResolutionInfo( 7, 1,  25f,  30f); // Shows weeks
+            if (span.Days    >=   4) return new TimerBarResolutionInfo( 6, 1,   6f,   7f); // v (Sub-segment count adjustments)
+            if (span.Days    >=   2) return new TimerBarResolutionInfo(12, 1,   6f,   7f); // v (Sub-segment count adjustments)
+            if (span.Days    >=   1) return new TimerBarResolutionInfo(24, 1,   6f,   7f); // Shows days
+            if (span.Hours   >=   1) return new TimerBarResolutionInfo( 4, 2,  23f,  24f); // Shows hours
+            if (span.Minutes >=  30) return new TimerBarResolutionInfo( 6, 2,  50f,  60f); // Shows 15-minutes
+            if (span.Minutes >=  10) return new TimerBarResolutionInfo(10, 1,  25f,  30f); // Shows 5-minutes
+            if (span.Minutes >=   1) return new TimerBarResolutionInfo( 6, 1,   9f,  10f); // Shows minutes
+            if (span.Seconds >=  10) return new TimerBarResolutionInfo(10, 1,  45f,  60f); // Shows 10-seconds
+            else                     return new TimerBarResolutionInfo( 0, 0,   5f,  10f); // Shows seconds
         }
 
         /// <summary>
@@ -285,90 +335,154 @@ namespace NewTimer.FormParts
         /// <param name="e"></param>
         protected override void DrawOnBar(PaintEventArgs e)
         {
-            //Let's try to not create a recursive Refresh call, mmmk
+            /*
+             * Set hatch state
+             */
             if (Timer.InFreeMode && !DrawHatched)
-            {
                 DrawHatchedOverflow = DrawHatched = true;
-            }
-            else if (!Timer.InFreeMode && DrawHatched)
-            {
-                DrawHatchedOverflow = DrawHatched = false;
-            }
 
+            else if (!Timer.InFreeMode && DrawHatched)
+                DrawHatchedOverflow = DrawHatched = false;
+
+            //Do nothing in free mode
             if (Timer.InFreeMode)
                 return;
-
-            Rectangle bounds = new Rectangle(BarMargin, BarMargin, Width - (2 * BarMargin), Height - (2 * BarMargin));
 
             //Do nothing else if the value of the bar is zero. To prevent DIV/0
             if (Value == 0)
                 return;
 
+            //Custom information about the current resolution data
+            TimerBarResolutionInfo resolutionInfo = GetCustomTimerBarResolutionInfo(Timer.TimeLeft);
+
+            //This is the part of the bar that we should draw to (It excludes margins)
+            Rectangle clientArea = new Rectangle(BarMargin, BarMargin, Width - (2 * BarMargin), Height - (2 * BarMargin));
+
             //Calculate the area to draw the subsegments in
-            float overflowScale = MaxValue / Value; //TODO: Name is stupid. It's the scale of the area that isn't overflown
-            float overflowWidth = overflowScale * bounds.Width;
+            float scaleOfLeftSide = MaxValue / Value;
+            float widthOfLeftSide = scaleOfLeftSide * clientArea.Width;
 
             //Do nothing if there is less than one second left of the timer (overflow is higher that the width of the control)
-            if (overflowWidth >= e.ClipRectangle.Width)
+            if (widthOfLeftSide >= e.ClipRectangle.Width)
                 return;
 
-            //Set pen's properties based on how big the subsegment area is
-            float subSegmentPenSize = Lerp(1f, 4f, (overflowScale - 0.75f) * 4f);
-            float subSegmentMarginScale = Lerp(0.04f, 0f, (overflowScale - 0.5f) * 2f);
-            const int subSegmentMarginMax = 10;
+            /*
+             * Left side fade-in
+             */
 
-            using (Pen transparentPen = new Pen(Color.FromArgb((int)(overflowWidth / bounds.Width * 0x8F), Color.White), subSegmentPenSize))
-            using (SolidBrush leftSideFadeInBrush = new SolidBrush(Color.FromArgb((int)Lerp(0x00, 0xFF, Math.Max(0f, Math.Min(1f, (overflowScale - 0.5f) * 2f))), _leftSideFadeInColor)))
+            if (!Timer.Overtime)
             {
-                SubSegmentInfo subSegmentCount = GetSubSegmentCount(Timer.TimeLeft);
+                //0-255
+                int   leftSideFadeInOpacity = (int)LerpClamped(0x00, 0xFF, (scaleOfLeftSide - 0.75f) * 4f);
+                Color leftSideFadeInColor   = Color.FromArgb(leftSideFadeInOpacity, _leftSideFadeInColor);
 
-                //Draw the left side fade-in animation when about to switch resolutions
-                e.Graphics.FillRectangle(
-                    leftSideFadeInBrush, 
-                    new RectangleF(
-                        bounds.Left, 
-                        bounds.Top,
-                        (float)subSegmentCount.SubSegmentCountBelongingToNextResolution / subSegmentCount.SubSegmentCount * overflowWidth,
-                        bounds.Height
-                    )
-                );
-
-                //Draw subsegments
-                //This code was originally designed to only draw sub-segments on the left-most part of the bar
-                //It has been hacked to draw segments over the entire bar. As a result, this code is ugly as fuck
-                //Please rewrite this at some point. Thank you, and good luck
-
-                if (subSegmentCount.SubSegmentCount == 0)
-                    return;
-
-                float widthPerSubSegement = overflowWidth / subSegmentCount.SubSegmentCount;
-                int fullSubSegmentCount = (int)(bounds.Width / widthPerSubSegement);
-
-                if (fullSubSegmentCount > 50)
-                    return;
-
-                for (int i = 1; i <= fullSubSegmentCount; i++)
+                using (SolidBrush leftSideFadeInBrush = new SolidBrush(leftSideFadeInColor))
                 {
+                    //Draw the left side fade-in animation when about to switch resolutions
+                    float leftSideFadeInWidth = (float)resolutionInfo.SubSegmentCountBelongingToNextResolution / resolutionInfo.SubSegmentsAtLeftSide * widthOfLeftSide;
+
+                    e.Graphics.FillRectangle(
+                        leftSideFadeInBrush,
+                        new RectangleF(
+                            clientArea.Left,
+                            clientArea.Top,
+                            leftSideFadeInWidth,
+                            clientArea.Height
+                        )
+                    );
+                }
+            }
+            else 
+            {
+
+                int   leftSideFadeOutOpacity = (int)LerpClamped(0x00, 0xFF, InverseLerp(resolutionInfo.LeftFadeOutStartValue, resolutionInfo.LeftFadeOutEndValue, Value));
+                Color leftSideFadeOutColor   = Color.FromArgb(leftSideFadeOutOpacity, _leftSideFadeInColor);
+
+                using (SolidBrush leftSideFadeOutBrush = new SolidBrush(leftSideFadeOutColor))
+                {
+                    e.Graphics.FillRectangle(
+                        leftSideFadeOutBrush,
+                        new RectangleF(
+                            clientArea.Left,
+                            clientArea.Top,
+                            widthOfLeftSide,
+                            clientArea.Height
+                        )
+                    );
+                }
+            }
+
+            /*
+             * Subsegments
+             */
+
+            //Set pen's properties are based on how big the subsegment area is
+            float subSegmentPenSize    = Lerp(1f, 4f, (scaleOfLeftSide - 0.75f) * 4f);
+            float subSegmentPenOpacity = widthOfLeftSide / clientArea.Width; //0-1
+            Color subSegmentPenColor   = Color.FromArgb((int)(subSegmentPenOpacity * 0x8F), Color.White);
+
+            float subSegmentMarginScale = Lerp(0.04f, 0f, (scaleOfLeftSide - 0.5f) * 2f);
+            float subSegmentMargin      = clientArea.Height * subSegmentMarginScale;
+
+            using (Pen subSegmentPen = new Pen(subSegmentPenColor, subSegmentPenSize))
+            {
+                //Nothing to draw
+                if (resolutionInfo.SubSegmentsAtLeftSide == 0)
+                    return;
+
+                //Width of each sub-segment
+                float widthPerSubSegement = widthOfLeftSide / resolutionInfo.SubSegmentsAtLeftSide;
+
+                //The total amount of sub-segments
+                int visibleSubSegmentCount = (int)(clientArea.Width / widthPerSubSegement);
+
+                //Stop after 50 to avoid too much strain
+                if (visibleSubSegmentCount > 50)
+                    return;
+
+                for (int i = 1; i <= visibleSubSegmentCount; i++)
+                {
+                    float translatedXOffset = (float)i / resolutionInfo.SubSegmentsAtLeftSide * widthOfLeftSide;
+
                     e.Graphics.DrawLine(
-                        pen: transparentPen,
-                        x1: bounds.Left + (float)i / subSegmentCount.SubSegmentCount * overflowWidth,
-                        y1: bounds.Top + Math.Min(bounds.Height * subSegmentMarginScale, subSegmentMarginMax),
-                        x2: bounds.Left + (float)i / subSegmentCount.SubSegmentCount * overflowWidth,
-                        y2: bounds.Bottom - Math.Min(bounds.Height * subSegmentMarginScale, subSegmentMarginMax)
+                        pen: subSegmentPen,
+                        x1: clientArea.Left   + translatedXOffset,
+                        y1: clientArea.Top    + subSegmentMargin,
+
+                        x2: clientArea.Left   + translatedXOffset,
+                        y2: clientArea.Bottom - subSegmentMargin
                     );
                 }
 
             }
         }
 
+        /// <summary>
+        /// Performs linear interpolation between a and b by t amount
+        /// </summary>
+        /// <param name="a"></param>
+        /// <param name="b"></param>
+        /// <param name="t"></param>
+        /// <returns></returns>
         public static float Lerp(float a, float b, float t) => a * (1 - t) + b * t;
 
-        private struct SubSegmentInfo
+        /// <summary>
+        /// Performs linear interpolation between a and b by t amount, where t is clamped between 0 and 1
+        /// </summary>
+        /// <param name="a"></param>
+        /// <param name="b"></param>
+        /// <param name="t"></param>
+        /// <returns></returns>
+        public static float LerpClamped(float a, float b, float t) => Lerp(a, b, Math.Min(1f, Math.Max(0f, t)));
+
+        public static float InverseLerp(float a, float b, float value) => (value - a) / (b - a);
+
+        private struct TimerBarResolutionInfo
         {
             /// <summary>
             /// Gets the total amount of sub-segments to draw per segment in the current resolution
             /// </summary>
-            public int SubSegmentCount { get; }
+            public int SubSegmentsAtLeftSide { get; }
 
             /// <summary>
             /// Gets the total amount of sub-segments that will eventually become real segments 
@@ -377,14 +491,26 @@ namespace NewTimer.FormParts
             public int SubSegmentCountBelongingToNextResolution { get; }
 
             /// <summary>
+            /// The actual value on the bar where the left fade-out in overtime will start happening
+            /// </summary>
+            public float LeftFadeOutStartValue { get; }
+
+            /// <summary>
+            /// The actual value on the bar where the left fade-out in overtime will finish
+            /// </summary>
+            public float LeftFadeOutEndValue { get; }
+
+            /// <summary>
             /// Creates a new sub-segment info object
             /// </summary>
             /// <param name="subSegmentCount"></param>
             /// <param name="subSegmentCountBelongingToNextResolution"></param>
-            public SubSegmentInfo(int subSegmentCount, int subSegmentCountBelongingToNextResolution)
+            public TimerBarResolutionInfo(int subSegmentCount, int subSegmentCountBelongingToNextResolution, float leftFadeOutStartValue, float leftFadeOutEndValue)
             {
-                SubSegmentCount = subSegmentCount;
+                SubSegmentsAtLeftSide = subSegmentCount;
                 SubSegmentCountBelongingToNextResolution = subSegmentCountBelongingToNextResolution;
+                LeftFadeOutStartValue = leftFadeOutStartValue;
+                LeftFadeOutEndValue = leftFadeOutEndValue;
             }
         }
     }

@@ -33,9 +33,7 @@ namespace NewTimer.FormParts
 
         const char OFFSET_BACKGROUND  = 'Η';
         const char DEFAULT_BACKGROUND = '@';
-        const char SMALL_DEFAULT_BACKGROUND = '\x03A2';
         const char ANALOG_BACKGROUND  = 'ν';
-        const char SMALL_ZERO = 'Θ';
 
         /// <summary>
         /// If set, three digits will be used instead of two
@@ -993,17 +991,17 @@ namespace NewTimer.FormParts
 
             if (longView)
             {
+                backgroundText = new string(DEFAULT_BACKGROUND, 3);
+
                 if (input >= 1000)
                 {
                     mainText = "---";
-                    backgroundText = new string(DEFAULT_BACKGROUND, 3);
                     separator = DecimalSeparatorPosition.NoDecimalSeparator;
                     offset = ' ';
                 }
                 else if (input >= 100)
                 {
                     mainText = Math.Floor(input).ToString("000", CultureInfo.InvariantCulture);
-                    backgroundText = new string(DEFAULT_BACKGROUND, 3);
                     separator = DecimalSeparatorPosition.NoDecimalSeparator;
                     offset = GetOffsetMarker(input);
                 }
@@ -1018,7 +1016,6 @@ namespace NewTimer.FormParts
                         if (num % 10 == 0)
                         {
                             mainText = " " + (num / 10).ToString("00", CultureInfo.InvariantCulture);
-                            backgroundText = new string(DEFAULT_BACKGROUND, 3);
                             separator = DecimalSeparatorPosition.NoDecimalSeparator;
                         }
 
@@ -1026,10 +1023,8 @@ namespace NewTimer.FormParts
                         else
                         {
                             mainText = num.ToString("000", CultureInfo.InvariantCulture);
-                            backgroundText = new string(DEFAULT_BACKGROUND, 2) + SMALL_DEFAULT_BACKGROUND;
                             separator = DecimalSeparatorPosition.TensUnits;
                         }
-
 
                         offset = GetOffsetMarker(input * 10);
                     }
@@ -1042,7 +1037,6 @@ namespace NewTimer.FormParts
                         if (num % 100 == 0)
                         {
                             mainText = "  " + (num / 100).ToString("0", CultureInfo.InvariantCulture);
-                            backgroundText = new string(DEFAULT_BACKGROUND, 3);
                             separator = DecimalSeparatorPosition.NoDecimalSeparator;
                         }
 
@@ -1050,7 +1044,6 @@ namespace NewTimer.FormParts
                         else if (num % 10 == 0)
                         {
                             mainText = " " + (num / 10).ToString("00", CultureInfo.InvariantCulture);
-                            backgroundText = new string(DEFAULT_BACKGROUND, 2) + SMALL_DEFAULT_BACKGROUND;
                             separator = DecimalSeparatorPosition.TensUnits;
                         }
 
@@ -1058,7 +1051,6 @@ namespace NewTimer.FormParts
                         else
                         {
                             mainText = num.ToString("000", CultureInfo.InvariantCulture);
-                            backgroundText = DEFAULT_BACKGROUND + new string(SMALL_DEFAULT_BACKGROUND, 2);
                             separator = DecimalSeparatorPosition.HundredsTens;
                         }
 
@@ -1068,24 +1060,23 @@ namespace NewTimer.FormParts
                 else
                 {
                     mainText = Math.Floor(input).ToString("0", CultureInfo.InvariantCulture);
-                    backgroundText = new string(DEFAULT_BACKGROUND, 3);
                     separator = DecimalSeparatorPosition.NoDecimalSeparator;
                     offset = GetOffsetMarker(input);
                 }
             }
             else
             {
+                backgroundText = new string(DEFAULT_BACKGROUND, 2);
+
                 if (input >= 100)
                 {
                     mainText = "--";
-                    backgroundText = new string(DEFAULT_BACKGROUND, 2);
                     separator = DecimalSeparatorPosition.NoDecimalSeparator;
                     offset = ' ';
                 }
                 else if (input >= 10)
                 {
                     mainText = Math.Floor(input).ToString("00", CultureInfo.InvariantCulture);
-                    backgroundText = new string(DEFAULT_BACKGROUND, 2);
                     separator = DecimalSeparatorPosition.NoDecimalSeparator;
                     offset = GetOffsetMarker(input);
                 }
@@ -1098,7 +1089,6 @@ namespace NewTimer.FormParts
                     if (num % 10 == 0)
                     {
                         mainText = " " + (num / 10).ToString("0", CultureInfo.InvariantCulture);
-                        backgroundText = new string(DEFAULT_BACKGROUND, 2);
                         separator = DecimalSeparatorPosition.NoDecimalSeparator;
                     }
 
@@ -1106,7 +1096,6 @@ namespace NewTimer.FormParts
                     else
                     {
                         mainText =  num.ToString("00", CultureInfo.InvariantCulture);
-                        backgroundText = DEFAULT_BACKGROUND + SMALL_DEFAULT_BACKGROUND.ToString();
                         separator = DecimalSeparatorPosition.TensUnits;
                     }
 
@@ -1115,7 +1104,6 @@ namespace NewTimer.FormParts
                 else
                 {
                     mainText = " " + Math.Floor(input).ToString("0", CultureInfo.InvariantCulture);
-                    backgroundText = new string(DEFAULT_BACKGROUND, 2);
                     separator = DecimalSeparatorPosition.NoDecimalSeparator;
                     offset = GetOffsetMarker(input);
                 }

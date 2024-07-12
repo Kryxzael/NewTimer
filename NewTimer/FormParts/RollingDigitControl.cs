@@ -29,6 +29,11 @@ namespace NewTimer.FormParts
         public Func<TimeSpan, double> GetValue { get; set; } = _ => 0;
 
         /// <summary>
+        /// Gets or sets whether the value of the digit should be adjusted if hour mode is set to 12-hour mode when in idle mode
+        /// </summary>
+        public bool ValueAffectedByHourMode { get; set; }
+
+        /// <summary>
         /// Gets whether the secondary timer should be tracked instead of the primary
         /// </summary>
         public bool TrackSecondaryTimer { get; set; }
@@ -73,8 +78,10 @@ namespace NewTimer.FormParts
 
                     if ((!TrackSecondaryTimer && Globals.PrimaryTimer.InFreeMode) || (TrackSecondaryTimer && Globals.SecondaryTimer.InFreeMode))
                     {
-                        if (Properties.Settings.Default.use24h)
+                        if (!ValueAffectedByHourMode || Properties.Settings.Default.use24h)
+                        {
                             value = GetValue(DateTime.Now.TimeOfDay.Add(new TimeSpan(DateTime.Now.Day, 0, 0, 0)));
+                        }
                         else
                         {
                             TimeSpan now = DateTime.Now.TimeOfDay;

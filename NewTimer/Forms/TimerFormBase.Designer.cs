@@ -470,6 +470,7 @@
             this.rollDay3.Size = new System.Drawing.Size(32, 32);
             this.rollDay3.TabIndex = 8;
             this.rollDay3.TrackSecondaryTimer = false;
+            this.rollDay3.ValueAffectedByHourMode = false;
             // 
             // rollDay2
             // 
@@ -481,6 +482,7 @@
             this.rollDay2.Size = new System.Drawing.Size(32, 32);
             this.rollDay2.TabIndex = 7;
             this.rollDay2.TrackSecondaryTimer = false;
+            this.rollDay2.ValueAffectedByHourMode = false;
             // 
             // rollDay1
             // 
@@ -492,6 +494,7 @@
             this.rollDay1.Size = new System.Drawing.Size(32, 32);
             this.rollDay1.TabIndex = 6;
             this.rollDay1.TrackSecondaryTimer = false;
+            this.rollDay1.ValueAffectedByHourMode = false;
             // 
             // rollHour2
             // 
@@ -503,6 +506,7 @@
             this.rollHour2.Size = new System.Drawing.Size(72, 72);
             this.rollHour2.TabIndex = 5;
             this.rollHour2.TrackSecondaryTimer = false;
+            this.rollHour2.ValueAffectedByHourMode = true;
             // 
             // rollMinute1
             // 
@@ -514,6 +518,7 @@
             this.rollMinute1.Size = new System.Drawing.Size(72, 72);
             this.rollMinute1.TabIndex = 4;
             this.rollMinute1.TrackSecondaryTimer = false;
+            this.rollMinute1.ValueAffectedByHourMode = false;
             // 
             // rollSecond1
             // 
@@ -525,6 +530,7 @@
             this.rollSecond1.Size = new System.Drawing.Size(72, 72);
             this.rollSecond1.TabIndex = 3;
             this.rollSecond1.TrackSecondaryTimer = false;
+            this.rollSecond1.ValueAffectedByHourMode = false;
             // 
             // rollMinute2
             // 
@@ -536,6 +542,7 @@
             this.rollMinute2.Size = new System.Drawing.Size(72, 72);
             this.rollMinute2.TabIndex = 2;
             this.rollMinute2.TrackSecondaryTimer = false;
+            this.rollMinute2.ValueAffectedByHourMode = false;
             // 
             // rollSecond2
             // 
@@ -547,6 +554,7 @@
             this.rollSecond2.Size = new System.Drawing.Size(72, 72);
             this.rollSecond2.TabIndex = 1;
             this.rollSecond2.TrackSecondaryTimer = false;
+            this.rollSecond2.ValueAffectedByHourMode = false;
             // 
             // rollHour1
             // 
@@ -558,6 +566,7 @@
             this.rollHour1.Size = new System.Drawing.Size(72, 72);
             this.rollHour1.TabIndex = 0;
             this.rollHour1.TrackSecondaryTimer = false;
+            this.rollHour1.ValueAffectedByHourMode = true;
             // 
             // tabTextOnly
             // 

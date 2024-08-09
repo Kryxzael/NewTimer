@@ -742,9 +742,9 @@ namespace NewTimer.FormParts
                     }
 
                     //D:H:M
-                    else if (span.TotalDays <= 12)
+                    else if (span.TotalDays < 13)
                     {
-                        primaryValue = span.Days;
+                        primaryValue = span.Days % 12;
                         secondaryValue = span.Hours % 12;
                         tertiaryValue = span.Minutes / 5;
 
@@ -822,9 +822,9 @@ namespace NewTimer.FormParts
                     }
 
                     //D:H
-                    else if (span.TotalDays <= 12)
+                    else if (span.TotalDays < 13)
                     {
-                        primaryValue = span.Days;
+                        primaryValue = span.Days % 12;
                         secondaryValue = span.Hours % 12;
                         showOffsetForSecondaryTimer = false;
 
@@ -848,7 +848,7 @@ namespace NewTimer.FormParts
                             unitBackground: DEFAULT_BACKGROUND,
                             decimalSeparator: DecimalSeparatorPosition.NoDecimalSeparator,
                             showSecondaryDecimalSeparator: false,
-                            longView: true
+                            longView: false
                         );
                     }
 

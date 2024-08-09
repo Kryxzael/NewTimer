@@ -20,6 +20,7 @@ namespace NewTimer
     public class TimerConfig
     {
         private bool _paused;
+        private int? _freeNumber;
         private DateTime _target = new DateTime(2017, 4, 7, 15, 05, 0); //Keeping this lol
 
         /// <summary>
@@ -58,6 +59,21 @@ namespace NewTimer
             {
                 _target = value;
                 LastPauseRealTimeLeft = _target - DateTime.Now;
+            }
+        }
+
+        /// <summary>
+        /// A free number the user can adjust themselves as a counter
+        /// </summary>
+        public int? FreeNumber
+        {
+            get
+            {
+                return _freeNumber;
+            }
+            set
+            {
+                _freeNumber = Math.Max(Math.Min(value ?? 0, 99_000_000), 0);
             }
         }
 

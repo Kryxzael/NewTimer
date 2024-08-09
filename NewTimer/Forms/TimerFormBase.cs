@@ -463,18 +463,35 @@ namespace NewTimer.Forms
                 //Used by the broadcaster when using invisible input numbers
                 Func<string, string, string, string> modifierDescription = (h, m, t) => "Set Target: " + h + ":" + m + " " + t;
 
-                if (e.Shift)
-                    modifierDescription = modifierDescription = (m, s, _) => "Set Duration: " + m + " mins, " + s + " secs";
+                if (e.Control)
+                {
+                    if (e.Shift)
+                        modifierDescription = (a, b, _) => "Set Number: " + a + b + ".000";
+                    else 
+                        modifierDescription = (a, b, _) => "Set Number: " + a + b;
+                }
+
+                else if (e.Shift)
+                    modifierDescription = (m, s, _) => "Set Duration: " + m + " mins, " + s + " secs";
 
                 else if (e.Alt)
-                    modifierDescription = modifierDescription = (h, m, _) => "Set Duration: " + h + " hrs, " + m + " mins";
+                    modifierDescription = (h, m, _) => "Set Duration: " + h + " hrs, " + m + " mins";
 
                 char longMicroMessagePrefix = '=';
 
-                if (e.Shift)
+                if (e.Control)
+                {
+                    if (e.Shift)
+                        longMicroMessagePrefix = '%';
+
+                    else
+                        longMicroMessagePrefix = '#';
+                }
+
+                else if (e.Shift)
                     longMicroMessagePrefix = '+';
 
-                if (e.Alt)
+                else if (e.Alt)
                     longMicroMessagePrefix = '^';
 
                 string hourText = InvisibleInputText.PadRight(4, '?').Substring(0, 2);
@@ -485,7 +502,7 @@ namespace NewTimer.Forms
                 string suffixText = "";
 
                 //This is to do conversion to 12 time if enabled
-                if (InvisibleInputText.Length == 4 && !Properties.Settings.Default.use24h && !(e.Shift || e.Alt))
+                if (InvisibleInputText.Length == 4 && !Properties.Settings.Default.use24h && !(e.Shift || e.Alt || e.Control))
                 {
                     int hourInt24 = int.Parse(hourText, NumberStyles.Integer);
                     int hourInt12 = hourInt24 % 12;
@@ -979,43 +996,101 @@ namespace NewTimer.Forms
                     break;
 
                 case Keys.Up:
+
                     if (e.Shift)
-                        Globals.PrimaryTimer.Target = Globals.PrimaryTimer.Target.AddMinutes(5);
+                    {
+                        if (Globals.PrimaryTimer.InFreeMode)
+                            Globals.PrimaryTimer.FreeNumber += 10;
+
+                        else
+                            Globals.PrimaryTimer.Target = Globals.PrimaryTimer.Target.AddMinutes(5);
+                    }
 
                     else if (e.Alt)
-                        Globals.PrimaryTimer.Target = Globals.PrimaryTimer.Target.AddMinutes(15);
+                    {
+                        if (Globals.PrimaryTimer.InFreeMode)
+                            Globals.PrimaryTimer.FreeNumber += 25;
+                        else
+                            Globals.PrimaryTimer.Target = Globals.PrimaryTimer.Target.AddMinutes(15);
+                    }
 
                     else if (e.Control)
-                        Globals.PrimaryTimer.Target = Globals.PrimaryTimer.Target.AddHours(1);
+                    {
+                        if (Globals.PrimaryTimer.InFreeMode)
+                            Globals.PrimaryTimer.FreeNumber += 100;
 
+                        else
+                            Globals.PrimaryTimer.Target = Globals.PrimaryTimer.Target.AddHours(1);
+                    }
+                        
                     else
-                        Globals.PrimaryTimer.Target = Globals.PrimaryTimer.Target.AddMinutes(1);
+                    {
+                        if (Globals.PrimaryTimer.InFreeMode)
+                            Globals.PrimaryTimer.FreeNumber++;
+                        else
+                            Globals.PrimaryTimer.Target = Globals.PrimaryTimer.Target.AddMinutes(1);
+                    }
 
-                    Globals.Broadcast(
-                        "Shift To: " + Globals.PrimaryTimer.Target.ToString(fullBroadcastTimeFormat), 
-                        Globals.PrimaryTimer.Target.ToString(microBroadcastTimeFormat), 
-                        " " + Globals.PrimaryTimer.Target.ToString(microBroadcastTimeFormat)
-                    );
+                    if (!Globals.PrimaryTimer.InFreeMode)
+                    {
+                        Globals.Broadcast(
+                            "Shift To: " + Globals.PrimaryTimer.Target.ToString(fullBroadcastTimeFormat),
+                            Globals.PrimaryTimer.Target.ToString(microBroadcastTimeFormat),
+                            " " + Globals.PrimaryTimer.Target.ToString(microBroadcastTimeFormat)
+                        );
+                    }
+                    else if (Globals.PrimaryTimer.FreeNumber > 100)
+                    {
+                        string paddedString = Globals.PrimaryTimer.FreeNumber.Value.ToString().PadLeft(5);
+                        Globals.Broadcast(null, paddedString.Substring(paddedString.Length - 4), paddedString.Substring(paddedString.Length - 5));
+                    }
+                    
                     break;
 
                 case Keys.Down:
+
                     if (e.Shift)
-                        Globals.PrimaryTimer.Target = Globals.PrimaryTimer.Target.AddMinutes(-5);
+                    {
+                        if (Globals.PrimaryTimer.InFreeMode)
+                            Globals.PrimaryTimer.FreeNumber -= 10;
+
+                        else
+                            Globals.PrimaryTimer.Target = Globals.PrimaryTimer.Target.AddMinutes(-5);
+                    }
 
                     else if (e.Alt)
-                        Globals.PrimaryTimer.Target = Globals.PrimaryTimer.Target.AddMinutes(-15);
+                    {
+                        if (Globals.PrimaryTimer.InFreeMode)
+                            Globals.PrimaryTimer.FreeNumber -= 25;
+                        else
+                            Globals.PrimaryTimer.Target = Globals.PrimaryTimer.Target.AddMinutes(-15);
+                    }
 
                     else if (e.Control)
-                        Globals.PrimaryTimer.Target = Globals.PrimaryTimer.Target.AddHours(-1);
+                    {
+                        if (Globals.PrimaryTimer.InFreeMode)
+                            Globals.PrimaryTimer.FreeNumber -= 100;
+
+                        else
+                            Globals.PrimaryTimer.Target = Globals.PrimaryTimer.Target.AddHours(-1);
+                    }
 
                     else
-                        Globals.PrimaryTimer.Target = Globals.PrimaryTimer.Target.AddMinutes(-1);
+                    {
+                        if (Globals.PrimaryTimer.InFreeMode)
+                            Globals.PrimaryTimer.FreeNumber--;
+                        else
+                            Globals.PrimaryTimer.Target = Globals.PrimaryTimer.Target.AddMinutes(-1);
+                    }
 
-                    Globals.Broadcast(
-                        "Shift To: " + Globals.PrimaryTimer.Target.ToString(fullBroadcastTimeFormat),
-                        Globals.PrimaryTimer.Target.ToString(microBroadcastTimeFormat),
-                        " " + Globals.PrimaryTimer.Target.ToString(microBroadcastTimeFormat)
-                    );
+                    if (!Globals.PrimaryTimer.InFreeMode)
+                    {
+                        Globals.Broadcast(
+                            "Shift To: " + Globals.PrimaryTimer.Target.ToString(fullBroadcastTimeFormat),
+                            Globals.PrimaryTimer.Target.ToString(microBroadcastTimeFormat),
+                            " " + Globals.PrimaryTimer.Target.ToString(microBroadcastTimeFormat)
+                        );
+                    }
                     break;
             }
 
@@ -1024,8 +1099,22 @@ namespace NewTimer.Forms
                 int a = int.Parse(InvisibleInputText.Substring(0, 2), NumberStyles.Integer, CultureInfo.InvariantCulture);
                 int b = int.Parse(InvisibleInputText.Substring(2, 2), NumberStyles.Integer, CultureInfo.InvariantCulture);
 
+                //Free number set
+                if (e.Control)
+                {
+                    int ab = a * 100 + b;
+
+                    if (e.Shift)
+                    {
+                        ab *= 1000;
+                    }
+
+                    Globals.PrimaryTimer.FreeNumber = ab;
+                    Globals.PrimaryTimer.InFreeMode = true;
+                }
+
                 //Duration
-                if (e.Shift || e.Alt)
+                else if (e.Shift || e.Alt)
                 {
                     int hour;
                     int minute;

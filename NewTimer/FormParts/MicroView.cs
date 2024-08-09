@@ -287,6 +287,57 @@ namespace NewTimer.FormParts
             }
             else if (Globals.PrimaryTimer.InFreeMode)
             {
+                if (Globals.PrimaryTimer.FreeNumber != null)
+                {
+                    char freeNumberUnit;
+                    double freeNumberAdjusted;
+
+                    if (LongView)
+                    {
+                        if (Globals.PrimaryTimer.FreeNumber >= 1_000_000)
+                        {
+                            freeNumberAdjusted = Globals.PrimaryTimer.FreeNumber.Value / 1_000_000.0;
+                            freeNumberUnit = 'M';
+                        }
+                        else if (Globals.PrimaryTimer.FreeNumber >= 1000)
+                        {
+                            freeNumberAdjusted = Globals.PrimaryTimer.FreeNumber.Value / 1000.0;
+                            freeNumberUnit = 'k';
+                        }
+                        else
+                        {
+                            freeNumberAdjusted = Globals.PrimaryTimer.FreeNumber.Value;
+                            freeNumberUnit = ' ';
+                        }
+                    }
+                    else
+                    {
+                        if (Globals.PrimaryTimer.FreeNumber >= 100_000)
+                        {
+                            freeNumberAdjusted = Globals.PrimaryTimer.FreeNumber.Value / 1_000_000.0;
+                            freeNumberUnit = 'M';
+                        }
+                        else if (Globals.PrimaryTimer.FreeNumber >= 1000)
+                        {
+                            freeNumberAdjusted = Globals.PrimaryTimer.FreeNumber.Value / 1000.0;
+                            freeNumberUnit = 'k';
+                        }
+                        else if (Globals.PrimaryTimer.FreeNumber >= 100)
+                        {
+                            freeNumberAdjusted = Globals.PrimaryTimer.FreeNumber.Value / 100.0;
+                            freeNumberUnit = 'C';
+                        }
+                        else
+                        {
+                            freeNumberAdjusted = Globals.PrimaryTimer.FreeNumber.Value;
+                            freeNumberUnit = ' ';
+                        }
+                    }
+                    
+
+                    return applySecondaryTimer(FromNumber(freeNumberAdjusted, true, freeNumberUnit, LongView, Globals.PrimaryTimer.RoundMicroViewValues));
+                }
+
                 MicroViewCommand command;
 
                 //Hack to get analog support for free-mode

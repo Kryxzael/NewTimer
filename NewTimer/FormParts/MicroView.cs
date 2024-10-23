@@ -872,6 +872,78 @@ namespace NewTimer.FormParts
                 );
             });
 
+            public static readonly MicroViewUnitSelector Hybrid = new MicroViewUnitSelector("hybrid", "HY", (timer, longView) => 
+            {
+                int number;
+                double handPercent;
+                char unit;
+                char offset;
+
+                if (timer.TimeLeft.TotalSeconds < 10)
+                {
+                    number = (int)timer.TimeLeft.TotalSeconds;
+                    handPercent = timer.TimeLeft.TotalSeconds % 1.0;
+                    unit = ' ';
+                    offset = ' ';
+                }
+                else if (timer.TimeLeft.TotalMinutes < 10)
+                {
+                    number = (int)timer.TimeLeft.TotalMinutes;
+                    handPercent = timer.TimeLeft.TotalMinutes % 1.0;
+                    unit = 'M';
+                    offset = (timer.TimeLeft.Seconds % 5).ToString(CultureInfo.InvariantCulture)[0];
+                }
+                else if (timer.TimeLeft.TotalHours < 10)
+                {
+                    number = (int)timer.TimeLeft.TotalHours;
+                    handPercent = timer.TimeLeft.TotalHours % 1.0;
+                    unit = 'H';
+                    offset = (timer.TimeLeft.Minutes % 5).ToString(CultureInfo.InvariantCulture)[0];
+                }
+                else if (timer.TimeLeft.TotalDays < 10)
+                {
+                    number = (int)timer.TimeLeft.TotalDays;
+                    handPercent = timer.TimeLeft.TotalDays % 1.0;
+                    unit = 'D';
+                    offset = (timer.TimeLeft.Hours % 9).ToString(CultureInfo.InvariantCulture)[0];
+                }
+                else if (timer.TimeLeft.TotalDays < 70)
+                {
+                    double totalWeeks = timer.TimeLeft.TotalDays / 7.0;
+
+                    number = (int)totalWeeks;
+                    handPercent = totalWeeks % 1.0;
+                    unit = 'W';
+                    offset = ' ';
+                }
+                else
+                {
+                    return new MicroViewCommand(
+                        mainText: "- ",
+                        backgroundText: DEFAULT_BACKGROUND + ANALOG_BACKGROUND.ToString(),
+                        offset: ' ',
+                        unit: ' ',
+                        offsetBackground: DEFAULT_BACKGROUND,
+                        unitBackground: DEFAULT_BACKGROUND,
+                        decimalSeparator: DecimalSeparatorPosition.NoDecimalSeparator,
+                        showSecondaryDecimalSeparator: false,
+                        longView: longView
+                    );
+                }
+
+                return new MicroViewCommand(
+                    mainText: number.ToString() + GetAnalogHandPosition((int)(handPercent * 12)),
+                    backgroundText: DEFAULT_BACKGROUND + ANALOG_BACKGROUND.ToString(),
+                    offset: offset,
+                    unit: unit,
+                    offsetBackground: DEFAULT_BACKGROUND,
+                    unitBackground: DEFAULT_BACKGROUND,
+                    decimalSeparator: DecimalSeparatorPosition.NoDecimalSeparator,
+                    showSecondaryDecimalSeparator: false,
+                    longView: longView
+                );
+            });
+
             /// <summary>
             /// Always displays time using seconds
             /// </summary>

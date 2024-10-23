@@ -847,7 +847,7 @@ namespace NewTimer.Forms
                                 }
                             }
 
-                            Globals.Broadcast("Enable Micro View", "MICR", "MICRO");
+                            Globals.Broadcast("Enable Micro View", null);
                         }
 
                         //Disable micro mode

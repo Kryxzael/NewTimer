@@ -262,7 +262,7 @@ namespace NewTimer.FormParts
 
             //Draw decimal separators
             if (command.SeparatorPosition == DecimalSeparatorPosition.HundredsTens || (command.SeparatorPosition == DecimalSeparatorPosition.TensUnits && !LongView))
-                graphics.DrawString(".", DEFAULT_FONT, foregroundBrush, new Point(20, 0));
+                graphics.DrawString(".", DEFAULT_FONT, foregroundBrush, new PointF(19.3f, 0));
 
             else if (command.SeparatorPosition == DecimalSeparatorPosition.TensUnits)
                 graphics.DrawString(".", DEFAULT_FONT, foregroundBrush, new PointF(63f, 0));

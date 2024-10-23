@@ -125,7 +125,7 @@ namespace NewTimer.FormParts
             base.OnPaint(e);
 
             Brush primaryBrush = new SolidBrush(Globals.PrimaryTimer.MicroViewColor);
-            Brush fadedPrimaryBrush = new SolidBrush(Color.FromArgb(0x4F, Globals.PrimaryTimer.MicroViewColor));
+            Brush fadedPrimaryBrush = new SolidBrush(Color.FromArgb(0x8F, Globals.PrimaryTimer.MicroViewColor));
             Brush secondaryBrush;
             Brush bgBrush = new SolidBrush(Color.FromArgb(0x5F, new ThemedColor(Color.Silver, Color.Black)));
 

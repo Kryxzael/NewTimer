@@ -373,7 +373,7 @@ namespace NewTimer.FormParts
             if (!Timer.Overtime)
             {
                 //0-255
-                int   leftSideFadeInOpacity = (int)LerpClamped(0x00, 0xFF, (scaleOfLeftSide - 0.75f) * 4f);
+                int   leftSideFadeInOpacity = (int)LerpClamped(0x00, 0xFF, (scaleOfLeftSide - 0.5f) * 2f);
                 Color leftSideFadeInColor   = Color.FromArgb(leftSideFadeInOpacity, _leftSideFadeInColor);
 
                 using (SolidBrush leftSideFadeInBrush = new SolidBrush(leftSideFadeInColor))
